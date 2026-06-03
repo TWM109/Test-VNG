@@ -406,6 +406,27 @@
     font-style: italic;
   }
   .pm__totalregister-milestone .moc-item { cursor: pointer; }
+  #dt3q-ld-sinhnhat-vongquay .group-soluot .pm__milestone {
+    position: absolute;
+  }
+  #dt3q-ld-sinhnhat-vongquay .admin-spin-accum-target {
+    position: absolute;
+    top: 7px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10;
+    min-width: 140px;
+    padding: 4px 12px;
+    border-radius: 4px;
+    background: #ffefbd;
+    border: 1px solid #b64825;
+    color: #b64825;
+    font-size: 18px;
+    font-weight: 700;
+    text-align: center;
+    line-height: 1.2;
+    pointer-events: none;
+  }
 </style>
 <script>
 // MỞ QUÀ SINH NHẬT — Đồng bộ cấu hình nhiệm vụ nhận lượt từ Admin (localStorage: dt3q_7y_config)
@@ -455,6 +476,37 @@
     }).join('');
   }
 
+  function giftSummary(gifts) {
+    return (gifts || []).map(function(g) {
+      var name = g && (g.name || g.label || g.reward || g.title);
+      if (!name) return '';
+      var qty = parseInt(g.qty || g.quantity || g.amount, 10) || 1;
+      return name + ' x' + qty;
+    }).filter(Boolean).join(' + ');
+  }
+
+  function setImageSrc(img, url) {
+    if (!img || !url) return;
+    img.style.visibility = 'hidden';
+    img.onload = function() {
+      img.style.visibility = '';
+      img.onload = null;
+    };
+    img.onerror = function() {
+      img.style.visibility = 'hidden';
+      img.onerror = null;
+    };
+    img.removeAttribute('src');
+    img.removeAttribute('data-src');
+    img.setAttribute('data-src', url);
+    img.classList.remove('MJ__lazyload');
+    img.src = url;
+    if (img.complete && img.naturalWidth) {
+      img.style.visibility = '';
+      img.onload = null;
+    }
+  }
+
   function applyMissionConfig(cfg) {
     var body = document.querySelector('#popup_getlist .content--body');
     if (!body) return;
@@ -475,8 +527,54 @@
     body.innerHTML = renderMissionGroup('Nhiệm vụ hàng ngày', daily) + renderMissionGroup('Nhiệm vụ cố định', fixed);
   }
 
+  function applySpinAccumulationConfig(cfg) {
+    var items = document.querySelectorAll('#dt3q-ld-sinhnhat-vongquay .group-soluot .pm__milestone');
+    if (!items.length) return;
+
+    window.originalSpinAccumulationHTML = window.originalSpinAccumulationHTML || Array.from(items).map(function(el) {
+      return el.innerHTML;
+    });
+
+    var milestones = cfg && Array.isArray(cfg.spinAccumulation) ? cfg.spinAccumulation : [];
+    if (!milestones.length) {
+      Array.from(items).forEach(function(el, i) {
+        if (window.originalSpinAccumulationHTML[i] !== undefined) el.innerHTML = window.originalSpinAccumulationHTML[i];
+      });
+      return;
+    }
+
+    Array.from(items).forEach(function(el, i) {
+      if (window.originalSpinAccumulationHTML[i] !== undefined) el.innerHTML = window.originalSpinAccumulationHTML[i];
+      var m = milestones[i];
+      if (!m) return;
+
+      var target = parseInt(m.target || m.moc || m.number, 10) || 0;
+      if (target) {
+        el.setAttribute('data-number', String(target));
+        var label = document.createElement('span');
+        label.className = 'admin-spin-accum-target';
+        label.textContent = target + ' Lượt Quay';
+        el.appendChild(label);
+      }
+
+      var tooltipUrl = m.tooltipImg || m.img || '';
+      if (tooltipUrl) {
+        setImageSrc(el.querySelector('.tooltip img'), tooltipUrl);
+      }
+
+      var gifts = giftSummary(m.gifts || []);
+      if (gifts) {
+        el.setAttribute('title', gifts);
+        var tooltip = el.querySelector('.tooltip');
+        if (tooltip) tooltip.setAttribute('title', gifts);
+      }
+    });
+  }
+
   function loadAndApplyMissionConfig() {
-    applyMissionConfig(readMainCfg());
+    var cfg = readMainCfg();
+    applyMissionConfig(cfg);
+    applySpinAccumulationConfig(cfg);
   }
 
   loadAndApplyMissionConfig();
