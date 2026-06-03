@@ -83,21 +83,23 @@
   'use strict';
   var LS_KEY = 'dt3q_thiep_moi_cfg';
 
-  /** Đọc mảng cấu hình mốc từ localStorage */
+  /** Đọc cấu hình mốc từ localStorage */
   function readThiepMoiCfg() {
     try {
       var raw = localStorage.getItem(LS_KEY);
-      if (!raw) return null;
+      if (!raw) return { milestones: [] };
       var data = JSON.parse(raw);
-      return Array.isArray(data) ? data : null;
+      if (Array.isArray(data)) return { milestones: data };
+      if (data && Array.isArray(data.milestones)) return data;
+      return { milestones: [] };
     } catch (e) {
-      return null;
+      return { milestones: [] };
     }
   }
 
   /** Định dạng số mốc hiển thị */
   function fmtMoc(n) {
-    return Number(n).toLocaleString('vi-VN');
+    return String(parseNumber(n));
   }
 
   function escHtml(s) {
@@ -125,6 +127,7 @@
   }
 
   function showTooltip(item, milestone) {
+    milestone = milestone || {};
     var tip = ensureFloatingTooltip();
     var img = tip.querySelector('.admin-thiep-tooltip__img');
     var list = tip.querySelector('.admin-thiep-tooltip__list');
@@ -136,10 +139,8 @@
       img.style.display = 'none';
     }
 
-    list.innerHTML = (milestone.gifts || []).map(function(g) {
-      return '<li><span class="gift-name">' + escHtml(g.name || 'Quà') + '</span>' +
-        '<span class="gift-qty">x' + (parseInt(g.qty, 10) || 1) + '</span></li>';
-    }).join('');
+    var giftsText = formatGiftsText(milestone.gifts || []);
+    list.innerHTML = giftsText ? '<li><span class="gift-name">' + escHtml(giftsText) + '</span></li>' : '';
 
     if (!list.innerHTML) {
       list.innerHTML = '<li class="gift-empty">Chưa cấu hình quà tặng</li>';
@@ -159,46 +160,153 @@
     return tip.offsetHeight || 120;
   }
 
-  /** Map dữ liệu cấu hình vào các phần tử .moc-item trên Client */
-  function applyThiepMoiConfig(milestones) {
-    if (!milestones || !milestones.length) return;
+  function formatGiftsText(gifts) {
+    return (gifts || []).map(function(g) {
+      var name = g && (g.name || g.label || g.reward || g.title);
+      if (!name) return '';
+      var qty = parseInt(g.qty || g.quantity || g.amount, 10) || 1;
+      return String(name) + ' x' + qty;
+    }).filter(Boolean).join(' + ');
+  }
 
-    var items = document.querySelectorAll('.pm__totalregister-milestone .moc-item');
+  function parseNumber(value) {
+    return parseInt(String(value || '').replace(/[^\d]/g, ''), 10) || 0;
+  }
 
-    milestones.forEach(function(m, i) {
-      var el = items[i];
-      if (!el) return;
+  function getMilestoneTarget(m) {
+    return parseNumber(m && (m.target || m.moc || m.number));
+  }
 
-      var mocVal = parseInt(m.moc, 10) || 0;
-
-      /* Cập nhật text số mốc hiển thị */
-      var span = el.querySelector(':scope > span');
-      if (span) span.textContent = fmtMoc(mocVal);
-
-      /* Cập nhật data-number theo giá trị mốc Admin */
-      el.setAttribute('data-number', String(mocVal));
-      el.setAttribute('data-target', String(mocVal));
-
-      /* Cập nhật ảnh tooltip gốc trong DOM (nếu có) */
-      var tooltip = el.querySelector('.tooltip');
-      if (tooltip && m.tooltipImg) {
-        var tipImg = tooltip.querySelector('img');
-        if (tipImg) {
-          tipImg.src = m.tooltipImg;
-          tipImg.removeAttribute('data-src');
-          tipImg.classList.remove('MJ__lazyload');
+  function getLoiChucTotal(cfg) {
+    var keys = ['loiChuc', 'loichuc', 'totalLoiChuc', 'total', 'current', 'count'];
+    if (cfg && typeof cfg === 'object') {
+      for (var i = 0; i < keys.length; i++) {
+        if (Object.prototype.hasOwnProperty.call(cfg, keys[i])) {
+          return parseNumber(cfg[keys[i]]);
         }
       }
+    }
 
-      /* Lưu dữ liệu mốc trên phần tử để tooltip luôn dùng config mới nhất */
-      el.__thiepMilestoneData = m;
+    var totalEl = document.querySelector('.pm__totalregister-milestone-value');
+    return totalEl ? parseNumber(totalEl.textContent) : 0;
+  }
 
-      /* Gắn sự kiện hover hiển thị tooltip chi tiết quà (chỉ bind một lần) */
-      if (!el.__thiepHoverBound) {
-        el.__thiepHoverBound = true;
-        el.addEventListener('mouseenter', function() { showTooltip(el, el.__thiepMilestoneData); });
-        el.addEventListener('mouseleave', hideTooltip);
+  function getVisibleMilestoneTarget(el) {
+    var span = el.querySelector(':scope > span');
+    return parseNumber(span ? span.textContent : el.getAttribute('data-number'));
+  }
+
+  function applyMilestoneState(el, loiChuc, target) {
+    if (!target) return;
+    if (loiChuc >= target) {
+      el.classList.add('active');
+      el.classList.remove('off');
+    } else {
+      el.classList.add('off');
+      el.classList.remove('active');
+    }
+  }
+
+  function bindAdminMilestoneHover(el, milestone) {
+    if (el.__thiepMouseEnterHandler) {
+      el.removeEventListener('mouseenter', el.__thiepMouseEnterHandler);
+    }
+    if (el.__thiepMouseLeaveHandler) {
+      el.removeEventListener('mouseleave', el.__thiepMouseLeaveHandler);
+    }
+
+    el.__thiepMilestoneData = milestone;
+    el.__thiepMouseEnterHandler = function() { showTooltip(el, el.__thiepMilestoneData); };
+    el.__thiepMouseLeaveHandler = hideTooltip;
+    el.addEventListener('mouseenter', el.__thiepMouseEnterHandler);
+    el.addEventListener('mouseleave', el.__thiepMouseLeaveHandler);
+  }
+
+  function unbindAdminMilestoneHover(el) {
+    if (el.__thiepMouseEnterHandler) {
+      el.removeEventListener('mouseenter', el.__thiepMouseEnterHandler);
+      el.__thiepMouseEnterHandler = null;
+    }
+    if (el.__thiepMouseLeaveHandler) {
+      el.removeEventListener('mouseleave', el.__thiepMouseLeaveHandler);
+      el.__thiepMouseLeaveHandler = null;
+    }
+    el.__thiepMilestoneData = null;
+  }
+
+  function applyConfiguredMilestoneHTML(el, m, target, originalHTML) {
+    var label = m.label || m.reward || fmtMoc(target);
+    var tooltipUrl = m.tooltipImg || m.img || '';
+
+    if (originalHTML !== undefined) {
+      el.innerHTML = originalHTML;
+    }
+
+    var span = el.querySelector(':scope > span');
+    if (!span) {
+      span = document.createElement('span');
+      el.appendChild(span);
+    }
+    span.textContent = label;
+
+    if (tooltipUrl) {
+      var tooltipImg = el.querySelector('.tooltip img');
+      if (tooltipImg) {
+        tooltipImg.style.visibility = 'hidden';
+        tooltipImg.onload = function() {
+          tooltipImg.style.visibility = '';
+          tooltipImg.onload = null;
+        };
+        tooltipImg.onerror = function() {
+          tooltipImg.style.visibility = 'hidden';
+          tooltipImg.onerror = null;
+        };
+        tooltipImg.removeAttribute('src');
+        tooltipImg.removeAttribute('data-src');
+        tooltipImg.setAttribute('data-src', tooltipUrl);
+        tooltipImg.classList.remove('MJ__lazyload');
+        tooltipImg.src = tooltipUrl;
+        if (tooltipImg.complete && tooltipImg.naturalWidth) {
+          tooltipImg.style.visibility = '';
+          tooltipImg.onload = null;
+        }
       }
+    }
+  }
+
+  /** Map dữ liệu cấu hình vào các phần tử .moc-item trên Client */
+  function applyThiepMoiConfig(cfg) {
+    var items = document.querySelectorAll('.pm__totalregister-milestone .moc-item');
+    if (!items.length) return;
+
+    window.originalMilestonesHTML = window.originalMilestonesHTML || Array.from(items).map(function(el) { return el.innerHTML; });
+
+    var milestones = Array.isArray(cfg) ? cfg : ((cfg && cfg.milestones) || []);
+    var loiChuc = getLoiChucTotal(cfg);
+
+    Array.from(items).forEach(function(el, i) {
+      if (!el) return;
+
+      if (i < milestones.length) {
+        var m = milestones[i] || {};
+        var target = getMilestoneTarget(m);
+
+        applyConfiguredMilestoneHTML(el, m, target, window.originalMilestonesHTML[i]);
+        el.setAttribute('data-number', String(target));
+        el.setAttribute('data-target', String(target));
+        unbindAdminMilestoneHover(el);
+        hideTooltip();
+        applyMilestoneState(el, loiChuc, target);
+        return;
+      }
+
+      unbindAdminMilestoneHover(el);
+      if (window.originalMilestonesHTML[i] !== undefined) {
+        el.innerHTML = window.originalMilestonesHTML[i];
+      }
+
+      var originalTarget = getVisibleMilestoneTarget(el);
+      applyMilestoneState(el, loiChuc, originalTarget);
     });
   }
 
