@@ -468,10 +468,10 @@
         <thead>
           <tr>
             <th style="width:40px">#</th>
-            <th>Tên phần thưởng</th>
+            <th>Quà tặng</th>
+            <th>Link ảnh tooltip</th>
             <th style="width:110px">Rate (%)</th>
             <th style="width:110px">Stock</th>
-            <th style="width:90px">Enabled</th>
             <th style="width:60px">Xoá</th>
           </tr>
         </thead>
@@ -718,8 +718,14 @@ let spinAccumulationData = [];
 /* Danh sách vật phẩm gợi ý cho select quà tặng mốc Thiệp Mời */
 const GIFT_ITEM_OPTIONS = [
   'KNB', 'Đá Cường Hóa', 'Thần Tướng Lệnh', 'Vé Quay', 'Mảnh Tướng Vũ Hoàng',
-  'Thức Tỉnh Đơn', 'Rương Đỏ', 'Rương Kim', 'Vàng', 'Bánh Kem', 'Tinh Túy', 'Rương Chọn Đá'
+  'Thức Tỉnh Đơn', 'Rương Đỏ', 'Rương Kim', 'Vàng', 'Bánh Kem', 'Tinh Túy', 'Rương Chọn Đá',
+  'Rương Chọn Đá Thô', 'Quà Đặc Biệt', 'Rương Tướng Hán Ngẫu Nhiên',
+  'Rương Đỏ/Kim Ngẫu Nhiên', 'Bánh Sinh Nhật', 'Móc Khóa',
+  'Rương Chọn Mảnh Tướng Tân', 'Rương Nhân Phẩm Vô Cực',
+  'Rương Chọn Mảnh Thập Giới', 'Gối Ôm Tiểu Kiều'
 ];
+
+const SPIN_ITEM_IMG_BASE = 'https://cdn-mainsite-aka.vnggames.com/products/dt3q/landing/2026-sinh-nhat-7-ai/dist/optimized/dt3q-ld-sinhnhat-vongquay/images/';
 
 /* Cấu hình mẫu mặc định 4 mốc khi chưa có dữ liệu localStorage */
 const DEFAULT_THIEP_MOI = [
@@ -747,9 +753,17 @@ const DEFAULT_THIEP_MOI = [
 
 const MOCK = {
   spin: [
-    { name: 'SSR Hero Chest', rate: 5, stock: 1000, enabled: true },
-    { name: 'Gold 200k', rate: 65, stock: 99999, enabled: true },
-    { name: 'Legend Skin', rate: 30, stock: 500, enabled: true },
+    { name: 'Rương Chọn Đá Thô', tooltipImg: SPIN_ITEM_IMG_BASE + 'item-1.png', rate: 8, stock: 1000 },
+    { name: 'Quà Đặc Biệt', tooltipImg: SPIN_ITEM_IMG_BASE + 'item-2.png', rate: 3, stock: 200 },
+    { name: 'Thức Tỉnh Đơn', tooltipImg: SPIN_ITEM_IMG_BASE + 'item-3.png', rate: 18, stock: 99999 },
+    { name: 'Rương Tướng Hán Ngẫu Nhiên', tooltipImg: SPIN_ITEM_IMG_BASE + 'item-4.png', rate: 10, stock: 3000 },
+    { name: 'Rương Đỏ/Kim Ngẫu Nhiên', tooltipImg: SPIN_ITEM_IMG_BASE + 'item-5.png', rate: 10, stock: 3000 },
+    { name: 'Bánh Sinh Nhật', tooltipImg: SPIN_ITEM_IMG_BASE + 'item-6.png', rate: 15, stock: 99999 },
+    { name: 'Móc Khóa', tooltipImg: SPIN_ITEM_IMG_BASE + 'item-7.png', rate: 4, stock: 500 },
+    { name: 'Rương Chọn Mảnh Tướng Tân', tooltipImg: SPIN_ITEM_IMG_BASE + 'item-8.png', rate: 9, stock: 3000 },
+    { name: 'Rương Nhân Phẩm Vô Cực', tooltipImg: SPIN_ITEM_IMG_BASE + 'item-9.png', rate: 8, stock: 2000 },
+    { name: 'Rương Chọn Mảnh Thập Giới', tooltipImg: SPIN_ITEM_IMG_BASE + 'item-10.png', rate: 7, stock: 1500 },
+    { name: 'Gối Ôm Tiểu Kiều', tooltipImg: SPIN_ITEM_IMG_BASE + 'item-11.png', rate: 8, stock: 300 },
   ],
   shop: [
     { name: 'Móc khóa DT3Q', points: 50, stock: 500, enabled: true },
@@ -900,26 +914,42 @@ function renderSpinTable() {
   const tbody = document.getElementById('spinTbody');
   tbody.innerHTML = '';
   spinData.forEach((row, i) => {
+    row.name = row.name || GIFT_ITEM_OPTIONS[0];
+    row.tooltipImg = row.tooltipImg || row.img || '';
+    row.rate = parseFloat(row.rate) || 0;
+    row.stock = parseInt(row.stock, 10) || 0;
     const tr = document.createElement('tr');
     tr.innerHTML = `
       <td class="mono text-muted">${i+1}</td>
-      <td><input type="text" value="${esc(row.name)}" onchange="spinData[${i}].name=this.value"></td>
-      <td><input type="number" min="0" max="100" step="0.01" value="${row.rate}" onchange="spinData[${i}].rate=parseFloat(this.value)||0;updateSpinSum()"></td>
-      <td><input type="number" min="0" value="${row.stock}" onchange="spinData[${i}].stock=parseInt(this.value)||0"></td>
       <td>
-        <label class="toggle"><input type="checkbox" ${row.enabled?'checked':''} onchange="spinData[${i}].enabled=this.checked">
-        <span class="toggle-slider"></span></label>
+        <select onchange="spinData[${i}].name=this.value">
+          ${buildGiftSelectOptions(row.name)}
+        </select>
       </td>
+      <td><input type="text" value="${esc(row.tooltipImg)}" placeholder="https://..." onchange="spinData[${i}].tooltipImg=this.value"></td>
+      <td><input type="number" min="0" max="100" step="0.01" value="${row.rate}" onchange="setSpinRate(${i}, this)"></td>
+      <td><input type="number" min="0" value="${row.stock}" onchange="spinData[${i}].stock=parseInt(this.value)||0"></td>
       <td><button class="btn btn-danger btn-xs" onclick="removeSpinRow(${i})">✕</button></td>`;
     tbody.appendChild(tr);
   });
   updateSpinSum();
 }
 function addSpinRow() {
-  spinData.push({ name: 'Phần thưởng mới', rate: 0, stock: 100, enabled: true });
+  spinData.push({ name: MOCK.spin[0].name, tooltipImg: MOCK.spin[0].tooltipImg, rate: 0, stock: 100 });
   renderSpinTable();
 }
 function removeSpinRow(i) { spinData.splice(i,1); renderSpinTable(); }
+function setSpinRate(index, input) {
+  let value = parseFloat(input.value);
+  if (Number.isNaN(value)) value = 0;
+  if (value < 0 || value > 100) {
+    value = Math.max(0, Math.min(100, value));
+    showToast('Rate từng phần thưởng phải nằm trong khoảng 0% đến 100%', 'error');
+  }
+  spinData[index].rate = value;
+  input.value = value;
+  updateSpinSum();
+}
 function updateSpinSum() {
   const sum = spinData.reduce((a,r) => a + (parseFloat(r.rate)||0), 0);
   const el = document.getElementById('spinRateSum');
@@ -1124,7 +1154,9 @@ function removePackageRow(i) { packageData.splice(i,1); renderPackageTable(); }
 
 /** Tạo chuỗi <option> cho select vật phẩm */
 function buildGiftSelectOptions(selected) {
-  return GIFT_ITEM_OPTIONS.map(function(name) {
+  var options = GIFT_ITEM_OPTIONS.slice();
+  if (selected && options.indexOf(selected) === -1) options.unshift(selected);
+  return options.map(function(name) {
     return '<option value="' + esc(name) + '"' + (name === selected ? ' selected' : '') + '>' + esc(name) + '</option>';
   }).join('');
 }
@@ -1269,10 +1301,14 @@ function runValidation() {
     issues.push({ type:'ok', msg: `Tổng rate vòng quay = 100% ✓` });
   }
 
-  // 2. Spin stock = 0 but enabled
+  // 2. Spin row validation
   spinData.forEach(r => {
-    if (r.enabled && r.stock === 0) {
-      issues.push({ type:'warning', msg: `Vòng quay "${r.name}": stock = 0 nhưng enabled` });
+    const rate = parseFloat(r.rate) || 0;
+    if (rate < 0 || rate > 100) {
+      issues.push({ type:'error', msg: `Vòng quay "${r.name}": rate phải nằm trong khoảng 0% đến 100%` });
+    }
+    if ((parseInt(r.stock, 10) || 0) === 0) {
+      issues.push({ type:'warning', msg: `Vòng quay "${r.name}": stock = 0` });
     }
   });
 
@@ -1304,7 +1340,7 @@ function runValidation() {
   // 5. Negative numbers
   let numOk = true;
   [...spinData].forEach(r => {
-    if (r.rate < 0 || r.stock < 0) { issues.push({ type:'error', msg: `Vòng quay "${r.name}": giá trị âm` }); numOk = false; }
+    if (r.rate < 0 || r.rate > 100 || r.stock < 0) { issues.push({ type:'error', msg: `Vòng quay "${r.name}": rate phải từ 0 đến 100 và stock không được âm` }); numOk = false; }
   });
   [...shopData].forEach(r => {
     if (r.points < 0 || r.stock < 0) { issues.push({ type:'error', msg: `Đổi quà "${r.name}": giá trị âm` }); numOk = false; }
@@ -1317,6 +1353,7 @@ function runValidation() {
   // 6. Empty names
   const emptyName = [...spinData, ...shopData, ...packageData].some(r => !r.name || r.name.trim() === '') ||
     missionData.some(r => !(r.contentHtml || r.name || '').trim()) ||
+    spinData.some(r => !(r.tooltipImg || '').trim()) ||
     spinAccumulationData.some(r => !(r.gifts || []).length || !(r.tooltipImg || '').trim());
   if (emptyName) issues.push({ type:'warning', msg: 'Có dòng thiếu tên/nội dung/quà hoặc tooltip' });
 
@@ -1325,11 +1362,12 @@ function runValidation() {
   const div = document.getElementById('validationResults');
   if (!issues.length) {
     div.innerHTML = '<div class="val-item val-ok"><span class="val-icon">✅</span>Mọi thứ đều ổn.</div>';
-    return;
+    return issues;
   }
   div.innerHTML = issues.map(it =>
     `<div class="val-item val-${it.type}"><span class="val-icon">${icons[it.type]}</span>${it.msg}</div>`
   ).join('');
+  return issues;
 }
 
 // ═══════════════════════════════════════════
@@ -1358,32 +1396,43 @@ function gatherConfig() {
 }
 
 function saveConfig() {
-  runValidation();
+  const issues = runValidation();
+  if (issues.some(it => it.type === 'error')) {
+    showToast('Config chưa hợp lệ. Vui lòng xử lý lỗi validation trước khi lưu.', 'error');
+    return false;
+  }
   const cfg = gatherConfig();
   localStorage.setItem(LS_KEY, JSON.stringify(cfg));
   saveThiepMoiConfig(true);
   window.dispatchEvent(new CustomEvent('dt3q-config-updated', { detail: cfg }));
   showToast('✅ Config đã được lưu vào localStorage', 'success');
+  return true;
 }
 
 /** Lưu config hiện tại vào localStorage (không hiện toast) trước khi mở preview */
 function syncConfigForPreview() {
+  const issues = runValidation();
+  if (issues.some(it => it.type === 'error')) {
+    showToast('Config chưa hợp lệ. Không thể mở preview khi còn lỗi validation.', 'error');
+    return false;
+  }
   const cfg = gatherConfig();
   localStorage.setItem(LS_KEY, JSON.stringify(cfg));
   saveThiepMoiConfig(true);
   window.dispatchEvent(new CustomEvent('dt3q-config-updated', { detail: cfg }));
+  return true;
 }
 
 /** Mở vng.html trong tab mới — config được đồng bộ trước khi mở */
 function openPreviewTab() {
-  syncConfigForPreview();
+  if (!syncConfigForPreview()) return;
   window.open('vng.html?' + Date.now(), '_blank');
   showToast('↗ Đã mở FE Preview trong tab mới', 'success');
 }
 
 /** Lưu toàn bộ config + mốc Thiệp Mời rồi mở preview tab mới */
 function saveAndPreview() {
-  saveConfig();
+  if (!saveConfig()) return;
   openPreviewTab();
 }
 
@@ -1405,7 +1454,7 @@ function applyConfig(cfg) {
     const el = document.getElementById('tl_' + k);
     if (el) el.value = v;
   });
-  spinData = cfg.spin || [...MOCK.spin];
+  spinData = normalizeSpinConfig(cfg.spin);
   shopData = cfg.shop || [...MOCK.shop];
   milestoneData = cfg.milestones || [...MOCK.milestone];
   missionData = cfg.missions || [...MOCK.mission];
@@ -1428,6 +1477,25 @@ function resetMock() {
   packageData = m.packages.map(r => ({...r}));
   renderAll();
   showToast('↺ Đã reset về mock data', 'warning');
+}
+
+function normalizeSpinConfig(rows) {
+  if (!Array.isArray(rows) || !rows.length) return MOCK.spin.map(r => ({...r}));
+
+  const hasTooltip = rows.some(r => r && (r.tooltipImg || r.img));
+  if (!hasTooltip) return MOCK.spin.map(r => ({...r}));
+
+  return rows.map((row, index) => {
+    const fallback = MOCK.spin[index] || MOCK.spin[0];
+    const byName = MOCK.spin.find(item => item.name === row.name);
+    const source = byName || fallback;
+    return {
+      name: row.name || source.name,
+      tooltipImg: row.tooltipImg || row.img || source.tooltipImg,
+      rate: parseFloat(row.rate) || 0,
+      stock: parseInt(row.stock, 10) || 0
+    };
+  });
 }
 
 function renderAll() {

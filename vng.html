@@ -409,14 +409,21 @@
   #dt3q-ld-sinhnhat-vongquay .group-soluot .pm__milestone {
     position: absolute;
   }
+  #dt3q-ld-sinhnhat-vongquay .group-soluot .pm__milestone:hover {
+    z-index: 30;
+  }
+  #dt3q-ld-sinhnhat-vongquay .group-soluot .pm__milestone .tooltip {
+    z-index: 50 !important;
+    pointer-events: none;
+  }
   #dt3q-ld-sinhnhat-vongquay .admin-spin-accum-target {
     position: absolute;
-    top: 7px;
+    top: 0;
     left: 50%;
     transform: translateX(-50%);
-    z-index: 10;
-    min-width: 140px;
-    padding: 4px 12px;
+    z-index: 5;
+    min-width: 120px;
+    padding: 13px 15px;
     border-radius: 4px;
     background: #ffefbd;
     border: 1px solid #b64825;
@@ -571,9 +578,52 @@
     });
   }
 
+  function applySpinPrizeConfig(cfg) {
+    var items = document.querySelectorAll('#dt3q-ld-sinhnhat-vongquay .gr_effect--item');
+    if (!items.length) return;
+
+    window.originalSpinPrizeImages = window.originalSpinPrizeImages || Array.from(items).map(function(el) {
+      var img = el.querySelector('img');
+      return {
+        src: img ? (img.getAttribute('src') || '') : '',
+        dataSrc: img ? (img.getAttribute('data-src') || '') : '',
+        alt: img ? (img.getAttribute('alt') || '') : '',
+        title: el.getAttribute('title') || ''
+      };
+    });
+
+    var prizes = cfg && Array.isArray(cfg.spin) ? cfg.spin : [];
+    Array.from(items).forEach(function(el, i) {
+      var img = el.querySelector('img');
+      if (!img) return;
+
+      var prize = prizes[i];
+      if (!prize) {
+        var original = window.originalSpinPrizeImages[i];
+        if (original) {
+          setImageSrc(img, original.dataSrc || original.src);
+          img.setAttribute('alt', original.alt);
+          if (original.title) el.setAttribute('title', original.title);
+          else el.removeAttribute('title');
+        }
+        return;
+      }
+
+      var imageUrl = prize.tooltipImg || prize.img || prize.image || '';
+      if (imageUrl) setImageSrc(img, imageUrl);
+
+      var name = prize.name || prize.label || '';
+      if (name) {
+        img.setAttribute('alt', name);
+        el.setAttribute('title', name);
+      }
+    });
+  }
+
   function loadAndApplyMissionConfig() {
     var cfg = readMainCfg();
     applyMissionConfig(cfg);
+    applySpinPrizeConfig(cfg);
     applySpinAccumulationConfig(cfg);
   }
 
