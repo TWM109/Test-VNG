@@ -42,7 +42,7 @@ Hien tai da **bo iframe**, nhung truc tiep HTML + `frame4.css` vao muc 4.
 
 - Vote/gui loi chuc that can API `event-vn.vnggames.com` (chi demo UI + alert).
 - Khong load `vote.js` / `frame4.js` day du de tranh redirect ve trang khac va popup login iframe.
-- Config admin chua wire tu dong vao DOM `vng.html` (can them script doc localStorage neu can demo day du).
+- **Promotion 1 (moc Q1–Q7):** Admin Save → `localStorage` `dt3q_7y_config` → `vng.html` cap nhat **nguong moc** (`<span>`) + **active/off**. Mo ta qua / URL anh trong admin la **CMS only** (chua wire len tooltip anh).
 
 ## Nguon
 
