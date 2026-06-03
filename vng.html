@@ -407,6 +407,100 @@
   }
   .pm__totalregister-milestone .moc-item { cursor: pointer; }
 </style>
+<script>
+// MỞ QUÀ SINH NHẬT — Đồng bộ cấu hình nhiệm vụ nhận lượt từ Admin (localStorage: dt3q_7y_config)
+(function() {
+  'use strict';
+  var LS_KEY = 'dt3q_7y_config';
+
+  function readMainCfg() {
+    try {
+      var raw = localStorage.getItem(LS_KEY);
+      return raw ? JSON.parse(raw) : null;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  function escAttr(s) {
+    return String(s || '').replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  }
+
+  function normalizeMission(m) {
+    var type = m && m.type === 'fixed' ? 'fixed' : 'daily';
+    var action = m && m.action === 'Nhận Lượt' ? 'Nhận Lượt' : 'Thực Hiện';
+    return {
+      type: type,
+      contentHtml: (m && (m.contentHtml || m.html || m.name)) || '',
+      action: action,
+      enabled: !m || m.enabled !== false
+    };
+  }
+
+  function buildMissionButton(m) {
+    if (m.action === 'Nhận Lượt') {
+      return '<a href="javascript:void(0)" class="btn_get MS__hover pm__menu-date">Nhận Lượt</a>';
+    }
+
+    return '<a href="javascript:void(0)" class="btn_get MS__hover pm__menu-cash">' + escAttr(m.action) + '</a>';
+  }
+
+  function renderMissionGroup(title, list) {
+    if (!list.length) return '';
+    return '<p class="subtitle">' + title + '</p>' + list.map(function(m) {
+      return '<div class="gr_nhiemvu">' +
+        '<div class="d-flex"><div class="text">' + m.contentHtml + '</div></div>' +
+        buildMissionButton(m) +
+        '</div>';
+    }).join('');
+  }
+
+  function applyMissionConfig(cfg) {
+    var body = document.querySelector('#popup_getlist .content--body');
+    if (!body) return;
+
+    window.originalGetListMissionHTML = window.originalGetListMissionHTML || body.innerHTML;
+
+    var missions = cfg && Array.isArray(cfg.missions) ? cfg.missions.map(normalizeMission).filter(function(m) {
+      return m.enabled && m.contentHtml;
+    }) : [];
+
+    if (!missions.length) {
+      body.innerHTML = window.originalGetListMissionHTML;
+      return;
+    }
+
+    var daily = missions.filter(function(m) { return m.type === 'daily'; });
+    var fixed = missions.filter(function(m) { return m.type === 'fixed'; });
+    body.innerHTML = renderMissionGroup('Nhiệm vụ hàng ngày', daily) + renderMissionGroup('Nhiệm vụ cố định', fixed);
+  }
+
+  function loadAndApplyMissionConfig() {
+    applyMissionConfig(readMainCfg());
+  }
+
+  loadAndApplyMissionConfig();
+
+  window.addEventListener('storage', function(e) {
+    if (e.key === LS_KEY) loadAndApplyMissionConfig();
+  });
+
+  window.addEventListener('message', function(e) {
+    if (e.data && e.data.type === 'dt3q-config-reload') loadAndApplyMissionConfig();
+  });
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', loadAndApplyMissionConfig);
+  }
+
+  var poll = 0;
+  var pollIv = setInterval(function() {
+    loadAndApplyMissionConfig();
+    poll += 100;
+    if (poll >= 5000) clearInterval(pollIv);
+  }, 100);
+})();
+</script>
 
 <script>
     let arGiftExchangeConfigPointRequire = '{"Mzc4MzA0":"1","Mzc4MzA1":"5","Mzc4MzA2":"10","Mzc4MzA3":"20","Mzc4MzA4":"40","Mzc4MzA5":"80","Mzc4MzEw":"150","Mzc4MzEx":"-1","Mzc4MzEy":"-1","Mzc4MzEz":"-1","Mzc4MzE0":"-1","Mzc4MzE1":"-1","Mzc4MzE2":"-1","Mzc4MzE3":"-1","Mzc4MzE4":"-1","Mzc4MzE5":"-1","Mzc4MzIw":"-1"}';

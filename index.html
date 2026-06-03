@@ -482,6 +482,29 @@
       <button class="btn btn-ghost btn-sm" onclick="addSpinRow()">+ Thêm phần thưởng</button>
       <span id="spinRateSum" class="mono" style="margin-left:auto;font-size:13px;color:var(--muted)">Tổng: 0%</span>
     </div>
+    <div style="height:16px"></div>
+    <div class="card-title" style="font-size:15px;margin-bottom:8px"><span class="card-title-icon">📋</span>Nhiệm Vụ Nhận Lượt</div>
+    <p class="text-muted mb-12" style="font-size:12px">
+      Cấu hình danh sách nhiệm vụ trong popup khi click nút Nhận Lượt. Nội dung cho phép HTML, ví dụ <code class="mono">&lt;b&gt;Nạp gói promotion 109.000đ&lt;/b&gt;&lt;br&gt;(+ 6 lượt/ngày)</code>.
+    </p>
+    <div class="table-overflow">
+      <table class="data-table" id="missionTable">
+        <thead>
+          <tr>
+            <th style="width:40px">#</th>
+            <th style="width:130px">Loại</th>
+            <th>Nội dung HTML</th>
+            <th style="width:130px">Nút</th>
+            <th style="width:90px">Enabled</th>
+            <th style="width:60px">Xoá</th>
+          </tr>
+        </thead>
+        <tbody id="missionTbody"></tbody>
+      </table>
+    </div>
+    <div class="table-actions">
+      <button class="btn btn-ghost btn-sm" onclick="addMissionRow()">+ Thêm nhiệm vụ</button>
+    </div>
   </div>
 
   <!-- 3. Đổi quà -->
@@ -526,28 +549,6 @@
     </div>
     <div class="table-actions">
       <button class="btn btn-ghost btn-sm" onclick="addMilestoneRow()">+ Thêm mốc</button>
-    </div>
-  </div>
-
-  <!-- 5. Nhiệm vụ hàng ngày -->
-  <div class="card">
-    <div class="card-title"><span class="card-title-icon">📋</span>Nhiệm Vụ Hàng Ngày</div>
-    <div class="table-overflow">
-      <table class="data-table" id="missionTable">
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>Tên nhiệm vụ</th>
-            <th style="width:130px">Reward (điểm)</th>
-            <th style="width:90px">Enabled</th>
-            <th style="width:60px">Xoá</th>
-          </tr>
-        </thead>
-        <tbody id="missionTbody"></tbody>
-      </table>
-    </div>
-    <div class="table-actions">
-      <button class="btn btn-ghost btn-sm" onclick="addMissionRow()">+ Thêm nhiệm vụ</button>
     </div>
   </div>
 
@@ -753,10 +754,33 @@ const MOCK = {
     { target: 100000, reward: 'Quà mốc Q5', status: 'locked' },
   ],
   mission: [
-    { name: 'Đăng nhập mỗi ngày', reward: 10, enabled: true },
-    { name: 'Đăng ký thông tin', reward: 30, enabled: true },
-    { name: 'Xem clip viral sinh nhật', reward: 20, enabled: true },
-    { name: 'Nạp game nhận lượt quay', reward: 50, enabled: true },
+    { type: 'daily', contentHtml: '<b>Điểm danh trên trang</b><br>1 lượt/Ngày. (Tối đa 30 lượt)', action: 'Nhận Lượt', enabled: true },
+    { type: 'fixed', contentHtml: '<b>Chia sẻ trang sự kiện</b><br>1 lượt (Tối đa 1 lượt trong suốt sự kiện).', action: 'Thực Hiện', enabled: true },
+    { type: 'fixed', contentHtml: '<b>Nạp gói promotion 20.000đ</b><br>(+ 1 lượt)', action: 'Thực Hiện', enabled: true },
+    { type: 'fixed', contentHtml: '<b>Nạp gói promotion 109.000đ</b><br>(+ 6 lượt/ngày)', action: 'Thực Hiện', enabled: true },
+    { type: 'fixed', contentHtml: '<b>Nạp gói promotion 199.000đ</b><br>(+ 10 lượt)', action: 'Thực Hiện', enabled: true },
+    { type: 'fixed', contentHtml: '<b>Nạp gói promotion 299.000đ</b><br>(+ 15 lượt)', action: 'Thực Hiện', enabled: true },
+    { type: 'fixed', contentHtml: '<b>Nạp gói promotion 599.000đ</b><br>(+ 30 lượt)', action: 'Thực Hiện', enabled: true },
+    { type: 'fixed', contentHtml: '<b>Nạp gói promotion 899.000đ</b><br>(+ 46 lượt)', action: 'Thực Hiện', enabled: true },
+    { type: 'fixed', contentHtml: '<b>Nạp gói promotion 1.499.000đ</b><br>(+ 78 lượt)', action: 'Thực Hiện', enabled: true },
+    { type: 'fixed', contentHtml: '<b>Nạp gói promotion 1.999.000đ</b><br>(+ 105 lượt)', action: 'Thực Hiện', enabled: true },
+    { type: 'fixed', contentHtml: '<b>Nạp gói event 1</b><br>(+ 2 lượt)', action: 'Thực Hiện', enabled: true },
+    { type: 'fixed', contentHtml: '<b>Nạp gói event 2</b><br>(+ 2 lượt)', action: 'Thực Hiện', enabled: true },
+    { type: 'fixed', contentHtml: '<b>Nạp gói event 3</b><br>(+ 2 lượt)', action: 'Thực Hiện', enabled: true },
+    { type: 'fixed', contentHtml: '<b>Nạp gói event 4</b><br>(+ 3 lượt)', action: 'Thực Hiện', enabled: true },
+    { type: 'fixed', contentHtml: '<b>Nạp gói event 5</b><br>(+ 3 lượt)', action: 'Thực Hiện', enabled: true },
+    { type: 'fixed', contentHtml: '<b>Nạp gói event 6</b><br>(+ 5 lượt)', action: 'Thực Hiện', enabled: true },
+    { type: 'fixed', contentHtml: '<b>Nạp gói event 7</b><br>(+ 7 lượt)', action: 'Thực Hiện', enabled: true },
+    { type: 'fixed', contentHtml: '<b>Nạp gói event 8</b><br>(+ 15 lượt)', action: 'Thực Hiện', enabled: true },
+    { type: 'fixed', contentHtml: '<b>Nạp gói event 9</b><br>(+ 22 lượt)', action: 'Thực Hiện', enabled: true },
+    { type: 'fixed', contentHtml: '<b>Nạp gói event 10</b><br>(+ 22 lượt)', action: 'Thực Hiện', enabled: true },
+    { type: 'fixed', contentHtml: '<b>Nạp gói event 11</b><br>(+ 25 lượt)', action: 'Thực Hiện', enabled: true },
+    { type: 'fixed', contentHtml: '<b>Nạp gói event 12</b><br>(+ 25 lượt)', action: 'Thực Hiện', enabled: true },
+    { type: 'fixed', contentHtml: '<b>Nạp gói event 13</b><br>(+ 50 lượt)', action: 'Thực Hiện', enabled: true },
+    { type: 'fixed', contentHtml: '<b>Nạp gói event 14</b><br>(+ 125 lượt)', action: 'Thực Hiện', enabled: true },
+    { type: 'fixed', contentHtml: '<b>Nạp gói event 15</b><br>(+ 125 lượt)', action: 'Thực Hiện', enabled: true },
+    { type: 'fixed', contentHtml: '<b>Nạp gói event 16</b><br>(+ 250 lượt)', action: 'Thực Hiện', enabled: true },
+    { type: 'fixed', contentHtml: '<b>Nạp gói event 17</b><br>(+ 250 lượt)', action: 'Thực Hiện', enabled: true },
   ],
   packages: [
     { name: 'Gói 99k', price: 99000, spin: 8, enabled: true },
@@ -912,11 +936,28 @@ function renderMissionTable() {
   const tbody = document.getElementById('missionTbody');
   tbody.innerHTML = '';
   missionData.forEach((row, i) => {
+    row.type = row.type || 'daily';
+    row.contentHtml = row.contentHtml || row.html || row.name || '';
+    row.action = row.action || 'Thực Hiện';
+    if (row.action !== 'Thực Hiện' && row.action !== 'Nhận Lượt') row.action = 'Thực Hiện';
     const tr = document.createElement('tr');
     tr.innerHTML = `
       <td class="mono text-muted">${i+1}</td>
-      <td><input type="text" value="${esc(row.name)}" onchange="missionData[${i}].name=this.value"></td>
-      <td><input type="number" min="0" value="${row.reward}" onchange="missionData[${i}].reward=parseInt(this.value)||0"></td>
+      <td>
+        <select onchange="missionData[${i}].type=this.value">
+          <option value="daily" ${row.type==='daily'?'selected':''}>Hàng ngày</option>
+          <option value="fixed" ${row.type==='fixed'?'selected':''}>Cố định</option>
+        </select>
+      </td>
+      <td>
+        <textarea rows="3" style="width:100%;min-width:360px;resize:vertical" onchange="missionData[${i}].contentHtml=this.value">${esc(row.contentHtml)}</textarea>
+      </td>
+      <td>
+        <select onchange="missionData[${i}].action=this.value">
+          <option value="Thực Hiện" ${row.action==='Thực Hiện'?'selected':''}>Thực Hiện</option>
+          <option value="Nhận Lượt" ${row.action==='Nhận Lượt'?'selected':''}>Nhận Lượt</option>
+        </select>
+      </td>
       <td>
         <label class="toggle"><input type="checkbox" ${row.enabled?'checked':''} onchange="missionData[${i}].enabled=this.checked">
         <span class="toggle-slider"></span></label>
@@ -926,7 +967,7 @@ function renderMissionTable() {
   });
 }
 function addMissionRow() {
-  missionData.push({ name: 'Nhiệm vụ mới', reward: 10, enabled: true });
+  missionData.push({ type: 'daily', contentHtml: '<b>Nhiệm vụ mới</b><br>(+ 1 lượt/ngày)', action: 'Thực Hiện', enabled: true });
   renderMissionTable();
 }
 function removeMissionRow(i) { missionData.splice(i,1); renderMissionTable(); }
@@ -1150,7 +1191,8 @@ function runValidation() {
   if (numOk) issues.push({ type:'ok', msg: 'Không có giá trị âm ✓' });
 
   // 6. Empty names
-  const emptyName = [...spinData, ...shopData, ...missionData, ...packageData].some(r => !r.name || r.name.trim() === '');
+  const emptyName = [...spinData, ...shopData, ...packageData].some(r => !r.name || r.name.trim() === '') ||
+    missionData.some(r => !(r.contentHtml || r.name || '').trim());
   if (emptyName) issues.push({ type:'warning', msg: 'Có dòng chưa đặt tên' });
 
   // Render
