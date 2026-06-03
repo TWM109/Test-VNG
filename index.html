@@ -630,8 +630,14 @@
     ⚠️ Sau khi Save config ở Tab 1, nhấn <strong>Reload Preview</strong> để thấy thay đổi phản ánh trên FE.
     Cả hai file cần cùng origin (Vercel) để iframe hoạt động không bị CORS.
   </div>
-  <div class="preview-iframe-wrap">
-    <iframe id="previewFrame" src="vng.html" title="FE Preview"></iframe>
+  <div class="preview-iframe-wrap" style="display:flex;align-items:center;justify-content:center;min-height:200px;flex-direction:column;gap:12px;">
+    <div style="color:var(--muted);font-size:13px;text-align:center;">
+      ⚠️ FE Preview không thể nhúng iframe do CORS từ VNG API.<br>
+      Mở trong tab mới để xem đầy đủ.
+    </div>
+    <button class="btn btn-primary" onclick="window.open('vng.html', '_blank')">
+      ↗ Mở FE Preview trong Tab Mới
+    </button>
   </div>
 </div>
 
