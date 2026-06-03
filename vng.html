@@ -1,4 +1,4 @@
-﻿<html lang="en" class="MS__Roboto-Regular"><head><!-- Google Tag Manager PEN-->
+﻿﻿<html lang="en" class="MS__Roboto-Regular"><head><!-- Google Tag Manager PEN-->
 					<script type="text/javascript" async="" src="https://www.googletagmanager.com/gtag/js?id=G-83M9K3SF93&amp;cx=c&amp;gtm=4e6610h2"></script><script async="" src="https://www.googletagmanager.com/gtm.js?id=GTM-PQ3SS9KZ"></script><script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
 					new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
 					j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
@@ -78,37 +78,229 @@
 <script type="text/javascript" src="//vcdn-event.vnggames.com/vn_new_promotion_platform/template/assets/vendor/sweetalert2.min.js"></script>
 <script type="text/javascript" src="//vcdn-event.vnggames.com/vn_new_promotion_platform/template/assets/js/history-ajax.js"></script>
 <script>
-    let isLogin = 0;
-    let isLogout = 1;
-    let serverID = '';
-    let userid = "---";
-    let characterId =  '';
-    let username = "";
-    let charactername = "";
-    let servername = "";
-    let cpInGame = 0;
-    let sPoint = 0;
-    let sTotalPoint = 0;
-    let baseGameSlug = "https://event-vn.vnggames.com/dt3q";
-    var baseURL = "https://event-vn.vnggames.com/dt3q/sinh-nhat-7-tuoi";
-    var urlPromotion = "https://event-vn.vnggames.com/dt3q/sinh-nhat-7-tuoi/";
-    var domainKM = "https://event-vn.vnggames.com/dt3q/sinh-nhat-7-tuoi/";
-    var domain = "https://event-vn.vnggames.com/dt3q/sinh-nhat-7-tuoi/";
-    let editProfile = "https://event-vn.vnggames.com/dt3q/sinh-nhat-7-tuoi";
-    let mainProgramUrl = "https://event-vn.vnggames.com/dt3q/sinh-nhat-7-tuoi/11066";
-    let module = "pm__login-module";
-    let menu = '{"PROFILE":{"pmid":"11067","title":"\u0110\u0103ng k\u00fd Th\u00f4ng Tin","uri":"\/dt3q\/sinh-nhat-7-tuoi\/11067"},"CONDITION_PROFILE":{"pmid":"11068","title":"\u0110\u0103ng k\u00fd nh\u1eadn l\u01b0\u1ee3t","uri":"\/dt3q\/sinh-nhat-7-tuoi\/11068"},"CONDITION_DATE":{"pmid":"11069","title":"\u0110\u0103ng nh\u1eadp m\u1ed7i ng\u00e0y ","uri":"\/dt3q\/sinh-nhat-7-tuoi\/11069"},"GET_EACH_CHARGE_RANGE_CASH":{"pmid":"11096","title":"N\u1ea1p nh\u1eadn l\u01b0\u1ee3t","uri":"\/dt3q\/sinh-nhat-7-tuoi\/11096"},"GIFT_EXCHANGE_MILESTONES":{"pmid":"11097","title":"\u0110\u1ed5i qu\u00e0 theo m\u1ed1c","uri":"\/dt3q\/sinh-nhat-7-tuoi\/11097"},"CONDITION_LINK":{"pmid":"11101","title":"Xem Clip Viral","uri":"\/dt3q\/sinh-nhat-7-tuoi\/11101"},"HISTORY":{"pmid":"11066","title":"L\u1ecbch s\u1eed","uri":"\/dt3q\/sinh-nhat-7-tuoi\/11066\/history"},"GIFT_RETRY":{"pmid":"11066","title":"Nh\u1eadn l\u1ea1i qu\u00e0","uri":"\/dt3q\/sinh-nhat-7-tuoi\/gift-retry\/retry-all"},"RANK":{"pmid":"11066","title":"B\u1ea3ng x\u1ebfp h\u1ea1ng","uri":"\/dt3q\/sinh-nhat-7-tuoi\/11066\/rank"},"RANK_SERVER":{"pmid":"11066","title":"B\u1ea3ng x\u1ebfp h\u1ea1ng server","uri":"\/dt3q\/sinh-nhat-7-tuoi\/11066\/rank-server"},"GET_EXCHANGE_POINT":{"pmid":"11066","title":"\u0110\u1ed5i qu\u00e0 t\u1eeb \u0111i\u1ec3m","uri":"\/dt3q\/sinh-nhat-7-tuoi\/11066\/exchangepointtogift"}}';
-    let cookiePath = "/dt3q";
-    let staticContent = [];
-    let arGiftExchangeConfigType = '{"Mzc4MzA0":"1","Mzc4MzA1":"1","Mzc4MzA2":"1","Mzc4MzA3":"1","Mzc4MzA4":"1","Mzc4MzA5":"1","Mzc4MzEw":"1","Mzc4MzEx":"1","Mzc4MzEy":"1","Mzc4MzEz":"1","Mzc4MzE0":"1","Mzc4MzE1":"1","Mzc4MzE2":"1","Mzc4MzE3":"1","Mzc4MzE4":"1","Mzc4MzE5":"1","Mzc4MzIw":"1"}';
-    let arPackageQuantityNeed = '{"Mzc4MzAw":5}';
-    let arPackageQuantityAvailable = '[]';
-    let arPackageExchangeStatus = '[]';
-    let arPackageTimesLimit = '[]';
-    let arPackageImage = '{"Mzc4Mjg2":"Q1","Mzc4Mjg3":"Q2","Mzc4Mjg4":"Q3","Mzc4Mjg5":"Q4","Mzc4Mjkw":"Q5","Mzc4Mjkx":"Q6","Mzc4Mjky":"Q7","Mzc4Mjkz":"A","Mzc4Mjk0":"B","Mzc4Mjk1":"C","Mzc4Mjk2":"D","Mzc4Mjk3":"E","Mzc4Mjk4":"F","Mzc4Mjk5":"G","Mzc4MzAw":"H","Mzc4MzAx":"I","Mzc4MzAy":"J","Mzc4MzAz":"K","Mzc4MzA0":"Z1","Mzc4MzA1":"Z2","Mzc4MzA2":"Z3","Mzc4MzA3":"Z4","Mzc4MzA4":"Z5","Mzc4MzA5":"Z6","Mzc4MzEw":"Z7","Mzc4MzEx":"T1","Mzc4MzEy":"T2","Mzc4MzEz":"T3","Mzc4MzE0":"T4","Mzc4MzE1":"T5","Mzc4MzE2":"T6","Mzc4MzE3":"T7","Mzc4MzE4":"T8","Mzc4MzE5":"T9","Mzc4MzIw":"U0"}';
-    let arPackageDetailImage = '[]';
-    let arPackageExchanged = '[]';
-    let arMilestones = {"TOTAL_USER_REGISTER":{"total":32699,"data":[{"id":"NDU0","code":"Q1","status":0,"message":"ok"},{"id":"NDU1","code":"Q2","status":0,"message":"ok"},{"id":"NDU2","code":"Q3","status":0,"message":"ok"},{"id":"NDU3","code":"Q4","status":0,"message":"ok"},{"id":"NDU4","code":"Q5","status":0,"message":"ok"},{"id":"NDU5","code":"Q6","status":-1,"message":"Ch\u01b0a \u0111\u1ee7 m\u1ed1c \u0111\u1ec3 nh\u1eadn qu\u00e0"},{"id":"NDYw","code":"Q7","status":-1,"message":"Ch\u01b0a \u0111\u1ee7 m\u1ed1c \u0111\u1ec3 nh\u1eadn qu\u00e0"}]}};
+// THIỆP MỜI ĐẠI TIỆC — Đồng bộ cấu hình mốc từ Admin (localStorage: dt3q_thiep_moi_cfg)
+(function() {
+  'use strict';
+  var LS_KEY = 'dt3q_thiep_moi_cfg';
+
+  /** Đọc mảng cấu hình mốc từ localStorage */
+  function readThiepMoiCfg() {
+    try {
+      var raw = localStorage.getItem(LS_KEY);
+      if (!raw) return null;
+      var data = JSON.parse(raw);
+      return Array.isArray(data) ? data : null;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  /** Định dạng số mốc hiển thị */
+  function fmtMoc(n) {
+    return Number(n).toLocaleString('vi-VN');
+  }
+
+  function escHtml(s) {
+    return String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  }
+
+  /** Tạo tooltip nổi (hover) hiển thị ảnh + danh sách quà */
+  function ensureFloatingTooltip() {
+    var el = document.getElementById('admin-thiep-tooltip');
+    if (!el) {
+      el = document.createElement('div');
+      el.id = 'admin-thiep-tooltip';
+      el.className = 'admin-thiep-tooltip';
+      el.innerHTML = '<img class="admin-thiep-tooltip__img" alt="">' +
+        '<div class="admin-thiep-tooltip__title">Phần thưởng mốc</div>' +
+        '<ul class="admin-thiep-tooltip__list"></ul>';
+      document.body.appendChild(el);
+    }
+    return el;
+  }
+
+  function hideTooltip() {
+    var el = document.getElementById('admin-thiep-tooltip');
+    if (el) el.classList.remove('visible');
+  }
+
+  function showTooltip(item, milestone) {
+    var tip = ensureFloatingTooltip();
+    var img = tip.querySelector('.admin-thiep-tooltip__img');
+    var list = tip.querySelector('.admin-thiep-tooltip__list');
+
+    if (milestone.tooltipImg) {
+      img.src = milestone.tooltipImg;
+      img.style.display = 'block';
+    } else {
+      img.style.display = 'none';
+    }
+
+    list.innerHTML = (milestone.gifts || []).map(function(g) {
+      return '<li><span class="gift-name">' + escHtml(g.name || 'Quà') + '</span>' +
+        '<span class="gift-qty">x' + (parseInt(g.qty, 10) || 1) + '</span></li>';
+    }).join('');
+
+    if (!list.innerHTML) {
+      list.innerHTML = '<li class="gift-empty">Chưa cấu hình quà tặng</li>';
+    }
+
+    tip.classList.add('visible');
+    var rect = item.getBoundingClientRect();
+    var tipRect = tip.getBoundingClientRect();
+    var left = rect.left + rect.width / 2 - tipRect.width / 2;
+    var top = rect.top - extraOffset(tip) - 8;
+    left = Math.max(8, Math.min(left, window.innerWidth - tipRect.width - 8));
+    tip.style.left = left + 'px';
+    tip.style.top = Math.max(8, top) + 'px';
+  }
+
+  function extraOffset(tip) {
+    return tip.offsetHeight || 120;
+  }
+
+  /** Map dữ liệu cấu hình vào các phần tử .moc-item trên Client */
+  function applyThiepMoiConfig(milestones) {
+    if (!milestones || !milestones.length) return;
+
+    var items = document.querySelectorAll('.pm__totalregister-milestone .moc-item');
+
+    milestones.forEach(function(m, i) {
+      var el = items[i];
+      if (!el) return;
+
+      var mocVal = parseInt(m.moc, 10) || 0;
+
+      /* Cập nhật text số mốc hiển thị */
+      var span = el.querySelector(':scope > span');
+      if (span) span.textContent = fmtMoc(mocVal);
+
+      /* Cập nhật data-number theo giá trị mốc Admin */
+      el.setAttribute('data-number', String(mocVal));
+      el.setAttribute('data-target', String(mocVal));
+
+      /* Cập nhật ảnh tooltip gốc trong DOM (nếu có) */
+      var tooltip = el.querySelector('.tooltip');
+      if (tooltip && m.tooltipImg) {
+        var tipImg = tooltip.querySelector('img');
+        if (tipImg) {
+          tipImg.src = m.tooltipImg;
+          tipImg.removeAttribute('data-src');
+          tipImg.classList.remove('MJ__lazyload');
+        }
+      }
+
+      /* Lưu dữ liệu mốc trên phần tử để tooltip luôn dùng config mới nhất */
+      el.__thiepMilestoneData = m;
+
+      /* Gắn sự kiện hover hiển thị tooltip chi tiết quà (chỉ bind một lần) */
+      if (!el.__thiepHoverBound) {
+        el.__thiepHoverBound = true;
+        el.addEventListener('mouseenter', function() { showTooltip(el, el.__thiepMilestoneData); });
+        el.addEventListener('mouseleave', hideTooltip);
+      }
+    });
+  }
+
+  function loadAndApply() {
+    applyThiepMoiConfig(readThiepMoiCfg());
+  }
+
+  loadAndApply();
+
+  /* Lắng nghe thay đổi localStorage từ tab Admin khác */
+  window.addEventListener('storage', function(e) {
+    if (e.key === LS_KEY) loadAndApply();
+  });
+
+  /* Nhận tín hiệu reload từ iframe Admin */
+  window.addEventListener('message', function(e) {
+    if (e.data && (e.data.type === 'dt3q-thiep-moi-reload' || e.data.type === 'dt3q-config-reload')) {
+      loadAndApply();
+    }
+  });
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', loadAndApply);
+  }
+
+  /* Poll ngắn — đợi DOM mốc render xong từ template gốc */
+  var poll = 0;
+  var pollIv = setInterval(function() {
+    loadAndApply();
+    poll += 100;
+    if (poll >= 5000) clearInterval(pollIv);
+  }, 100);
+})();
+</script>
+<style id="admin-thiep-bridge-style">
+  /* Tooltip hover mốc Thiệp Mời — Client Preview */
+  .admin-thiep-tooltip {
+    position: fixed;
+    z-index: 99999;
+    min-width: 180px;
+    max-width: 260px;
+    padding: 10px 12px;
+    background: rgba(15, 23, 42, 0.96);
+    border: 1px solid #f59e0b;
+    border-radius: 8px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+    pointer-events: none;
+    opacity: 0;
+    transform: translateY(6px);
+    transition: opacity 0.2s, transform 0.2s;
+  }
+  .admin-thiep-tooltip.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .admin-thiep-tooltip__img {
+    display: block;
+    width: 100%;
+    max-height: 100px;
+    object-fit: contain;
+    margin-bottom: 8px;
+    border-radius: 4px;
+  }
+  .admin-thiep-tooltip__title {
+    font-size: 11px;
+    font-weight: 700;
+    color: #fbbf24;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 6px;
+    text-align: center;
+  }
+  .admin-thiep-tooltip__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .admin-thiep-tooltip__list li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+    padding: 4px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    font-size: 12px;
+    color: #fef3c7;
+  }
+  .admin-thiep-tooltip__list li:last-child { border-bottom: none; }
+  .admin-thiep-tooltip__list .gift-qty {
+    color: #fbbf24;
+    font-weight: 700;
+    font-family: monospace;
+  }
+  .admin-thiep-tooltip__list .gift-empty {
+    justify-content: center;
+    color: #9ca3af;
+    font-style: italic;
+  }
+  .pm__totalregister-milestone .moc-item { cursor: pointer; }
+</style>
+
+<script>
     let arGiftExchangeConfigPointRequire = '{"Mzc4MzA0":"1","Mzc4MzA1":"5","Mzc4MzA2":"10","Mzc4MzA3":"20","Mzc4MzA4":"40","Mzc4MzA5":"80","Mzc4MzEw":"150","Mzc4MzEx":"-1","Mzc4MzEy":"-1","Mzc4MzEz":"-1","Mzc4MzE0":"-1","Mzc4MzE1":"-1","Mzc4MzE2":"-1","Mzc4MzE3":"-1","Mzc4MzE4":"-1","Mzc4MzE5":"-1","Mzc4MzIw":"-1"}';
     let listWinRewards = [];
     let isReceiveByDate = '';
@@ -932,17 +1124,7 @@
                   Z4: 'https://cdn-mainsite-aka.vnggames.com/products/dt3q/landing/2026-sinh-nhat-7-ai/dist/optimized/libraryMainsite-t-popup/images/frame3/4.webp',
                   Z5: 'https://cdn-mainsite-aka.vnggames.com/products/dt3q/landing/2026-sinh-nhat-7-ai/dist/optimized/libraryMainsite-t-popup/images/frame3/5.webp',
                   Z6: 'https://cdn-mainsite-aka.vnggames.com/products/dt3q/landing/2026-sinh-nhat-7-ai/dist/optimized/libraryMainsite-t-popup/images/frame3/6.webp',
-                  Z7: 'https://cdn-mainsite-aka.vnggames.com/products/dt3q/landing/2026-sinh-nhat-7-ai/dist/optimized/libraryMainsite-t-popup/images/frame3/7.webp',
-                  T1: 'https://cdn-mainsite-aka.vnggames.com/products/dt3q/landing/2026-sinh-nhat-7-ai/dist/optimized/libraryMainsite-t-popup/images/frame4/1.webp',
-                  T2: 'https://cdn-mainsite-aka.vnggames.com/products/dt3q/landing/2026-sinh-nhat-7-ai/dist/optimized/libraryMainsite-t-popup/images/frame4/2.webp',
-                  T3: 'https://cdn-mainsite-aka.vnggames.com/products/dt3q/landing/2026-sinh-nhat-7-ai/dist/optimized/libraryMainsite-t-popup/images/frame4/3.webp',
-                  T4: 'https://cdn-mainsite-aka.vnggames.com/products/dt3q/landing/2026-sinh-nhat-7-ai/dist/optimized/libraryMainsite-t-popup/images/frame4/4.webp',
-                  T5: 'https://cdn-mainsite-aka.vnggames.com/products/dt3q/landing/2026-sinh-nhat-7-ai/dist/optimized/libraryMainsite-t-popup/images/frame4/5.webp',
-                  T6: 'https://cdn-mainsite-aka.vnggames.com/products/dt3q/landing/2026-sinh-nhat-7-ai/dist/optimized/libraryMainsite-t-popup/images/frame4/6.webp',
-                  T7: 'https://cdn-mainsite-aka.vnggames.com/products/dt3q/landing/2026-sinh-nhat-7-ai/dist/optimized/libraryMainsite-t-popup/images/frame4/7.webp',
-                  T8: 'https://cdn-mainsite-aka.vnggames.com/products/dt3q/landing/2026-sinh-nhat-7-ai/dist/optimized/libraryMainsite-t-popup/images/frame4/8.webp',
-                  T9: 'https://cdn-mainsite-aka.vnggames.com/products/dt3q/landing/2026-sinh-nhat-7-ai/dist/optimized/libraryMainsite-t-popup/images/frame4/9.webp',
-                  U0: 'https://cdn-mainsite-aka.vnggames.com/products/dt3q/landing/2026-sinh-nhat-7-ai/dist/optimized/libraryMainsite-t-popup/images/frame4/10.webp'
+                  Z7: 'https://cdn-mainsite-aka.vnggames.com/products/dt3q/landing/2026-sinh-nhatps://cdn-mainsite-aka.vnggames.com/products/dt3q/landing/2026-sinh-nhat-7-ai/dist/optimized/libraryMainsite-t-popup/images/frame4/10.webp'
             };
 
             function afterFetchViewData() {
@@ -1025,5 +1207,8 @@
           });
       })();
   </script>
+
+
+
 
 </body></html>

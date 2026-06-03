@@ -269,11 +269,6 @@
     background: rgba(245,158,11,.08); border: 1px solid rgba(245,158,11,.25);
     border-radius: 6px; padding: 8px 14px; margin-bottom: 12px;
   }
-  .preview-iframe-wrap {
-    border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden;
-    background: var(--surface2);
-  }
-  #previewFrame { width: 100%; height: 75vh; border: none; display: block; }
 
   /* ── MISC ── */
   .section-title { font-size: 12px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: .7px; margin-bottom: 10px; }
@@ -308,6 +303,53 @@
   .table-overflow { overflow-x: auto; }
 
   .header-timestamp { font-family: var(--mono); font-size: 11px; color: var(--muted); }
+
+  /* ── Cấu hình Thiệp Mời Đại Tiệc ── */
+  .thiep-moc-block {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px;
+    margin-bottom: 12px;
+  }
+  .thiep-moc-header {
+    display: grid;
+    grid-template-columns: 120px 1fr auto;
+    gap: 12px;
+    align-items: end;
+    margin-bottom: 12px;
+  }
+  @media(max-width:900px) {
+    .thiep-moc-header { grid-template-columns: 1fr; }
+  }
+  .thiep-moc-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--blue);
+    font-family: var(--mono);
+    margin-bottom: 8px;
+  }
+  .thiep-gifts-section {
+    border-top: 1px solid var(--border);
+    padding-top: 12px;
+  }
+  .thiep-gifts-title {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: .6px;
+    margin-bottom: 8px;
+  }
+  .thiep-gift-row {
+    display: grid;
+    grid-template-columns: 1fr 90px auto;
+    gap: 8px;
+    align-items: center;
+    margin-bottom: 6px;
+  }
+  .thiep-gift-row select,
+  .thiep-gift-row input { font-size: 12px; padding: 6px 8px; }
 </style>
 </head>
 <body>
@@ -405,7 +447,20 @@
     </div>
   </div>
 
-  <!-- 2. Vòng quay -->
+  <!-- 2. Thiệp Mời Đại Tiệc — Mốc tích lũy -->
+  <div class="card" id="card-thiep-moi">
+    <div class="card-title"><span class="card-title-icon">💌</span>Cấu Hình Mốc Tích Lũy Thiệp Mời Đại Tiệc</div>
+    <p class="text-muted mb-12" style="font-size:12px">
+      Cấu hình số mốc, ảnh tooltip và danh sách quà tặng cho từng mốc. Dữ liệu đồng bộ sang Client qua localStorage key <code class="mono">dt3q_thiep_moi_cfg</code>.
+    </p>
+    <div id="thiepMoiContainer"></div>
+    <div class="table-actions">
+      <button class="btn btn-ghost btn-sm" type="button" onclick="addThiepMoiMilestone()">+ Thêm mốc</button>
+      <button class="btn btn-primary btn-sm" type="button" onclick="saveThiepMoiConfig()" style="margin-left:auto">💾 Lưu mốc Thiệp Mời</button>
+    </div>
+  </div>
+
+  <!-- 3. Vòng quay -->
   <div class="card">
     <div class="card-title"><span class="card-title-icon">🎡</span>Vòng Quay Lucky Spin</div>
     <div class="table-overflow">
@@ -528,6 +583,7 @@
     <div class="action-bar">
       <button class="btn btn-primary" onclick="runValidation()">🔍 Run Validation</button>
       <button class="btn btn-success" onclick="saveConfig()">💾 Save Config</button>
+      <button class="btn btn-success" onclick="saveAndPreview()">💾 Save &amp; Preview</button>
       <button class="btn btn-ghost" onclick="resetMock()">↺ Reset Mock Data</button>
     </div>
   </div>
@@ -622,22 +678,12 @@
 ═══════════════════════════════════════════ -->
 <div id="tab-preview" class="tab-content">
   <div class="preview-bar">
-    <button class="btn btn-primary" onclick="reloadPreview()">↻ Reload Preview</button>
-    <a class="btn btn-ghost" href="vng.html" target="_blank">↗ Mở Tab Mới</a>
-    <span class="text-muted" style="font-size:12px;margin-left:8px">iframe: vng.html</span>
+    <button class="btn btn-primary" onclick="openPreviewTab()">↗ Mở lại FE Preview</button>
+    <span class="text-muted" style="font-size:12px">Client: vng.html</span>
   </div>
   <div class="preview-note">
-    ⚠️ Sau khi Save config ở Tab 1, nhấn <strong>Reload Preview</strong> để thấy thay đổi phản ánh trên FE.
-    Cả hai file cần cùng origin (Vercel) để iframe hoạt động không bị CORS.
-  </div>
-  <div class="preview-iframe-wrap" style="display:flex;align-items:center;justify-content:center;min-height:200px;flex-direction:column;gap:12px;">
-    <div style="color:var(--muted);font-size:13px;text-align:center;">
-      ⚠️ FE Preview không thể nhúng iframe do CORS từ VNG API.<br>
-      Mở trong tab mới để xem đầy đủ.
-    </div>
-    <button class="btn btn-primary" onclick="window.open('vng.html', '_blank')">
-      ↗ Mở FE Preview trong Tab Mới
-    </button>
+    ✅ Khi chọn tab <strong>FE Preview</strong>, hệ thống tự lưu config hiện tại vào localStorage và mở <strong>vng.html</strong> trong tab mới.
+    Bạn không cần bấm thêm nút "Mở Tab Mới".
   </div>
 </div>
 
@@ -649,12 +695,44 @@
 // CONSTANTS & STATE
 // ═══════════════════════════════════════════
 const LS_KEY = 'dt3q_7y_config';
+const THIEP_MOI_LS_KEY = 'dt3q_thiep_moi_cfg';
 
 let spinData = [];
 let shopData = [];
 let milestoneData = [];
 let missionData = [];
 let packageData = [];
+let thiepMoiData = [];
+
+/* Danh sách vật phẩm gợi ý cho select quà tặng mốc Thiệp Mời */
+const GIFT_ITEM_OPTIONS = [
+  'KNB', 'Đá Cường Hóa', 'Thần Tướng Lệnh', 'Vé Quay', 'Mảnh Tướng Vũ Hoàng',
+  'Thức Tỉnh Đơn', 'Rương Đỏ', 'Rương Kim', 'Vàng', 'Bánh Kem', 'Tinh Túy', 'Rương Chọn Đá'
+];
+
+/* Cấu hình mẫu mặc định 4 mốc khi chưa có dữ liệu localStorage */
+const DEFAULT_THIEP_MOI = [
+  {
+    moc: 100,
+    tooltipImg: 'https://cdn-mainsite-aka.vnggames.com/products/dt3q/landing/2026-sinh-nhat-7-ai/dist/optimized/dt3q-ld-sinhnhat-header/images/tooltip-1.webp',
+    gifts: [{ name: 'KNB', qty: 500 }, { name: 'Vàng', qty: 500 }]
+  },
+  {
+    moc: 5000,
+    tooltipImg: 'https://cdn-mainsite-aka.vnggames.com/products/dt3q/landing/2026-sinh-nhat-7-ai/dist/optimized/dt3q-ld-sinhnhat-header/images/tooltip-2.webp',
+    gifts: [{ name: 'Thần Tướng Lệnh', qty: 5 }, { name: 'Thức Tỉnh Đơn', qty: 1000 }]
+  },
+  {
+    moc: 10000,
+    tooltipImg: 'https://cdn-mainsite-aka.vnggames.com/products/dt3q/landing/2026-sinh-nhat-7-ai/dist/optimized/dt3q-ld-sinhnhat-header/images/tooltip-3.webp',
+    gifts: [{ name: 'Rương Đỏ', qty: 2 }, { name: 'Rương Kim', qty: 2 }]
+  },
+  {
+    moc: 20000,
+    tooltipImg: 'https://cdn-mainsite-aka.vnggames.com/products/dt3q/landing/2026-sinh-nhat-7-ai/dist/optimized/dt3q-ld-sinhnhat-header/images/tooltip-4.webp',
+    gifts: [{ name: 'Đá Cường Hóa', qty: 10 }, { name: 'Vé Quay', qty: 20 }]
+  },
+];
 
 const MOCK = {
   spin: [
@@ -727,6 +805,7 @@ function switchTab(name, btn) {
   document.getElementById('tab-' + name).classList.add('active');
   if (btn) btn.classList.add('active');
   if (name === 'dashboard') refreshDashboard();
+  if (name === 'preview') openPreviewTab();
 }
 
 // ═══════════════════════════════════════════
@@ -878,6 +957,143 @@ function addPackageRow() {
 function removePackageRow(i) { packageData.splice(i,1); renderPackageTable(); }
 
 // ═══════════════════════════════════════════
+// THIỆP MỜI ĐẠI TIỆC — Cấu hình mốc tích lũy
+// ═══════════════════════════════════════════
+
+/** Tạo chuỗi <option> cho select vật phẩm */
+function buildGiftSelectOptions(selected) {
+  return GIFT_ITEM_OPTIONS.map(function(name) {
+    return '<option value="' + esc(name) + '"' + (name === selected ? ' selected' : '') + '>' + esc(name) + '</option>';
+  }).join('');
+}
+
+/** Render toàn bộ UI cấu hình mốc Thiệp Mời từ mảng thiepMoiData */
+function renderThiepMoiUI() {
+  var container = document.getElementById('thiepMoiContainer');
+  if (!container) return;
+  container.innerHTML = '';
+
+  thiepMoiData.forEach(function(milestone, mi) {
+    var block = document.createElement('div');
+    block.className = 'thiep-moc-block';
+    block.dataset.index = mi;
+
+    var giftsHtml = (milestone.gifts || []).map(function(gift, gi) {
+      return '<div class="thiep-gift-row" data-gift-index="' + gi + '">' +
+        '<select onchange="thiepMoiData[' + mi + '].gifts[' + gi + '].name=this.value">' +
+        buildGiftSelectOptions(gift.name) + '</select>' +
+        '<input type="number" min="1" value="' + (gift.qty || 1) + '" ' +
+        'onchange="thiepMoiData[' + mi + '].gifts[' + gi + '].qty=parseInt(this.value,10)||1">' +
+        '<button class="btn btn-danger btn-xs" type="button" onclick="removeThiepMoiGift(' + mi + ',' + gi + ')">❌ Xóa</button>' +
+        '</div>';
+    }).join('');
+
+    block.innerHTML =
+      '<div class="thiep-moc-label">Mốc #' + (mi + 1) + '</div>' +
+      '<div class="thiep-moc-header">' +
+        '<div class="form-group">' +
+          '<label>Số mốc tích lũy</label>' +
+          '<input type="number" min="1" value="' + (milestone.moc || 0) + '" ' +
+          'onchange="thiepMoiData[' + mi + '].moc=parseInt(this.value,10)||0">' +
+        '</div>' +
+        '<div class="form-group">' +
+          '<label>Link ảnh Tooltip</label>' +
+          '<input type="text" value="' + esc(milestone.tooltipImg || '') + '" ' +
+          'placeholder="https://..." onchange="thiepMoiData[' + mi + '].tooltipImg=this.value">' +
+        '</div>' +
+        '<button class="btn btn-danger btn-sm" type="button" onclick="removeThiepMoiMilestone(' + mi + ')">🗑 Xóa mốc</button>' +
+      '</div>' +
+      '<div class="thiep-gifts-section">' +
+        '<div class="thiep-gifts-title">Danh sách quà tặng</div>' +
+        '<div class="thiep-gifts-list" id="thiepGifts-' + mi + '">' + giftsHtml + '</div>' +
+        '<button class="btn btn-ghost btn-xs mt-12" type="button" onclick="addThiepMoiGift(' + mi + ')">➕ Thêm quà</button>' +
+      '</div>';
+
+    container.appendChild(block);
+  });
+}
+
+/** Thêm một dòng quà mới vào mốc chỉ định */
+function addThiepMoiGift(milestoneIndex) {
+  if (!thiepMoiData[milestoneIndex]) return;
+  if (!thiepMoiData[milestoneIndex].gifts) thiepMoiData[milestoneIndex].gifts = [];
+  thiepMoiData[milestoneIndex].gifts.push({ name: GIFT_ITEM_OPTIONS[0], qty: 1 });
+  renderThiepMoiUI();
+}
+
+/** Xóa một dòng quà trong mốc */
+function removeThiepMoiGift(milestoneIndex, giftIndex) {
+  if (!thiepMoiData[milestoneIndex]) return;
+  thiepMoiData[milestoneIndex].gifts.splice(giftIndex, 1);
+  renderThiepMoiUI();
+}
+
+/** Thêm mốc mới vào danh sách */
+function addThiepMoiMilestone() {
+  thiepMoiData.push({
+    moc: 1000,
+    tooltipImg: '',
+    gifts: [{ name: GIFT_ITEM_OPTIONS[0], qty: 1 }]
+  });
+  renderThiepMoiUI();
+}
+
+/** Xóa toàn bộ mốc khỏi danh sách */
+function removeThiepMoiMilestone(index) {
+  thiepMoiData.splice(index, 1);
+  renderThiepMoiUI();
+}
+
+/**
+ * loadThiepMoiConfig — Đọc cấu hình mốc Thiệp Mời từ localStorage.
+ * Key: dt3q_thiep_moi_cfg. Nếu chưa có dữ liệu thì dùng DEFAULT_THIEP_MOI.
+ */
+function loadThiepMoiConfig() {
+  var raw = localStorage.getItem(THIEP_MOI_LS_KEY);
+  if (raw) {
+    try {
+      var parsed = JSON.parse(raw);
+      if (Array.isArray(parsed) && parsed.length) {
+        thiepMoiData = parsed.map(function(m) {
+          return {
+            moc: parseInt(m.moc, 10) || 0,
+            tooltipImg: m.tooltipImg || m.img || '',
+            gifts: (m.gifts || []).map(function(g) {
+              return { name: g.name || GIFT_ITEM_OPTIONS[0], qty: parseInt(g.qty, 10) || 1 };
+            })
+          };
+        });
+        renderThiepMoiUI();
+        return;
+      }
+    } catch (e) {}
+  }
+  /* Sinh cấu hình mẫu mặc định */
+  thiepMoiData = JSON.parse(JSON.stringify(DEFAULT_THIEP_MOI));
+  renderThiepMoiUI();
+}
+
+/**
+ * saveThiepMoiConfig — Thu thập dữ liệu mốc + quà tặng, lưu JSON vào localStorage.
+ * Key: dt3q_thiep_moi_cfg
+ */
+function saveThiepMoiConfig(silent) {
+  var payload = thiepMoiData.map(function(m) {
+    return {
+      moc: parseInt(m.moc, 10) || 0,
+      tooltipImg: m.tooltipImg || '',
+      gifts: (m.gifts || []).map(function(g) {
+        return { name: g.name || '', qty: parseInt(g.qty, 10) || 1 };
+      })
+    };
+  });
+  localStorage.setItem(THIEP_MOI_LS_KEY, JSON.stringify(payload));
+  window.dispatchEvent(new CustomEvent('dt3q-thiep-moi-updated', { detail: payload }));
+  if (!silent) showToast('✅ Đã lưu cấu hình mốc Thiệp Mời', 'success');
+  return payload;
+}
+
+// ═══════════════════════════════════════════
 // VALIDATION
 // ═══════════════════════════════════════════
 function runValidation() {
@@ -977,7 +1193,30 @@ function saveConfig() {
   runValidation();
   const cfg = gatherConfig();
   localStorage.setItem(LS_KEY, JSON.stringify(cfg));
+  saveThiepMoiConfig(true);
+  window.dispatchEvent(new CustomEvent('dt3q-config-updated', { detail: cfg }));
   showToast('✅ Config đã được lưu vào localStorage', 'success');
+}
+
+/** Lưu config hiện tại vào localStorage (không hiện toast) trước khi mở preview */
+function syncConfigForPreview() {
+  const cfg = gatherConfig();
+  localStorage.setItem(LS_KEY, JSON.stringify(cfg));
+  saveThiepMoiConfig(true);
+  window.dispatchEvent(new CustomEvent('dt3q-config-updated', { detail: cfg }));
+}
+
+/** Mở vng.html trong tab mới — config được đồng bộ trước khi mở */
+function openPreviewTab() {
+  syncConfigForPreview();
+  window.open('vng.html?' + Date.now(), '_blank');
+  showToast('↗ Đã mở FE Preview trong tab mới', 'success');
+}
+
+/** Lưu toàn bộ config + mốc Thiệp Mời rồi mở preview tab mới */
+function saveAndPreview() {
+  saveConfig();
+  openPreviewTab();
 }
 
 function loadConfig() {
@@ -1214,12 +1453,6 @@ function renderFunnel(data) {
 // ═══════════════════════════════════════════
 // PREVIEW
 // ═══════════════════════════════════════════
-function reloadPreview() {
-  const frame = document.getElementById('previewFrame');
-  frame.src = 'vng.html?' + Date.now();
-  showToast('🔄 Đang reload preview...', 'warning');
-}
-
 // ═══════════════════════════════════════════
 // UTILS
 // ═══════════════════════════════════════════
@@ -1236,6 +1469,7 @@ function fmtVnd(n) {
 // ═══════════════════════════════════════════
 document.addEventListener('DOMContentLoaded', () => {
   loadConfig();
+  loadThiepMoiConfig();
 });
 </script>
 </body>
