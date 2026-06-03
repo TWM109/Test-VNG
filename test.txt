@@ -1,5 +1,5 @@
-﻿<html lang="en" class="MS__Roboto-Regular"><head><!-- Google Tag Manager PEN-->
-					<script type="text/javascript" async="" src="https://www.googletagmanager.com/gtag/js?id=G-83M9K3SF93&amp;cx=c&amp;gtm=4e6610h2"></script><script async="" src="https://www.googletagmanager.com/gtm.js?id=GTM-PQ3SS9KZ"></script><script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+<html lang="en" class="MS__Roboto-Regular"><head><!-- Google Tag Manager PEN-->
+					<script type="text/javascript" async="" src="https://www.googletagmanager.com/gtag/js?id=G-83M9K3SF93&amp;cx=c&amp;gtm=4e6610h2"></script><script id="loginHub" src="https://cdn-gg.vnggames.app/web-sdk/prod/0.2.4/loginHub.js"></script><script async="" src="https://www.googletagmanager.com/gtm.js?id=GTM-PQ3SS9KZ"></script><script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
 					new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
 					j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 					'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
@@ -50,7 +50,36 @@
                     --sr-device-height: calc(100vh * 1.0416666666666667);
                     --sr-scale-ratio: 0.96
                 }
-            </style></head>
+            </style><script id="cdn-gg.vnggames.app-/ggUtil.js" src="https://cdn-gg.vnggames.app/web-sdk/prod/0.2.4/ggUtil.js"></script><script id="cdn-gg.vnggames.app-/ggCurl.js" src="https://cdn-gg.vnggames.app/web-sdk/prod/0.2.4/ggCurl.js"></script><script id="cdn-gg.vnggames.app-/ggSdkLogin.js" src="https://cdn-gg.vnggames.app/widget/0.2.4/static/js/ggSdkLogin.js"></script><link rel="stylesheet" type="text/css" href="https://cdn-gg.vnggames.app/widget/0.2.4/static/css/gg.0.2.4-fca1bf88.css"><script charset="utf-8" src="https://cdn-gg.vnggames.app/widget/0.2.4/static/js/gg.0.2.4-fca1bf88.js"></script><style id="gg-sdk-login-css" type="text/css">
+      @font-face {
+        font-family: "HarmonyOS Sans";
+        src: url("https://cdn-gg.vnggames.app/widget/0.2.4/static/fonts/HarmonyOS_Sans_Bold.ttf");
+      }
+      @font-face {
+        font-family: "HarmonyOS Sans";
+        src: url("https://cdn-gg.vnggames.app/widget/0.2.4/static/fonts/HarmonyOS_Sans_Regular.ttf");
+      }
+
+      #gg-sdk-login-main * {
+        box-sizing: border-box;
+        font-family: "HarmonyOS Sans";
+      }
+      #ecnDialogClose {
+          transition: all .2s ease-in-out;
+          position: absolute;
+          right:1.5em;
+          top:1.5em;
+          font-size: 1.5em;
+          cursor: pointer;
+          z-index: 1;
+      }
+      #ecnDialogClose:hover{
+          transform: scale(1.1);
+      }
+      gg-widget-1780392301705 {
+        width: 100%;
+      }
+  </style><link rel="stylesheet" type="text/css" href="https://cdn-gg.vnggames.app/widget/0.2.4/static/css/gg.0.2.4-b11cd056.css"><script charset="utf-8" src="https://cdn-gg.vnggames.app/widget/0.2.4/static/js/gg.0.2.4-b11cd056.js"></script><link rel="stylesheet" type="text/css" href="https://cdn-gg.vnggames.app/widget/0.2.4/static/css/gg.0.2.4-12cfa8f0.css"><script charset="utf-8" src="https://cdn-gg.vnggames.app/widget/0.2.4/static/js/gg.0.2.4-12cfa8f0.js"></script><link rel="stylesheet" type="text/css" href="https://cdn-gg.vnggames.app/widget/0.2.4/static/css/gg.0.2.4-0b22dd92.css"><link rel="stylesheet" type="text/css" href="https://cdn-gg.vnggames.app/widget/0.2.4/static/css/gg.0.2.4-b08b935a.css"><script charset="utf-8" src="https://cdn-gg.vnggames.app/widget/0.2.4/static/js/gg.0.2.4-b08b935a.js"></script></head>
 
 <body class="vn" style="height: 3194.31px;" data-scale-ratio="0.615" data-device-type="desktop">
 	<script>
@@ -154,11 +183,100 @@
     const formType = "REDIRECT";
     const gamesInfo = JSON.parse('[]');
 
+    let loginHubConfig = {
+        clientID,
+        callback: 'doCallback',
+        methods: allowMethod,
+        type: formType,
+        scope: authScope
+    };
+
+    if(gamesInfo.length > 0){
+        loginHubConfig["gamesInfo"] = gamesInfo;
+    }
+
+    if(formType === "REDIRECT"){
+        loginHubConfig['onLoginMethodSelected'] =  function(data){
+            let queryParams = {
+                auth_method: data.authMethod,
+                lang: authLang
+            };
+
+            if(typeof data.targetClientId != 'undefined'){
+                queryParams["targetClientId"] = data.targetClientId;
+            }
+
+            if(typeof data.method != 'undefined'){
+                queryParams["method"] = data.method;
+            }
+
+            const params = new URLSearchParams(queryParams);
+
+            let redirectUrl = `${beIntegratedUrl}?${params}`;
+            window.location.href = redirectUrl;
+        }
+    }
+
+    // Init loginHub
+    window.loginHubInit = function() {
+        if(typeof isUsingIframe == "undefined"){
+            loginHub.init(loginHubConfig);
+        }
+    }
+
+    window.doCallback = function (resp) {
+        if (resp.status !== "SUCCESS") {
+            console.log({ resp });
+        } else {
+            let authRes = resp.data;
+            $(`<form action="https://event-vn.vnggames.com/dt3q/dang-nhap-popup" method="post">
+                <input name="code" value="${authRes.code}" type="hidden"/>
+                <input name="code_verify" value="${authRes.codeVerifier}" type="hidden"/>
+                <input name="redirect_uri" value="${authRes.redirectUri}" type="hidden"/>
+            </form>`).appendTo('body').submit();
+        }
+    };
+
+    function showLoginForm(){
+        loginHub.doAuthentication({
+            type: formType,
+            lang: authLang
+        });
+    }
+
     window.addEventListener("DOMContentLoaded", (e) => {
+
         if (typeof notRemovePopupLogin == 'undefined') {
             $(".pm__login-module").remove();
         }
+
+        $('.pm__login').click(function(e){
+            showLoginForm();
+            e.preventDefault();
+        });
+
+        var checkLoginHubLoaded = setInterval(function() {
+            if(typeof loginHub.doAuthentication == "function"){
+                if(typeof offAutoShowFormLogin == "undefined"){
+                    showLoginForm();
+                }
+                clearInterval(checkLoginHubLoaded);
+            }
+        }, 500);
     });
+
+    (function (d, s, id, version) {
+        var js,
+            fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) {
+            window.loginHubInit();
+            return;
+        }
+        js = d.createElement(s);
+        js.id = id;
+        js.src = 'https://cdn-gg.vnggames.app/web-sdk/prod/' + version + '/loginHub.js';
+        fjs.parentNode.insertBefore(js, fjs);
+    })(document, "script", "loginHub", '0.2.4');
 </script>
 					<!-- Google Tag Manager (noscript) PEN-->
 					<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PQ3SS9KZ"
@@ -1025,5 +1143,5 @@
           });
       })();
   </script>
-git add .
+
 </body></html>
