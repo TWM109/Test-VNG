@@ -376,6 +376,60 @@
     font-family: var(--mono);
     font-size: 12px;
   }
+  .readme-doc {
+    max-width: 1060px;
+    line-height: 1.65;
+  }
+  .readme-doc h1 {
+    font-size: 24px;
+    margin-bottom: 18px;
+    letter-spacing: 0;
+  }
+  .readme-doc h2 {
+    font-size: 17px;
+    margin: 26px 0 10px;
+    color: var(--text);
+    letter-spacing: 0;
+  }
+  .readme-doc h3 {
+    font-size: 14px;
+    margin: 18px 0 8px;
+    color: #bfdbfe;
+    letter-spacing: 0;
+  }
+  .readme-doc p,
+  .readme-doc li {
+    color: #cbd5e1;
+  }
+  .readme-doc ul,
+  .readme-doc ol {
+    padding-left: 22px;
+    margin: 8px 0 14px;
+  }
+  .readme-doc table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 12px 0 18px;
+    font-size: 13px;
+  }
+  .readme-doc th,
+  .readme-doc td {
+    border: 1px solid var(--border);
+    padding: 10px 12px;
+    vertical-align: top;
+  }
+  .readme-doc th {
+    background: var(--bg);
+    color: var(--muted);
+    text-transform: uppercase;
+    font-size: 11px;
+    letter-spacing: .6px;
+  }
+  .readme-doc code {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: #93c5fd;
+  }
 </style>
 </head>
 <body>
@@ -406,6 +460,9 @@
   </button>
   <button class="tab-btn" onclick="switchTab('preview',this)">
     <span class="tab-icon">👁️</span> FE Preview
+  </button>
+  <button class="tab-btn" onclick="switchTab('readme',this)">
+    <span class="tab-icon">📄</span> Read me
   </button>
 </nav>
 
@@ -530,7 +587,8 @@
               <th>Quà tặng</th>
               <th>Link ảnh tooltip</th>
               <th style="width:110px">Rate (%)</th>
-              <th style="width:110px">Stock</th>
+              <th style="width:130px">Giới hạn phát</th>
+              <th style="width:90px">Enabled</th>
               <th style="width:60px">Xoá</th>
             </tr>
           </thead>
@@ -607,7 +665,9 @@
               <th>Vật Phẩm</th>
               <th style="width:110px">Số lượng</th>
               <th style="width:160px">Số Bánh Tích Lũy(Để mở)</th>
+              <th style="width:130px">Giới hạn phát</th>
               <th>Hình Ảnh (Link ảnh tooltip)</th>
+              <th style="width:90px">Enabled</th>
               <th style="width:60px">Xoá</th>
             </tr>
           </thead>
@@ -757,7 +817,7 @@
       <div class="card-title"><span class="card-title-icon">📦</span>Tích bánh mở quà Vip</div>
       <table class="data-table" id="stockTable">
         <thead>
-          <tr><th>Vật phẩm</th><th>Số lượng</th><th>Số bánh</th><th style="text-align:right">Ảnh</th></tr>
+          <tr><th>Vật phẩm</th><th>Qty/lần</th><th>Số bánh</th><th>Giới hạn</th><th>Đã phát mock</th><th>Còn lại mock</th><th style="text-align:right">Ảnh</th></tr>
         </thead>
         <tbody id="stockTbody"></tbody>
       </table>
@@ -783,6 +843,137 @@
   <div class="preview-note">
     ✅ Khi chọn tab <strong>FE Preview</strong>, hệ thống tự lưu config hiện tại vào localStorage và mở <strong>vng.html</strong> trong tab mới.
     Bạn không cần bấm thêm nút "Mở Tab Mới".
+  </div>
+</div>
+
+<!-- TAB 4 - README -->
+<div id="tab-readme" class="tab-content">
+  <div class="card readme-doc">
+    <h1>DT3Q Sinh Nhật 7 Tuổi - Admin Operation Tool</h1>
+
+    <h2>1. Mục tiêu</h2>
+    <p>Tool này phục vụ việc cấu hình và vận hành promotion sinh nhật DT3Q 7 tuổi. Admin cấu hình tại <code>index.html</code>, sau đó preview kết quả trên FE <code>vng.html</code>.</p>
+    <p>Phạm vi bài tập không kết nối API thật, nên các số liệu thống kê, tồn kho, claim và doanh thu đang là mock/estimate để minh họa workflow vận hành.</p>
+
+    <h2>2. Promotion gồm bao nhiêu module?</h2>
+    <p>Promotion hiện được hiểu là 4 module chính:</p>
+    <table>
+      <thead>
+        <tr>
+          <th>Module</th>
+          <th>Mapping trong bài</th>
+          <th>Nội dung cấu hình</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Thiệp Mời Đại Tiệc</td>
+          <td>Community Milestone</td>
+          <td>Start/end date, các mốc tích lũy, ảnh tooltip, danh sách quà theo từng mốc, thể lệ HTML.</td>
+        </tr>
+        <tr>
+          <td>Mở Quà Sinh Nhật</td>
+          <td>Vòng quay + Nhiệm vụ + Tích lũy nhận lượt</td>
+          <td>Start/end date, danh sách phần thưởng, rate (%), giới hạn phát mỗi giải, enabled, nhiệm vụ nhận lượt, direct URL, mốc tích lũy nhận lượt, thể lệ HTML.</td>
+        </tr>
+        <tr>
+          <td>Tích Bánh Mở Quà VIP</td>
+          <td>Đổi quà</td>
+          <td>Start/end date, vật phẩm đổi, số lượng item nhận mỗi lần, số bánh điều kiện đổi, giới hạn phát, enabled, ảnh tooltip, thể lệ HTML.</td>
+        </tr>
+        <tr>
+          <td>Bàn Tiệc Sinh Nhật</td>
+          <td>Lời chúc / bình chọn / mission phụ</td>
+          <td>Start/end date, thể lệ HTML, danh sách nhiệm vụ nhận lượt, direct URL.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2>3. Persona người dùng tool</h2>
+    <h3>Primary persona: Event Operation Admin</h3>
+    <p>Người vận hành sự kiện hằng ngày. Họ không cần code, nhưng cần sửa nhanh cấu hình promotion và xem preview trước khi publish.</p>
+    <p>Công việc hằng ngày:</p>
+    <ul>
+      <li>Cập nhật thời gian bắt đầu/kết thúc từng module.</li>
+      <li>Điều chỉnh danh sách quà, rate, giới hạn phát và điều kiện đổi.</li>
+      <li>Bật/tắt nhiệm vụ, sửa số lượt thưởng và link điều hướng.</li>
+      <li>Sửa nội dung thể lệ HTML theo yêu cầu campaign.</li>
+      <li>Chạy validation trước khi save.</li>
+      <li>Mở FE preview để đảm bảo cấu hình hiển thị đúng.</li>
+      <li>Xem dashboard mock để theo dõi tình trạng event.</li>
+    </ul>
+
+    <h3>Secondary persona: Campaign Owner / PO</h3>
+    <p>Người review tính đúng của campaign:</p>
+    <ul>
+      <li>Kiểm tra module có đúng scope promotion không.</li>
+      <li>Kiểm tra copywriting, thể lệ, mốc thưởng.</li>
+      <li>Kiểm tra rủi ro cấu hình sai: rate không đủ 100%, end date nhỏ hơn start date, giới hạn phát/quantity không hợp lệ.</li>
+    </ul>
+
+    <h2>4. Các tính năng đã có</h2>
+    <h3>Configuration</h3>
+    <ul>
+      <li>Cấu hình start/end date theo module.</li>
+      <li>Cấu hình Thiệp Mời Đại Tiệc như Community Milestone.</li>
+      <li>Cấu hình Mở Quà Sinh Nhật: phần thưởng, rate, giới hạn phát, enabled, nhiệm vụ, direct URL, tích lũy nhận lượt.</li>
+      <li>Cấu hình Tích Bánh Mở Quà VIP như Đổi Quà.</li>
+      <li>Cấu hình Bàn Tiệc Sinh Nhật: thể lệ và nhiệm vụ.</li>
+      <li>Cấu hình thể lệ HTML cho các module chính.</li>
+      <li>FE preview đọc config từ <code>localStorage</code> và reflect lên <code>vng.html</code>.</li>
+    </ul>
+
+    <h3>Validation</h3>
+    <ul>
+      <li>Tổng rate vòng quay phải bằng 100%.</li>
+      <li>Start/end date: end date phải lớn hơn start date.</li>
+      <li>Các field số tự nhiên lớn hơn 0 được chặn ngay lúc nhập với các field quan trọng.</li>
+      <li>Giới hạn phát, mốc tích lũy, lượt quay, quantity item không được là số thập phân/chữ/nhỏ hơn hoặc bằng 0 khi cấu hình đang enabled.</li>
+      <li>Cảnh báo/lỗi khi reward/item đang enabled nhưng giới hạn phát nhỏ hơn hoặc bằng 0.</li>
+    </ul>
+
+    <h3>Dashboard / Report</h3>
+    <ul>
+      <li>KPI tổng participants, conversion, doanh thu ước tính, tổng lượt quay đã dùng.</li>
+      <li>Chart participants theo ngày.</li>
+      <li>Chart top rewards claimed đang dùng mock data.</li>
+      <li>Widget milestone progress.</li>
+      <li>Bảng trạng thái vật phẩm đổi quà gồm giới hạn phát, đã phát mock và còn lại mock.</li>
+      <li>Conversion funnel mock.</li>
+    </ul>
+
+    <h2>5. Giới hạn hiện tại</h2>
+    <p>Do bài tập không kết nối API, các mục sau chỉ là mock/estimate:</p>
+    <ul>
+      <li>Tồn kho thực tế của vật phẩm.</li>
+      <li>Số lượt quay đã dùng/còn lại theo từng giải.</li>
+      <li>Claim rate thực tế so với cấu hình.</li>
+      <li>Top 10 phần thưởng nhận nhiều nhất.</li>
+      <li>Conversion thật theo chuỗi visit → login → mission done.</li>
+      <li>Doanh thu thật từ gói nạp.</li>
+    </ul>
+
+    <h2>6. Ghi chú nghiệp vụ về Stock / Tồn kho</h2>
+    <p>Trong bài tập này nên tách rõ 2 khái niệm:</p>
+    <ul>
+      <li><code>quantity</code>: số lượng item người chơi nhận được mỗi lần claim/đổi.</li>
+      <li><code>stock</code> hoặc <code>limit</code>: tổng số lượng tối đa có thể phát trong sự kiện. Trong UI nên hiểu là “Giới hạn phát”.</li>
+    </ul>
+    <p>Không có API thì không thể biết tồn kho realtime. Tuy nhiên admin tool vẫn cho cấu hình <code>stock/limit</code> ban đầu để validation và dashboard mock có cơ sở tính:</p>
+    <ul>
+      <li><code>remaining = configured stock - mock claimed count</code></li>
+      <li>Warning khi stock = 0 nhưng reward/item vẫn enabled.</li>
+      <li>Warning khi claimed count mock &gt; configured stock.</li>
+    </ul>
+    <p>Trong bản demo, <code>remaining</code> là mock. Bản production cần claim API/log để tính remaining thật.</p>
+
+    <h2>7. Cách chạy</h2>
+    <ol>
+      <li>Mở <code>index.html</code> để cấu hình admin.</li>
+      <li>Chạy validation.</li>
+      <li>Save Config hoặc Save &amp; Preview.</li>
+      <li>FE preview mở <code>vng.html</code> và đọc config từ <code>localStorage</code>.</li>
+    </ol>
   </div>
 </div>
 
@@ -1110,6 +1301,7 @@ function renderSpinTable() {
     row.tooltipImg = row.tooltipImg || row.img || '';
     row.rate = parseFloat(row.rate) || 0;
     row.stock = row.stock ?? 0;
+    row.enabled = row.enabled !== false;
     const tr = document.createElement('tr');
     tr.innerHTML = `
       <td class="mono text-muted">${i+1}</td>
@@ -1121,13 +1313,17 @@ function renderSpinTable() {
       <td><input type="text" value="${esc(row.tooltipImg)}" placeholder="https://..." onchange="spinData[${i}].tooltipImg=this.value"></td>
       <td><input type="number" min="0" max="100" step="0.01" value="${row.rate}" onchange="setSpinRate(${i}, this)"></td>
       <td><input type="text" inputmode="numeric" pattern="[1-9][0-9]*" value="${esc(row.stock)}" oninput="sanitizePositiveIntegerInput(this, spinData[${i}], 'stock')" onchange="sanitizePositiveIntegerInput(this, spinData[${i}], 'stock')"></td>
+      <td>
+        <label class="toggle"><input type="checkbox" ${row.enabled?'checked':''} onchange="spinData[${i}].enabled=this.checked; updateSpinSum();">
+        <span class="toggle-slider"></span></label>
+      </td>
       <td><button class="btn btn-danger btn-xs" onclick="removeSpinRow(${i})">✕</button></td>`;
     tbody.appendChild(tr);
   });
   updateSpinSum();
 }
 function addSpinRow() {
-  spinData.push({ name: MOCK.spin[0].name, tooltipImg: MOCK.spin[0].tooltipImg, rate: 0, stock: 100 });
+  spinData.push({ name: MOCK.spin[0].name, tooltipImg: MOCK.spin[0].tooltipImg, rate: 0, stock: 100, enabled: true });
   renderSpinTable();
 }
 function removeSpinRow(i) { spinData.splice(i,1); renderSpinTable(); }
@@ -1143,7 +1339,7 @@ function setSpinRate(index, input) {
   updateSpinSum();
 }
 function updateSpinSum() {
-  const sum = spinData.reduce((a,r) => a + (parseFloat(r.rate)||0), 0);
+  const sum = spinData.filter(r => r.enabled !== false).reduce((a,r) => a + (parseFloat(r.rate)||0), 0);
   const el = document.getElementById('spinRateSum');
   el.textContent = 'Tổng: ' + sum.toFixed(2) + '%';
   el.style.color = Math.abs(sum - 100) < 0.01 ? 'var(--green)' : 'var(--red)';
@@ -1164,13 +1360,22 @@ function renderShopTable() {
   const tbody = document.getElementById('shopTbody');
   tbody.innerHTML = '';
   shopData.forEach((row, i) => {
+    row.qty = row.qty ?? 1;
+    row.cakes = row.cakes ?? 1;
+    row.stock = row.stock ?? 100;
+    row.enabled = row.enabled !== false;
     const tr = document.createElement('tr');
     tr.innerHTML = `
       <td class="mono text-muted">${i+1}</td>
       <td><select onchange="shopData[${i}].name=this.value">${buildGiftSelectOptions(row.name)}</select></td>
-      <td><input type="number" min="1" value="${row.qty || 1}" onchange="shopData[${i}].qty=parseInt(this.value,10)||1"></td>
-      <td><input type="number" min="0" value="${row.cakes}" onchange="shopData[${i}].cakes=parseInt(this.value,10)||0"></td>
+      <td><input type="text" inputmode="numeric" pattern="[1-9][0-9]*" value="${esc(row.qty)}" oninput="sanitizePositiveIntegerInput(this, shopData[${i}], 'qty')" onchange="sanitizePositiveIntegerInput(this, shopData[${i}], 'qty')"></td>
+      <td><input type="text" inputmode="numeric" pattern="[1-9][0-9]*" value="${esc(row.cakes)}" oninput="sanitizePositiveIntegerInput(this, shopData[${i}], 'cakes')" onchange="sanitizePositiveIntegerInput(this, shopData[${i}], 'cakes')"></td>
+      <td><input type="text" inputmode="numeric" pattern="[1-9][0-9]*" value="${esc(row.stock)}" oninput="sanitizePositiveIntegerInput(this, shopData[${i}], 'stock')" onchange="sanitizePositiveIntegerInput(this, shopData[${i}], 'stock')"></td>
       <td><input type="text" value="${esc(row.tooltipImg)}" placeholder="https://..." onchange="shopData[${i}].tooltipImg=this.value"></td>
+      <td>
+        <label class="toggle"><input type="checkbox" ${row.enabled?'checked':''} onchange="shopData[${i}].enabled=this.checked">
+        <span class="toggle-slider"></span></label>
+      </td>
       <td><button class="btn btn-danger btn-xs" onclick="removeShopRow(${i})">✕</button></td>`;
     tbody.appendChild(tr);
   });
@@ -1182,6 +1387,8 @@ function addShopRow() {
     name: GIFT_ITEM_OPTIONS[(next - 1) % GIFT_ITEM_OPTIONS.length],
     qty: 1,
     cakes: next,
+    stock: 100,
+    enabled: true,
     tooltipImg: SHOP_ITEM_IMG_BASE + 'banh-' + fallbackIndex + '.webp'
   });
   renderShopTable();
@@ -1616,7 +1823,8 @@ function runValidation() {
   const issues = [];
 
   // 1. Spin rate sum
-  const rateSum = spinData.reduce((a,r) => a + (parseFloat(r.rate)||0), 0);
+  const enabledSpinData = spinData.filter(r => r.enabled !== false);
+  const rateSum = enabledSpinData.reduce((a,r) => a + (parseFloat(r.rate)||0), 0);
   if (Math.abs(rateSum - 100) > 0.01) {
     issues.push({ type:'error', msg: `Tổng rate vòng quay = ${rateSum.toFixed(2)}% (cần đúng 100%)` });
   } else {
@@ -1629,8 +1837,11 @@ function runValidation() {
     if (rate < 0 || rate > 100) {
       issues.push({ type:'error', msg: `Vòng quay "${r.name}": rate phải nằm trong khoảng 0% đến 100%` });
     }
-    if (!isPositiveIntegerValue(r.stock)) {
-      issues.push({ type:'error', msg: `Mở quà sinh nhật "${r.name || ''}": Stock phải là số tự nhiên lớn hơn 0 và không được là số thập phân` });
+    if (r.enabled !== false && !isPositiveIntegerValue(r.stock)) {
+      issues.push({ type:'error', msg: `Mở quà sinh nhật "${r.name || ''}": Giới hạn phát phải là số tự nhiên lớn hơn 0 khi giải đang bật` });
+    }
+    if (r.enabled !== false && rate <= 0) {
+      issues.push({ type:'warning', msg: `Vòng quay "${r.name || ''}": giải đang bật nhưng rate = 0%` });
     }
   });
 
@@ -1672,11 +1883,14 @@ function runValidation() {
 
   // 6. Tích bánh mở quà Vip validation
   shopData.forEach((r, i) => {
-    if ((parseInt(r.cakes, 10) || 0) <= 0) {
+    if (r.enabled !== false && !isPositiveIntegerValue(r.cakes)) {
       issues.push({ type:'error', msg: `Tích bánh mở quà Vip #${i + 1}: số bánh phải lớn hơn 0` });
     }
-    if ((parseInt(r.qty, 10) || 0) <= 0) {
+    if (r.enabled !== false && !isPositiveIntegerValue(r.qty)) {
       issues.push({ type:'error', msg: `Tích bánh mở quà Vip #${i + 1}: số lượng phải lớn hơn 0` });
+    }
+    if (r.enabled !== false && !isPositiveIntegerValue(r.stock)) {
+      issues.push({ type:'error', msg: `Tích bánh mở quà Vip #${i + 1}: giới hạn phát phải lớn hơn 0 khi vật phẩm đang bật` });
     }
     if (!(r.tooltipImg || '').trim()) {
       issues.push({ type:'warning', msg: `Tích bánh mở quà Vip "${r.name || ('#' + (i + 1))}": thiếu link ảnh tooltip` });
@@ -1697,11 +1911,12 @@ function runValidation() {
   // 8. Negative numbers
   let numOk = true;
   [...spinData].forEach(r => {
-    if (r.rate < 0 || r.rate > 100 || r.stock < 0) { issues.push({ type:'error', msg: `Vòng quay "${r.name}": rate phải từ 0 đến 100 và stock không được âm` }); numOk = false; }
+    if (r.rate < 0 || r.rate > 100 || r.stock < 0) { issues.push({ type:'error', msg: `Vòng quay "${r.name}": rate phải từ 0 đến 100 và giới hạn phát không được âm` }); numOk = false; }
   });
   [...shopData].forEach(r => {
     if ((parseInt(r.cakes, 10) || 0) < 0) { issues.push({ type:'error', msg: `Tích bánh mở quà Vip "${r.name}": số bánh không được âm` }); numOk = false; }
     if ((parseInt(r.qty, 10) || 0) < 0) { issues.push({ type:'error', msg: `Tích bánh mở quà Vip "${r.name}": số lượng không được âm` }); numOk = false; }
+    if ((parseInt(r.stock, 10) || 0) < 0) { issues.push({ type:'error', msg: `Tích bánh mở quà Vip "${r.name}": giới hạn phát không được âm` }); numOk = false; }
   });
   if (numOk) issues.push({ type:'ok', msg: 'Không có giá trị âm ✓' });
 
@@ -1880,7 +2095,8 @@ function normalizeSpinConfig(rows) {
       name: row.name || source.name,
       tooltipImg: row.tooltipImg || row.img || source.tooltipImg,
       rate: parseFloat(row.rate) || 0,
-      stock: parseInt(row.stock, 10) || 0
+      stock: parseInt(row.stock ?? row.limit ?? source.stock, 10) || 0,
+      enabled: row.enabled !== false
     };
   });
 }
@@ -1906,6 +2122,8 @@ function normalizeShopConfig(rows) {
       name: row.name || row.label || fallback.name || GIFT_ITEM_OPTIONS[0],
       qty: parseInt(row.qty ?? row.quantity ?? row.amount ?? fallback.qty ?? 1, 10) || 1,
       cakes: parseInt(row.cakes ?? row.points ?? row.cost ?? fallback.cakes, 10) || fallback.cakes,
+      stock: parseInt(row.stock ?? row.limit ?? fallback.stock ?? 100, 10) || 100,
+      enabled: row.enabled !== false,
       tooltipImg: row.tooltipImg || row.img || row.image || fallback.tooltipImg
     };
   });
@@ -2056,12 +2274,18 @@ function renderMilestoneProgress() {
 function renderStockTable() {
   const tbody = document.getElementById('stockTbody');
   tbody.innerHTML = '';
-  shopData.forEach(item => {
+  shopData.forEach((item, index) => {
+    const stock = parseInt(item.stock, 10) || 0;
+    const claimedMock = item.enabled === false ? 0 : Math.min(stock, (index + 1) * 3);
+    const remaining = Math.max(0, stock - claimedMock);
     const tr = document.createElement('tr');
     tr.innerHTML = `
       <td>${esc(item.name)}</td>
       <td class="mono">${fmt(parseInt(item.qty, 10) || 1)}</td>
       <td class="mono">${fmt(parseInt(item.cakes, 10) || 0)}</td>
+      <td class="mono">${fmt(stock)}</td>
+      <td class="mono">${fmt(claimedMock)}</td>
+      <td><span class="badge ${remaining > 0 ? 'badge-green' : 'badge-red'}">${fmt(remaining)}</span></td>
       <td style="text-align:right"><a href="${esc(item.tooltipImg || '')}" target="_blank" rel="noopener" class="mono">Xem ảnh</a></td>`;
     tbody.appendChild(tr);
   });

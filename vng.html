@@ -771,17 +771,25 @@
 
     window.originalShopListHTML = window.originalShopListHTML || list.innerHTML;
 
-    var rewards = cfg && Array.isArray(cfg.shop) ? cfg.shop : [];
-    if (!rewards.length) {
+    var rawRewards = cfg && Array.isArray(cfg.shop) ? cfg.shop : null;
+    if (!rawRewards) {
       list.innerHTML = window.originalShopListHTML;
       return;
     }
+    var rewards = rawRewards.filter(function(item) {
+      return !item || item.enabled !== false;
+    });
 
     list.innerHTML = window.originalShopListHTML;
     var items = Array.from(list.children).filter(function(el) {
       return /\bqua-\d+\b/.test(el.className || '');
     });
     var template = items[items.length - 1] || null;
+
+    if (!rewards.length) {
+      items.forEach(function(el) { el.style.display = 'none'; });
+      return;
+    }
 
     rewards.forEach(function(reward, i) {
       var el = items[i];
@@ -799,7 +807,8 @@
       var name = reward.name || reward.label || ('Quà Vip ' + (i + 1));
       var qty = parseInt(reward.qty || reward.quantity || reward.amount, 10) || 1;
       var cakes = parseInt(reward.cakes || reward.points || reward.cost, 10) || 0;
-      var rewardTitle = name + ' x' + qty + (cakes ? ' - ' + cakes + ' bánh' : '');
+      var stock = parseInt(reward.stock || reward.limit, 10) || 0;
+      var rewardTitle = name + ' x' + qty + (cakes ? ' - ' + cakes + ' bánh' : '') + (stock ? ' - giới hạn ' + stock : '');
 
       if (img) {
         img.className = 'banh-' + (i + 1);
@@ -810,12 +819,14 @@
       el.setAttribute('title', rewardTitle);
       el.setAttribute('data-cakes', String(cakes));
       el.setAttribute('data-qty', String(qty));
+      el.setAttribute('data-stock-limit', String(stock));
 
       var claim = el.querySelector('.pm__btn-claim');
       if (claim) {
         claim.setAttribute('data-image', i < 9 ? ('T' + (i + 1)) : ('U' + (i - 9)));
         claim.setAttribute('data-cakes', String(cakes));
         claim.setAttribute('data-qty', String(qty));
+        claim.setAttribute('data-stock-limit', String(stock));
         claim.setAttribute('title', rewardTitle);
       }
 
@@ -853,7 +864,12 @@
       if (!img) return;
 
       var prize = prizes[i];
-      if (!prize) {
+      if (!prize || prize.enabled === false) {
+        if (prize && prize.enabled === false) {
+          el.style.display = 'none';
+          return;
+        }
+        el.style.display = '';
         var original = window.originalSpinPrizeImages[i];
         if (original) {
           setImageSrc(img, original.dataSrc || original.src);
@@ -863,6 +879,7 @@
         }
         return;
       }
+      el.style.display = '';
 
       var imageUrl = prize.tooltipImg || prize.img || prize.image || '';
       if (imageUrl) setImageSrc(img, imageUrl);

@@ -13,8 +13,8 @@ Promotion hien duoc hieu la 4 module chinh:
 | Module | Mapping trong bai | Noi dung cau hinh |
 |---|---|---|
 | Thiep Moi Dai Tiec | Community Milestone | Start/end date, cac moc tich luy, anh tooltip, danh sach qua theo tung moc, the le HTML |
-| Mo Qua Sinh Nhat | Vong quay + Nhiem vu + Tich luy nhan luot | Start/end date, danh sach phan thuong, rate (%), stock/limit moi giai, nhiem vu nhan luot, direct URL, moc tich luy nhan luot, the le HTML |
-| Tich Banh Mo Qua VIP | Doi qua | Start/end date, vat pham doi, so luong item nhan, so banh dieu kien doi, anh tooltip, the le HTML |
+| Mo Qua Sinh Nhat | Vong quay + Nhiem vu + Tich luy nhan luot | Start/end date, danh sach phan thuong, rate (%), gioi han phat moi giai, enabled, nhiem vu nhan luot, direct URL, moc tich luy nhan luot, the le HTML |
+| Tich Banh Mo Qua VIP | Doi qua | Start/end date, vat pham doi, so luong item nhan moi lan, so banh dieu kien doi, gioi han phat, enabled, anh tooltip, the le HTML |
 | Ban Tiec Sinh Nhat | Loi chuc / binh chon / mission phu | Start/end date, the le HTML, danh sach nhiem vu nhan luot, direct URL |
 
 ## 3. Persona nguoi dung tool
@@ -26,7 +26,7 @@ Nguoi van hanh su kien hang ngay. Ho khong can code, nhung can sua nhanh cau hin
 Cong viec hang ngay:
 
 - Cap nhat thoi gian bat dau/ket thuc tung module.
-- Dieu chinh danh sach qua, rate, stock/limit va dieu kien doi.
+- Dieu chinh danh sach qua, rate, gioi han phat va dieu kien doi.
 - Bat/tat nhiem vu, sua so luot thuong va link dieu huong.
 - Sua noi dung the le HTML theo yeu cau campaign.
 - Chay validation truoc khi save.
@@ -39,7 +39,7 @@ Nguoi review tinh dung cua campaign:
 
 - Kiem tra module co dung scope promotion khong.
 - Kiem tra copywriting, the le, moc thuong.
-- Kiem tra rui ro cau hinh sai: rate khong du 100%, end date nho hon start date, stock/quantity khong hop le.
+- Kiem tra rui ro cau hinh sai: rate khong du 100%, end date nho hon start date, gioi han phat/quantity khong hop le.
 
 ## 4. Cac tinh nang da co
 
@@ -47,7 +47,7 @@ Nguoi review tinh dung cua campaign:
 
 - Cau hinh start/end date theo module.
 - Cau hinh Thiep Moi Dai Tiec nhu Community Milestone.
-- Cau hinh Mo Qua Sinh Nhat: phan thuong, rate, stock/limit, nhiem vu, direct URL, tich luy nhan luot.
+- Cau hinh Mo Qua Sinh Nhat: phan thuong, rate, gioi han phat, enabled, nhiem vu, direct URL, tich luy nhan luot.
 - Cau hinh Tich Banh Mo Qua VIP nhu Doi Qua.
 - Cau hinh Ban Tiec Sinh Nhat: the le va nhiem vu.
 - Cau hinh the le HTML cho cac module chinh.
@@ -58,7 +58,8 @@ Nguoi review tinh dung cua campaign:
 - Tong rate vong quay phai bang 100%.
 - Start/end date: end date phai lon hon start date.
 - Cac field so tu nhien lon hon 0 duoc chan ngay luc nhap voi cac field quan trong.
-- Stock, moc tich luy, luot quay, quantity item khong duoc la so thap phan/chu/<= 0.
+- Gioi han phat, moc tich luy, luot quay, quantity item khong duoc la so thap phan/chu/<= 0 khi cau hinh dang enabled.
+- Canh bao/loi khi reward/item dang enabled nhung gioi han phat <= 0.
 
 ### Dashboard / Report
 
@@ -66,7 +67,7 @@ Nguoi review tinh dung cua campaign:
 - Chart participants theo ngay.
 - Chart top rewards claimed dang dung mock data.
 - Widget milestone progress.
-- Bang trang thai vat pham doi qua.
+- Bang trang thai vat pham doi qua gom gioi han phat, da phat mock va con lai mock.
 - Conversion funnel mock.
 
 ## 5. Gioi han hien tai
@@ -85,15 +86,15 @@ Do bai tap khong ket noi API, cac muc sau chi la mock/estimate:
 Trong bai tap nay nen tach ro 2 khai niem:
 
 - `quantity`: so luong item nguoi choi nhan duoc moi lan claim/doi.
-- `stock` hoac `limit`: tong so luong toi da co the phat trong su kien.
+- `stock` hoac `limit`: tong so luong toi da co the phat trong su kien. Trong UI nen hieu la "Gioi han phat".
 
-Khong co API thi khong the biet ton kho realtime. Tuy nhien admin tool van nen cho cau hinh `stock/limit` ban dau de validation va dashboard mock co co so tinh:
+Khong co API thi khong the biet ton kho realtime. Tuy nhien admin tool van cho cau hinh `stock/limit` ban dau de validation va dashboard mock co co so tinh:
 
 - remaining = configured stock - mock claimed count
 - warning khi stock = 0 nhung reward/item van enabled
 - warning khi claimed count mock > configured stock
 
-Neu can nhe scope, co the coi `stock` la "gioi han phat thuong" thay vi "ton kho realtime".
+Trong ban demo, `remaining` la mock. Ban production can claim API/log de tinh remaining that.
 
 ## 7. Cach chay
 
@@ -101,4 +102,3 @@ Neu can nhe scope, co the coi `stock` la "gioi han phat thuong" thay vi "ton kho
 2. Chay validation.
 3. Save Config hoac Save & Preview.
 4. FE preview mo `vng.html` va doc config tu `localStorage`.
-
