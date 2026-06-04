@@ -128,6 +128,10 @@
   }
   input:focus, select:focus, textarea:focus { border-color: var(--blue); }
   input[type="number"] { font-family: var(--mono); }
+  input.date-invalid {
+    border-color: var(--red) !important;
+    box-shadow: 0 0 0 1px rgba(239, 68, 68, .35);
+  }
   textarea { resize: vertical; line-height: 1.45; }
   .form-row { margin-bottom: 12px; }
   .form-group { display: flex; flex-direction: column; }
@@ -479,6 +483,16 @@
       <p class="text-muted mb-12" style="font-size:12px">
         Cấu hình số mốc, ảnh tooltip và danh sách quà tặng cho từng mốc. Dữ liệu đồng bộ sang Client qua localStorage key <code class="mono">dt3q_thiep_moi_cfg</code>.
       </p>
+      <div class="form-row grid-2">
+        <div class="form-group">
+          <label>Start Date</label>
+          <input type="datetime-local" id="tl_thiep_start">
+        </div>
+        <div class="form-group">
+          <label>End Date</label>
+          <input type="datetime-local" id="tl_thiep_end">
+        </div>
+      </div>
       <div id="thiepMoiContainer"></div>
       <div class="form-row mt-12">
         <label>Thể lệ (HTML)</label>
@@ -498,6 +512,16 @@
       <button class="collapse-toggle" type="button" aria-label="Mở rộng module" aria-expanded="false">⌄</button>
     </div>
     <div class="collapsible-body">
+      <div class="form-row grid-2">
+        <div class="form-group">
+          <label>Start Date</label>
+          <input type="datetime-local" id="tl_open_gift_start">
+        </div>
+        <div class="form-group">
+          <label>End Date</label>
+          <input type="datetime-local" id="tl_open_gift_end">
+        </div>
+      </div>
       <div class="table-overflow">
         <table class="data-table" id="spinTable">
           <thead>
@@ -564,6 +588,16 @@
       <button class="collapse-toggle" type="button" aria-label="Mở rộng module" aria-expanded="false">⌄</button>
     </div>
     <div class="collapsible-body">
+      <div class="form-row grid-2">
+        <div class="form-group">
+          <label>Start Date</label>
+          <input type="datetime-local" id="tl_vip_start">
+        </div>
+        <div class="form-group">
+          <label>End Date</label>
+          <input type="datetime-local" id="tl_vip_end">
+        </div>
+      </div>
       <div class="table-overflow">
         <table class="data-table" id="shopTable">
           <thead>
@@ -589,48 +623,51 @@
     </div>
   </div>
 
-  <!-- 4. Community Milestone -->
-  <div class="card">
-    <div class="card-title"><span class="card-title-icon">🏆</span>Community Milestone</div>
-    <div class="table-overflow">
-      <table class="data-table" id="milestoneTable">
-        <thead>
-          <tr>
-            <th>#</th>
-            <th style="width:140px">Mốc (người)</th>
-            <th>Phần thưởng</th>
-            <th style="width:130px">Trạng thái</th>
-            <th style="width:60px">Xoá</th>
-          </tr>
-        </thead>
-        <tbody id="milestoneTbody"></tbody>
-      </table>
+  <!-- 4. Bàn tiệc sinh nhật -->
+  <div class="card collapsible-card collapsed" id="card-birthday-table">
+    <div class="card-title">
+      <span class="card-title-icon">🎂</span><span class="collapsible-title-text">Bàn tiệc sinh nhật</span>
+      <button class="collapse-toggle" type="button" aria-label="Mở rộng module" aria-expanded="false">⌄</button>
     </div>
-    <div class="table-actions">
-      <button class="btn btn-ghost btn-sm" onclick="addMilestoneRow()">+ Thêm mốc</button>
-    </div>
-  </div>
-
-  <!-- 6. Gói nạp -->
-  <div class="card">
-    <div class="card-title"><span class="card-title-icon">💎</span>Gói Nạp</div>
-    <div class="table-overflow">
-      <table class="data-table" id="packageTable">
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>Tên gói</th>
-            <th style="width:130px">Giá (VND)</th>
-            <th style="width:110px">Bonus Spin</th>
-            <th style="width:90px">Enabled</th>
-            <th style="width:60px">Xoá</th>
-          </tr>
-        </thead>
-        <tbody id="packageTbody"></tbody>
-      </table>
-    </div>
-    <div class="table-actions">
-      <button class="btn btn-ghost btn-sm" onclick="addPackageRow()">+ Thêm gói nạp</button>
+    <div class="collapsible-body">
+      <div class="form-row grid-2">
+        <div class="form-group">
+          <label>Start Date</label>
+          <input type="datetime-local" id="tl_birthday_table_start">
+        </div>
+        <div class="form-group">
+          <label>End Date</label>
+          <input type="datetime-local" id="tl_birthday_table_end">
+        </div>
+      </div>
+      <div class="form-row mt-12">
+        <label>Thể lệ (HTML)</label>
+        <textarea class="rule-editor" id="rule_birthday_table" placeholder="<h2>...</h2>"></textarea>
+      </div>
+      <div style="height:16px"></div>
+      <div class="card-title" style="font-size:15px;margin-bottom:8px"><span class="card-title-icon">📋</span>Nhiệm Vụ Nhận Lượt</div>
+      <p class="text-muted mb-12" style="font-size:12px">
+        Cấu hình danh sách nhiệm vụ trong popup khi người dùng click nút Nhiệm Vụ ở Bàn tiệc sinh nhật.
+      </p>
+      <div class="table-overflow">
+        <table class="data-table" id="birthdayTableMissionTable">
+          <thead>
+            <tr>
+              <th style="width:40px">#</th>
+              <th style="width:130px">Loại</th>
+              <th>Nội dung HTML</th>
+              <th style="width:110px">Lượt quay</th>
+              <th style="width:130px">Nút</th>
+              <th style="width:90px">Enabled</th>
+              <th style="width:60px">Xoá</th>
+            </tr>
+          </thead>
+          <tbody id="birthdayTableMissionTbody"></tbody>
+        </table>
+      </div>
+      <div class="table-actions">
+        <button class="btn btn-ghost btn-sm" onclick="addBirthdayTableMissionRow()">+ Thêm nhiệm vụ</button>
+      </div>
     </div>
   </div>
 
@@ -761,6 +798,7 @@ let spinData = [];
 let shopData = [];
 let milestoneData = [];
 let missionData = [];
+let birthdayTableMissionData = [];
 let packageData = [];
 let thiepMoiData = [];
 let spinAccumulationData = [];
@@ -791,6 +829,10 @@ const DEFAULT_RULES = {
   shop_vip: {
     sourceUrl: 'https://dt3q.zing.vn/sinh-nhat-3-tuoi/promotion/the-le-tich-l-y-banh-mo-qua-vip.html',
     html: '<h2>Thể lệ Tích Bánh Mở Quà VIP</h2><p>Người chơi tích lũy Bánh Kem trong sự kiện để mở các phần quà VIP. Mỗi vật phẩm yêu cầu số Bánh Kem tương ứng theo cấu hình admin.</p><ul><li>Số Bánh Kem sẽ được trừ khi đổi quà thành công.</li><li>Mỗi phần quà hiển thị theo ảnh tooltip và số lượng admin cấu hình.</li><li>Nội dung này được mock từ URL thể lệ hiện có trong FE: <a href="https://dt3q.zing.vn/sinh-nhat-3-tuoi/promotion/the-le-tich-l-y-banh-mo-qua-vip.html" target="_blank">the-le-tich-l-y-banh-mo-qua-vip.html</a>.</li></ul>'
+  },
+  birthday_table: {
+    sourceUrl: 'https://dt3q.zing.vn/sinh-nhat-3-tuoi/promotion/the-le-ban-tiec-sinh-nhat.html',
+    html: '<h2>Thể lệ Bàn Tiệc Sinh Nhật</h2><p>Người chơi tham gia gửi lời chúc, bình chọn và hoàn thành nhiệm vụ để nhận lượt trong khu vực Bàn Tiệc Sinh Nhật.</p><ul><li>Nhiệm vụ chỉ có hiệu lực trong thời gian admin cấu hình.</li><li>Lượt nhận được tính theo danh sách nhiệm vụ trong module Bàn Tiệc Sinh Nhật.</li><li>Nội dung này đang được mock từ URL thể lệ FE: <a href="https://dt3q.zing.vn/sinh-nhat-3-tuoi/promotion/the-le-ban-tiec-sinh-nhat.html" target="_blank">the-le-ban-tiec-sinh-nhat.html</a>.</li></ul>'
   }
 };
 
@@ -881,6 +923,11 @@ const MOCK = {
     { type: 'fixed', contentHtml: '<b>Nạp gói event 16</b><br>(+ 250 lượt)', action: 'Thực Hiện', enabled: true },
     { type: 'fixed', contentHtml: '<b>Nạp gói event 17</b><br>(+ 250 lượt)', action: 'Thực Hiện', enabled: true },
   ],
+  birthdayTableMission: [
+    { type: 'daily', contentHtml: '<b>Gửi lời chúc sinh nhật</b><br>(+ 1 lượt/ngày)', turns: 1, action: 'Thực Hiện', enabled: true },
+    { type: 'daily', contentHtml: '<b>Bình chọn lời chúc yêu thích</b><br>(+ 1 lượt/ngày)', turns: 1, action: 'Nhận Lượt', enabled: true },
+    { type: 'fixed', contentHtml: '<b>Chia sẻ Bàn Tiệc Sinh Nhật</b><br>(+ 2 lượt)', turns: 2, action: 'Thực Hiện', enabled: true },
+  ],
   spinAccumulation: [
     {
       target: 1,
@@ -925,6 +972,10 @@ const MOCK = {
   ],
   timeline: {
     global_start: '2026-05-27T00:00', global_end: '2026-06-30T23:59',
+    thiep_start: '2026-05-27T00:00', thiep_end: '2026-06-30T23:59',
+    open_gift_start: '2026-05-27T00:00', open_gift_end: '2026-06-15T23:59',
+    vip_start: '2026-05-27T00:00', vip_end: '2026-06-20T23:59',
+    birthday_table_start: '2026-05-27T00:00', birthday_table_end: '2026-06-30T23:59',
     spin_start: '2026-05-27T00:00', spin_end: '2026-06-15T23:59',
     shop_start: '2026-05-27T00:00', shop_end: '2026-06-20T23:59',
     mission_start: '2026-05-27T00:00', mission_end: '2026-06-30T23:59',
@@ -978,6 +1029,70 @@ function showToast(msg, type = 'success') {
   t.className = 'show ' + type;
   clearTimeout(toastTimer);
   toastTimer = setTimeout(() => { t.className = ''; }, 3000);
+}
+
+function getTimelinePairs() {
+  return [
+    ['Global', 'tl_global_start', 'tl_global_end'],
+    ['Thiệp Mời Đại Tiệc', 'tl_thiep_start', 'tl_thiep_end'],
+    ['Mở quà sinh nhật', 'tl_open_gift_start', 'tl_open_gift_end'],
+    ['Tích bánh mở quà Vip', 'tl_vip_start', 'tl_vip_end'],
+    ['Bàn tiệc sinh nhật', 'tl_birthday_table_start', 'tl_birthday_table_end'],
+    ['Vòng quay', 'tl_spin_start', 'tl_spin_end'],
+    ['Tích bánh mở quà Vip', 'tl_shop_start', 'tl_shop_end'],
+    ['Nhiệm vụ', 'tl_mission_start', 'tl_mission_end'],
+  ];
+}
+
+function validateTimelinePair(label, startId, endId, showMessage = false) {
+  const startEl = document.getElementById(startId);
+  const endEl = document.getElementById(endId);
+  if (!startEl || !endEl) return true;
+
+  const invalid = Boolean(startEl.value && endEl.value && endEl.value <= startEl.value);
+  const message = invalid ? `${label}: End date phải lớn hơn Start date` : '';
+  startEl.classList.toggle('date-invalid', invalid);
+  endEl.classList.toggle('date-invalid', invalid);
+  startEl.setCustomValidity(message);
+  endEl.setCustomValidity(message);
+  startEl.setAttribute('aria-invalid', String(invalid));
+  endEl.setAttribute('aria-invalid', String(invalid));
+  startEl.title = message;
+  endEl.title = message;
+
+  if (invalid && showMessage) {
+    showToast(message, 'error');
+    endEl.reportValidity();
+  }
+  return !invalid;
+}
+
+function validateTimelineRealtime(showMessage = false) {
+  let isValid = true;
+  getTimelinePairs().forEach(([label, startId, endId]) => {
+    if (!validateTimelinePair(label, startId, endId, showMessage)) isValid = false;
+  });
+  return isValid;
+}
+
+function openNativeDatePicker(input) {
+  if (typeof input.showPicker !== 'function') return;
+  try {
+    input.showPicker();
+  } catch (err) {
+    // showPicker can throw while another native picker is already active.
+  }
+}
+
+function initDateInputs() {
+  document.querySelectorAll('input[type="datetime-local"]').forEach(input => {
+    if (input.dataset.dateInputReady === '1') return;
+    input.addEventListener('click', () => openNativeDatePicker(input));
+    input.addEventListener('focus', () => openNativeDatePicker(input));
+    input.addEventListener('input', () => validateTimelineRealtime(false));
+    input.addEventListener('change', () => validateTimelineRealtime(true));
+    input.dataset.dateInputReady = '1';
+  });
 }
 
 // ═══════════════════════════════════════════
@@ -1074,6 +1189,7 @@ function removeShopRow(i) { shopData.splice(i,1); renderShopTable(); }
 // ── Milestone ──
 function renderMilestoneTable() {
   const tbody = document.getElementById('milestoneTbody');
+  if (!tbody) return;
   tbody.innerHTML = '';
   milestoneData.forEach((row, i) => {
     const tr = document.createElement('tr');
@@ -1150,6 +1266,53 @@ function addMissionRow() {
   renderMissionTable();
 }
 function removeMissionRow(i) { missionData.splice(i,1); renderMissionTable(); }
+
+function setBirthdayTableMissionTurns(index, input) {
+  sanitizePositiveIntegerInput(input, birthdayTableMissionData[index], 'turns');
+}
+
+function renderBirthdayTableMissionTable() {
+  const tbody = document.getElementById('birthdayTableMissionTbody');
+  if (!tbody) return;
+  tbody.innerHTML = '';
+  birthdayTableMissionData.forEach((row, i) => {
+    row.type = row.type || 'daily';
+    row.contentHtml = row.contentHtml || row.html || row.name || '';
+    row.turns = deriveMissionTurns(row);
+    row.action = row.action || 'Thực Hiện';
+    if (row.action !== 'Thực Hiện' && row.action !== 'Nhận Lượt') row.action = 'Thực Hiện';
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td class="mono text-muted">${i+1}</td>
+      <td>
+        <select onchange="birthdayTableMissionData[${i}].type=this.value">
+          <option value="daily" ${row.type==='daily'?'selected':''}>Hàng ngày</option>
+          <option value="fixed" ${row.type==='fixed'?'selected':''}>Cố định</option>
+        </select>
+      </td>
+      <td>
+        <textarea rows="3" style="width:100%;min-width:360px;resize:vertical" onchange="birthdayTableMissionData[${i}].contentHtml=this.value">${esc(row.contentHtml)}</textarea>
+      </td>
+      <td><input type="text" inputmode="numeric" pattern="[1-9][0-9]*" value="${row.turns || ''}" oninput="setBirthdayTableMissionTurns(${i}, this)" onchange="setBirthdayTableMissionTurns(${i}, this)"></td>
+      <td>
+        <select onchange="birthdayTableMissionData[${i}].action=this.value">
+          <option value="Thực Hiện" ${row.action==='Thực Hiện'?'selected':''}>Thực Hiện</option>
+          <option value="Nhận Lượt" ${row.action==='Nhận Lượt'?'selected':''}>Nhận Lượt</option>
+        </select>
+      </td>
+      <td>
+        <label class="toggle"><input type="checkbox" ${row.enabled?'checked':''} onchange="birthdayTableMissionData[${i}].enabled=this.checked">
+        <span class="toggle-slider"></span></label>
+      </td>
+      <td><button class="btn btn-danger btn-xs" onclick="removeBirthdayTableMissionRow(${i})">✕</button></td>`;
+    tbody.appendChild(tr);
+  });
+}
+function addBirthdayTableMissionRow() {
+  birthdayTableMissionData.push({ type: 'daily', contentHtml: '<b>Nhiệm vụ mới</b><br>(+ 1 lượt/ngày)', turns: 1, action: 'Thực Hiện', enabled: true });
+  renderBirthdayTableMissionTable();
+}
+function removeBirthdayTableMissionRow(i) { birthdayTableMissionData.splice(i,1); renderBirthdayTableMissionTable(); }
 
 // ── Spin Accumulation ──
 function renderSpinAccumulationUI() {
@@ -1228,6 +1391,7 @@ function removeSpinAccumulationMilestone(index) {
 // ── Package ──
 function renderPackageTable() {
   const tbody = document.getElementById('packageTbody');
+  if (!tbody) return;
   tbody.innerHTML = '';
   packageData.forEach((row, i) => {
     const tr = document.createElement('tr');
@@ -1400,7 +1564,7 @@ function cloneRules(source) {
 function normalizeRulesConfig(rules) {
   var source = rules && typeof rules === 'object' ? rules : {};
   var defaults = cloneRules(DEFAULT_RULES);
-  ['thiep_moi', 'open_gift', 'shop_vip'].forEach(function(key) {
+  ['thiep_moi', 'open_gift', 'shop_vip', 'birthday_table'].forEach(function(key) {
     var incoming = source[key] || {};
     if (typeof incoming === 'string') incoming = { html: incoming };
     defaults[key] = {
@@ -1415,7 +1579,8 @@ function renderRulesUI() {
   var fields = {
     thiep_moi: document.getElementById('rule_thiep_moi'),
     open_gift: document.getElementById('rule_open_gift'),
-    shop_vip: document.getElementById('rule_shop_vip')
+    shop_vip: document.getElementById('rule_shop_vip'),
+    birthday_table: document.getElementById('rule_birthday_table')
   };
   Object.keys(fields).forEach(function(key) {
     if (fields[key]) fields[key].value = (rulesData[key] && rulesData[key].html) || '';
@@ -1427,7 +1592,8 @@ function gatherRulesConfig() {
   var fields = {
     thiep_moi: document.getElementById('rule_thiep_moi'),
     open_gift: document.getElementById('rule_open_gift'),
-    shop_vip: document.getElementById('rule_shop_vip')
+    shop_vip: document.getElementById('rule_shop_vip'),
+    birthday_table: document.getElementById('rule_birthday_table')
   };
   Object.keys(fields).forEach(function(key) {
     if (fields[key]) normalized[key].html = fields[key].value;
@@ -1466,6 +1632,11 @@ function runValidation() {
   missionData.forEach((r, i) => {
     if (!isPositiveIntegerValue(r.turns)) {
       issues.push({ type:'error', msg: `Nhiệm vụ nhận lượt #${i + 1}: Lượt quay phải là số tự nhiên lớn hơn 0 và không được là số thập phân` });
+    }
+  });
+  birthdayTableMissionData.forEach((r, i) => {
+    if (!isPositiveIntegerValue(r.turns)) {
+      issues.push({ type:'error', msg: `Bàn tiệc sinh nhật nhiệm vụ #${i + 1}: Lượt quay phải là số tự nhiên lớn hơn 0 và không được là số thập phân` });
     }
   });
 
@@ -1507,18 +1678,11 @@ function runValidation() {
   });
 
   // 7. Timeline: end < start
-  const tlPairs = [
-    ['Global', 'tl_global_start', 'tl_global_end'],
-    ['Vòng quay', 'tl_spin_start', 'tl_spin_end'],
-    ['Tích bánh mở quà Vip', 'tl_shop_start', 'tl_shop_end'],
-    ['Nhiệm vụ', 'tl_mission_start', 'tl_mission_end'],
-  ];
+  const tlPairs = getTimelinePairs();
   let tlOk = true;
   tlPairs.forEach(([label, s, e]) => {
-    const sv = document.getElementById(s).value;
-    const ev = document.getElementById(e).value;
-    if (sv && ev && ev < sv) {
-      issues.push({ type:'error', msg: `${label}: End date trước Start date` });
+    if (!validateTimelinePair(label, s, e, false)) {
+      issues.push({ type:'error', msg: `${label}: End date phải lớn hơn Start date` });
       tlOk = false;
     }
   });
@@ -1536,8 +1700,9 @@ function runValidation() {
   if (numOk) issues.push({ type:'ok', msg: 'Không có giá trị âm ✓' });
 
   // 9. Empty names
-  const emptyName = [...spinData, ...shopData, ...packageData].some(r => !r.name || r.name.trim() === '') ||
+  const emptyName = [...spinData, ...shopData].some(r => !r.name || r.name.trim() === '') ||
     missionData.some(r => !(r.contentHtml || r.name || '').trim()) ||
+    birthdayTableMissionData.some(r => !(r.contentHtml || r.name || '').trim()) ||
     spinData.some(r => !(r.tooltipImg || '').trim()) ||
     shopData.some(r => !(r.tooltipImg || '').trim()) ||
     spinAccumulationData.some(r => !(r.gifts || []).length || !(r.tooltipImg || '').trim());
@@ -1564,6 +1729,14 @@ function gatherConfig() {
     timeline: {
       global_start: document.getElementById('tl_global_start').value,
       global_end:   document.getElementById('tl_global_end').value,
+      thiep_start: document.getElementById('tl_thiep_start').value,
+      thiep_end:   document.getElementById('tl_thiep_end').value,
+      open_gift_start: document.getElementById('tl_open_gift_start').value,
+      open_gift_end:   document.getElementById('tl_open_gift_end').value,
+      vip_start: document.getElementById('tl_vip_start').value,
+      vip_end:   document.getElementById('tl_vip_end').value,
+      birthday_table_start: document.getElementById('tl_birthday_table_start').value,
+      birthday_table_end:   document.getElementById('tl_birthday_table_end').value,
       spin_start:   document.getElementById('tl_spin_start').value,
       spin_end:     document.getElementById('tl_spin_end').value,
       shop_start:   document.getElementById('tl_shop_start').value,
@@ -1575,6 +1748,9 @@ function gatherConfig() {
     shop: JSON.parse(JSON.stringify(shopData)),
     milestones: JSON.parse(JSON.stringify(milestoneData)),
     missions: JSON.parse(JSON.stringify(missionData)),
+    birthdayTable: {
+      missions: JSON.parse(JSON.stringify(birthdayTableMissionData))
+    },
     spinAccumulation: JSON.parse(JSON.stringify(spinAccumulationData)),
     packages: JSON.parse(JSON.stringify(packageData)),
     rules: gatherRulesConfig(),
@@ -1636,7 +1812,16 @@ function loadConfig() {
 }
 
 function applyConfig(cfg) {
-  const tl = cfg.timeline || MOCK.timeline;
+  const tl = {
+    ...MOCK.timeline,
+    ...(cfg.timeline || {})
+  };
+  tl.open_gift_start = tl.open_gift_start || tl.spin_start;
+  tl.open_gift_end = tl.open_gift_end || tl.spin_end;
+  tl.vip_start = tl.vip_start || tl.shop_start;
+  tl.vip_end = tl.vip_end || tl.shop_end;
+  tl.birthday_table_start = tl.birthday_table_start || tl.mission_start;
+  tl.birthday_table_end = tl.birthday_table_end || tl.mission_end;
   Object.entries(tl).forEach(([k,v]) => {
     const el = document.getElementById('tl_' + k);
     if (el) el.value = v;
@@ -1645,10 +1830,15 @@ function applyConfig(cfg) {
   shopData = normalizeShopConfig(cfg.shop);
   milestoneData = cfg.milestones || [...MOCK.milestone];
   missionData = cfg.missions || [...MOCK.mission];
+  const birthdayMissions = cfg.birthdayTable && Array.isArray(cfg.birthdayTable.missions)
+    ? cfg.birthdayTable.missions
+    : (Array.isArray(cfg.birthdayTableMissions) ? cfg.birthdayTableMissions : MOCK.birthdayTableMission);
+  birthdayTableMissionData = birthdayMissions.map(r => ({...r}));
   spinAccumulationData = (cfg.spinAccumulation || cfg.accumulations || MOCK.spinAccumulation).map(r => ({...r, gifts: (r.gifts || []).map(g => ({...g}))}));
   packageData = cfg.packages || [...MOCK.packages];
   rulesData = normalizeRulesConfig(cfg.rules);
   renderAll();
+  validateTimelineRealtime(false);
 }
 
 function resetMock() {
@@ -1661,10 +1851,12 @@ function resetMock() {
   shopData = m.shop.map(r => ({...r}));
   milestoneData = m.milestone.map(r => ({...r}));
   missionData = m.mission.map(r => ({...r}));
+  birthdayTableMissionData = m.birthdayTableMission.map(r => ({...r}));
   spinAccumulationData = m.spinAccumulation.map(r => ({...r, gifts: (r.gifts || []).map(g => ({...g}))}));
   packageData = m.packages.map(r => ({...r}));
   rulesData = normalizeRulesConfig(DEFAULT_RULES);
   renderAll();
+  validateTimelineRealtime(false);
   showToast('↺ Đã reset về mock data', 'warning');
 }
 
@@ -1718,6 +1910,7 @@ function renderAll() {
   renderShopTable();
   renderMilestoneTable();
   renderMissionTable();
+  renderBirthdayTableMissionTable();
   renderSpinAccumulationUI();
   renderPackageTable();
   renderRulesUI();
@@ -1954,6 +2147,8 @@ document.addEventListener('DOMContentLoaded', () => {
   loadConfig();
   loadThiepMoiConfig();
   initCollapsibleCards();
+  initDateInputs();
+  validateTimelineRealtime(false);
 });
 </script>
 </body>

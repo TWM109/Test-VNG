@@ -457,7 +457,7 @@
     z-index: 2;
     width: 78%;
     height: 68%;
-    margin: 92px auto 0;
+    margin: 20px auto 0;
     padding: 12px 18px;
     overflow: auto;
     color: #3f1d0b;
@@ -506,6 +506,10 @@
     shop_vip: {
       sourceUrl: 'https://dt3q.zing.vn/sinh-nhat-3-tuoi/promotion/the-le-tich-l-y-banh-mo-qua-vip.html',
       html: '<h2>Thể lệ Tích Bánh Mở Quà VIP</h2><p>Người chơi tích lũy Bánh Kem trong sự kiện để mở các phần quà VIP. Mỗi vật phẩm yêu cầu số Bánh Kem tương ứng theo cấu hình admin.</p><ul><li>Số Bánh Kem sẽ được trừ khi đổi quà thành công.</li><li>Mỗi phần quà hiển thị theo ảnh tooltip và số lượng admin cấu hình.</li></ul>'
+    },
+    birthday_table: {
+      sourceUrl: 'https://dt3q.zing.vn/sinh-nhat-3-tuoi/promotion/the-le-ban-tiec-sinh-nhat.html',
+      html: '<h2>Thể lệ Bàn Tiệc Sinh Nhật</h2><p>Người chơi tham gia gửi lời chúc, bình chọn và hoàn thành nhiệm vụ để nhận lượt trong khu vực Bàn Tiệc Sinh Nhật.</p><ul><li>Nhiệm vụ chỉ có hiệu lực trong thời gian admin cấu hình.</li><li>Lượt nhận được tính theo danh sách nhiệm vụ trong module Bàn Tiệc Sinh Nhật.</li></ul>'
     }
   };
 
@@ -517,7 +521,8 @@
       return {
         thiep_moi: normalizeRule(rules.thiep_moi, DEFAULT_RULES.thiep_moi),
         open_gift: normalizeRule(rules.open_gift, DEFAULT_RULES.open_gift),
-        shop_vip: normalizeRule(rules.shop_vip, DEFAULT_RULES.shop_vip)
+        shop_vip: normalizeRule(rules.shop_vip, DEFAULT_RULES.shop_vip),
+        birthday_table: normalizeRule(rules.birthday_table, DEFAULT_RULES.birthday_table)
       };
     } catch (e) {
       return DEFAULT_RULES;
@@ -538,6 +543,7 @@
     if (trigger.closest('#dt3q-ld-sinhnhat-header') && trigger.matches('.MS__sprite-btn-thele1')) return 'thiep_moi';
     if (trigger.closest('#dt3q-ld-sinhnhat-vongquay') && trigger.matches('.MS__sprite-btn-thele')) return 'open_gift';
     if (trigger.closest('#dt3q-ld-sinhnhat-doiqua') && trigger.matches('.MS__sprite-btn-thele2')) return 'shop_vip';
+    if (trigger.closest('#dt3q-loichuc') && trigger.matches('#btn-thele-muc4, .MS__sprite-btn-thele3')) return 'birthday_table';
     return '';
   }
 
@@ -570,7 +576,7 @@
   }
 
   document.addEventListener('click', function(e) {
-    var trigger = e.target.closest('.MS__sprite-btn-thele1, .MS__sprite-btn-thele, .MS__sprite-btn-thele2');
+    var trigger = e.target.closest('.MS__sprite-btn-thele1, .MS__sprite-btn-thele, .MS__sprite-btn-thele2, #btn-thele-muc4, .MS__sprite-btn-thele3');
     var key = getRuleKey(trigger);
     if (!key) return;
     e.preventDefault();
@@ -591,6 +597,7 @@
 (function() {
   'use strict';
   var LS_KEY = 'dt3q_7y_config';
+  var activeMissionPopup = 'open_gift';
 
   function readMainCfg() {
     try {
@@ -667,6 +674,12 @@
     }
   }
 
+  function renderMissionList(body, missions) {
+    var daily = missions.filter(function(m) { return m.type === 'daily'; });
+    var fixed = missions.filter(function(m) { return m.type === 'fixed'; });
+    body.innerHTML = renderMissionGroup('Nhiệm vụ hàng ngày', daily) + renderMissionGroup('Nhiệm vụ cố định', fixed);
+  }
+
   function applyMissionConfig(cfg) {
     var body = document.querySelector('#popup_getlist .content--body');
     if (!body) return;
@@ -682,9 +695,26 @@
       return;
     }
 
-    var daily = missions.filter(function(m) { return m.type === 'daily'; });
-    var fixed = missions.filter(function(m) { return m.type === 'fixed'; });
-    body.innerHTML = renderMissionGroup('Nhiệm vụ hàng ngày', daily) + renderMissionGroup('Nhiệm vụ cố định', fixed);
+    renderMissionList(body, missions);
+  }
+
+  function applyBirthdayTableMissionConfig(cfg) {
+    var body = document.querySelector('#popup_getlist .content--body');
+    if (!body) return;
+
+    window.originalGetListMissionHTML = window.originalGetListMissionHTML || body.innerHTML;
+
+    var source = cfg && cfg.birthdayTable && Array.isArray(cfg.birthdayTable.missions) ? cfg.birthdayTable.missions : [];
+    var missions = source.map(normalizeMission).filter(function(m) {
+      return m.enabled && m.contentHtml;
+    });
+
+    if (!missions.length) {
+      body.innerHTML = window.originalGetListMissionHTML;
+      return;
+    }
+
+    renderMissionList(body, missions);
   }
 
   function applySpinAccumulationConfig(cfg) {
@@ -841,15 +871,42 @@
     });
   }
 
+  function applyBirthdayTableTimeline(cfg) {
+    var section = document.getElementById('dt3q-loichuc');
+    if (!section) return;
+    var timeline = cfg && cfg.timeline ? cfg.timeline : {};
+    var start = timeline.birthday_table_start || timeline.mission_start || '';
+    var end = timeline.birthday_table_end || timeline.mission_end || '';
+    section.setAttribute('data-admin-start', start);
+    section.setAttribute('data-admin-end', end);
+  }
+
   function loadAndApplyMissionConfig() {
     var cfg = readMainCfg();
-    applyMissionConfig(cfg);
+    if (activeMissionPopup === 'birthday_table') applyBirthdayTableMissionConfig(cfg);
+    else applyMissionConfig(cfg);
     applySpinPrizeConfig(cfg);
     applySpinAccumulationConfig(cfg);
     applyShopConfig(cfg);
+    applyBirthdayTableTimeline(cfg);
   }
 
   loadAndApplyMissionConfig();
+
+  document.addEventListener('click', function(e) {
+    var birthdayBtn = e.target.closest('#btn-nhiemvu-muc4');
+    if (birthdayBtn) {
+      activeMissionPopup = 'birthday_table';
+      loadAndApplyMissionConfig();
+      return;
+    }
+
+    var openGiftBtn = e.target.closest('#dt3q-ld-sinhnhat-vongquay .pm__btn-show-condition');
+    if (openGiftBtn) {
+      activeMissionPopup = 'open_gift';
+      loadAndApplyMissionConfig();
+    }
+  }, true);
 
   window.addEventListener('storage', function(e) {
     if (e.key === LS_KEY) loadAndApplyMissionConfig();
