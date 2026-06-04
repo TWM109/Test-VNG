@@ -2276,8 +2276,12 @@ function renderStockTable() {
   tbody.innerHTML = '';
   shopData.forEach((item, index) => {
     const stock = parseInt(item.stock, 10) || 0;
-    const claimedMock = item.enabled === false ? 0 : Math.min(stock, (index + 1) * 3);
+    const lowRemainingMocks = [3, 7, 9];
+    const targetRemainingMock = index % 4 === 0 ? lowRemainingMocks[Math.floor(index / 4) % lowRemainingMocks.length] : 18 + (index * 5);
+    const claimedMock = item.enabled === false ? 0 : Math.max(0, stock - Math.min(stock, targetRemainingMock));
     const remaining = Math.max(0, stock - claimedMock);
+    const remainingStatus = remaining < 10 ? 'Warning' : 'Safe';
+    const remainingBadge = remaining < 10 ? 'badge-yellow' : 'badge-green';
     const tr = document.createElement('tr');
     tr.innerHTML = `
       <td>${esc(item.name)}</td>
@@ -2285,7 +2289,7 @@ function renderStockTable() {
       <td class="mono">${fmt(parseInt(item.cakes, 10) || 0)}</td>
       <td class="mono">${fmt(stock)}</td>
       <td class="mono">${fmt(claimedMock)}</td>
-      <td><span class="badge ${remaining > 0 ? 'badge-green' : 'badge-red'}">${fmt(remaining)}</span></td>
+      <td><span class="badge ${remainingBadge}">${fmt(remaining)} · ${remainingStatus}</span></td>
       <td style="text-align:right"><a href="${esc(item.tooltipImg || '')}" target="_blank" rel="noopener" class="mono">Xem ảnh</a></td>`;
     tbody.appendChild(tr);
   });
