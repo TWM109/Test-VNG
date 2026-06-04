@@ -434,6 +434,23 @@
     line-height: 1.2;
     pointer-events: none;
   }
+  #dt3q-ld-sinhnhat-doiqua .admin-shop-cakes {
+    display: block;
+    position: absolute;
+    left: 50%;
+    bottom: -18px;
+    transform: translateX(-50%);
+    min-width: 82px;
+    padding: 2px 6px;
+    border-radius: 4px;
+    background: rgba(73, 31, 12, .82);
+    color: #fff2b0;
+    font-size: 13px;
+    font-weight: 700;
+    text-align: center;
+    line-height: 1.2;
+    pointer-events: none;
+  }
 </style>
 <script>
 // MỞ QUÀ SINH NHẬT — Đồng bộ cấu hình nhiệm vụ nhận lượt từ Admin (localStorage: dt3q_7y_config)
@@ -578,6 +595,74 @@
     });
   }
 
+  function applyShopConfig(cfg) {
+    var list = document.querySelector('#dt3q-ld-sinhnhat-doiqua .list-qua');
+    if (!list) return;
+
+    window.originalShopListHTML = window.originalShopListHTML || list.innerHTML;
+
+    var rewards = cfg && Array.isArray(cfg.shop) ? cfg.shop : [];
+    if (!rewards.length) {
+      list.innerHTML = window.originalShopListHTML;
+      return;
+    }
+
+    list.innerHTML = window.originalShopListHTML;
+    var items = Array.from(list.children).filter(function(el) {
+      return /\bqua-\d+\b/.test(el.className || '');
+    });
+    var template = items[items.length - 1] || null;
+
+    rewards.forEach(function(reward, i) {
+      var el = items[i];
+      if (!el && template) {
+        el = template.cloneNode(true);
+        el.className = 'qua-' + (i + 1);
+        list.appendChild(el);
+        items.push(el);
+      }
+      if (!el) return;
+
+      el.style.display = '';
+      var img = el.querySelector('img:not(.bg-nhan)');
+      var imageUrl = reward.tooltipImg || reward.img || reward.image || '';
+      var name = reward.name || reward.label || ('Quà Vip ' + (i + 1));
+      var qty = parseInt(reward.qty || reward.quantity || reward.amount, 10) || 1;
+      var cakes = parseInt(reward.cakes || reward.points || reward.cost, 10) || 0;
+      var rewardTitle = name + ' x' + qty + (cakes ? ' - ' + cakes + ' bánh' : '');
+
+      if (img) {
+        img.className = 'banh-' + (i + 1);
+        if (imageUrl) setImageSrc(img, imageUrl);
+        img.setAttribute('alt', name + ' x' + qty);
+      }
+
+      el.setAttribute('title', rewardTitle);
+      el.setAttribute('data-cakes', String(cakes));
+      el.setAttribute('data-qty', String(qty));
+
+      var claim = el.querySelector('.pm__btn-claim');
+      if (claim) {
+        claim.setAttribute('data-image', i < 9 ? ('T' + (i + 1)) : ('U' + (i - 9)));
+        claim.setAttribute('data-cakes', String(cakes));
+        claim.setAttribute('data-qty', String(qty));
+        claim.setAttribute('title', rewardTitle);
+      }
+
+      var label = el.querySelector('.admin-shop-cakes');
+      if (!label) {
+        label = document.createElement('span');
+        label.className = 'admin-shop-cakes';
+        el.appendChild(label);
+      }
+      label.textContent = cakes ? cakes + ' Bánh' : '';
+    });
+
+    items.forEach(function(el, i) {
+      if (i >= rewards.length) el.style.display = 'none';
+    });
+  }
+
   function applySpinPrizeConfig(cfg) {
     var items = document.querySelectorAll('#dt3q-ld-sinhnhat-vongquay .gr_effect--item');
     if (!items.length) return;
@@ -625,6 +710,7 @@
     applyMissionConfig(cfg);
     applySpinPrizeConfig(cfg);
     applySpinAccumulationConfig(cfg);
+    applyShopConfig(cfg);
   }
 
   loadAndApplyMissionConfig();

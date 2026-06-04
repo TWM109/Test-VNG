@@ -92,6 +92,22 @@
     display: flex; align-items: center; gap: 8px;
   }
   .card-title-icon { font-size: 16px; }
+  .collapsible-card > .card-title {
+    margin-bottom: 0;
+    cursor: pointer;
+    user-select: none;
+  }
+  .collapsible-card:not(.collapsed) > .card-title { margin-bottom: 16px; }
+  .collapsible-title-text { flex: 1; }
+  .collapse-toggle {
+    width: 28px; height: 28px; border-radius: 6px;
+    border: 1px solid var(--border); background: var(--surface2);
+    color: var(--muted); font-size: 16px; line-height: 1;
+    cursor: pointer; transition: .15s;
+  }
+  .collapse-toggle:hover { color: var(--text); border-color: var(--border2); }
+  .collapsible-card.collapsed .collapsible-body { display: none; }
+  .collapsible-card.collapsed .collapse-toggle { transform: rotate(-90deg); }
 
   /* ── GRID ── */
   .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
@@ -419,14 +435,14 @@
         </div>
       </div>
       <div>
-        <p class="section-title">Đổi quà</p>
+        <p class="section-title">Tích bánh mở quà Vip</p>
         <div class="form-row grid-2">
           <div class="form-group">
-            <label>Shop Start</label>
+            <label>Tích bánh Start</label>
             <input type="datetime-local" id="tl_shop_start">
           </div>
           <div class="form-group">
-            <label>Shop End</label>
+            <label>Tích bánh End</label>
             <input type="datetime-local" id="tl_shop_end">
           </div>
         </div>
@@ -448,94 +464,109 @@
   </div>
 
   <!-- 2. Thiệp Mời Đại Tiệc — Mốc tích lũy -->
-  <div class="card" id="card-thiep-moi">
-    <div class="card-title"><span class="card-title-icon">💌</span>Cấu Hình Mốc Tích Lũy Thiệp Mời Đại Tiệc</div>
-    <p class="text-muted mb-12" style="font-size:12px">
-      Cấu hình số mốc, ảnh tooltip và danh sách quà tặng cho từng mốc. Dữ liệu đồng bộ sang Client qua localStorage key <code class="mono">dt3q_thiep_moi_cfg</code>.
-    </p>
-    <div id="thiepMoiContainer"></div>
-    <div class="table-actions">
-      <button class="btn btn-ghost btn-sm" type="button" onclick="addThiepMoiMilestone()">+ Thêm mốc</button>
-      <button class="btn btn-primary btn-sm" type="button" onclick="saveThiepMoiConfig()" style="margin-left:auto">💾 Lưu mốc Thiệp Mời</button>
+  <div class="card collapsible-card collapsed" id="card-thiep-moi">
+    <div class="card-title">
+      <span class="card-title-icon">💌</span><span class="collapsible-title-text">Cấu Hình Mốc Tích Lũy Thiệp Mời Đại Tiệc</span>
+      <button class="collapse-toggle" type="button" aria-label="Mở rộng module" aria-expanded="false">⌄</button>
+    </div>
+    <div class="collapsible-body">
+      <p class="text-muted mb-12" style="font-size:12px">
+        Cấu hình số mốc, ảnh tooltip và danh sách quà tặng cho từng mốc. Dữ liệu đồng bộ sang Client qua localStorage key <code class="mono">dt3q_thiep_moi_cfg</code>.
+      </p>
+      <div id="thiepMoiContainer"></div>
+      <div class="table-actions">
+        <button class="btn btn-ghost btn-sm" type="button" onclick="addThiepMoiMilestone()">+ Thêm mốc</button>
+        <button class="btn btn-primary btn-sm" type="button" onclick="saveThiepMoiConfig()" style="margin-left:auto">💾 Lưu mốc Thiệp Mời</button>
+      </div>
     </div>
   </div>
 
   <!-- 3. Vòng quay -->
-  <div class="card">
-    <div class="card-title"><span class="card-title-icon">🎡</span>Vòng Quay Lucky Spin</div>
-    <div class="table-overflow">
-      <table class="data-table" id="spinTable">
-        <thead>
-          <tr>
-            <th style="width:40px">#</th>
-            <th>Quà tặng</th>
-            <th>Link ảnh tooltip</th>
-            <th style="width:110px">Rate (%)</th>
-            <th style="width:110px">Stock</th>
-            <th style="width:60px">Xoá</th>
-          </tr>
-        </thead>
-        <tbody id="spinTbody"></tbody>
-      </table>
+  <div class="card collapsible-card collapsed" id="card-open-gift">
+    <div class="card-title">
+      <span class="card-title-icon">🎡</span><span class="collapsible-title-text">Config Mở quà sinh nhật</span>
+      <button class="collapse-toggle" type="button" aria-label="Mở rộng module" aria-expanded="false">⌄</button>
     </div>
-    <div class="table-actions">
-      <button class="btn btn-ghost btn-sm" onclick="addSpinRow()">+ Thêm phần thưởng</button>
-      <span id="spinRateSum" class="mono" style="margin-left:auto;font-size:13px;color:var(--muted)">Tổng: 0%</span>
-    </div>
-    <div style="height:16px"></div>
-    <div class="card-title" style="font-size:15px;margin-bottom:8px"><span class="card-title-icon">📋</span>Nhiệm Vụ Nhận Lượt</div>
-    <p class="text-muted mb-12" style="font-size:12px">
-      Cấu hình danh sách nhiệm vụ trong popup khi click nút Nhận Lượt. Nội dung cho phép HTML, ví dụ <code class="mono">&lt;b&gt;Nạp gói promotion 109.000đ&lt;/b&gt;&lt;br&gt;(+ 6 lượt/ngày)</code>.
-    </p>
-    <div class="table-overflow">
-      <table class="data-table" id="missionTable">
-        <thead>
-          <tr>
-            <th style="width:40px">#</th>
-            <th style="width:130px">Loại</th>
-            <th>Nội dung HTML</th>
-            <th style="width:130px">Nút</th>
-            <th style="width:90px">Enabled</th>
-            <th style="width:60px">Xoá</th>
-          </tr>
-        </thead>
-        <tbody id="missionTbody"></tbody>
-      </table>
-    </div>
-    <div class="table-actions">
-      <button class="btn btn-ghost btn-sm" onclick="addMissionRow()">+ Thêm nhiệm vụ</button>
-    </div>
-    <div style="height:16px"></div>
-    <div class="card-title" style="font-size:15px;margin-bottom:8px"><span class="card-title-icon">🎁</span>Tích Lũy Nhận Lượt</div>
-    <p class="text-muted mb-12" style="font-size:12px">
-      Cấu hình các mốc số lượt tích lũy, danh sách quà tặng và ảnh tooltip hiển thị khi hover từng mốc.
-    </p>
-    <div id="spinAccumulationContainer"></div>
-    <div class="table-actions">
-      <button class="btn btn-ghost btn-sm" type="button" onclick="addSpinAccumulationMilestone()">+ Thêm mốc tích lũy</button>
+    <div class="collapsible-body">
+      <div class="table-overflow">
+        <table class="data-table" id="spinTable">
+          <thead>
+            <tr>
+              <th style="width:40px">#</th>
+              <th>Quà tặng</th>
+              <th>Link ảnh tooltip</th>
+              <th style="width:110px">Rate (%)</th>
+              <th style="width:110px">Stock</th>
+              <th style="width:60px">Xoá</th>
+            </tr>
+          </thead>
+          <tbody id="spinTbody"></tbody>
+        </table>
+      </div>
+      <div class="table-actions">
+        <button class="btn btn-ghost btn-sm" onclick="addSpinRow()">+ Thêm phần thưởng</button>
+        <span id="spinRateSum" class="mono" style="margin-left:auto;font-size:13px;color:var(--muted)">Tổng: 0%</span>
+      </div>
+      <div style="height:16px"></div>
+      <div class="card-title" style="font-size:15px;margin-bottom:8px"><span class="card-title-icon">📋</span>Nhiệm Vụ Nhận Lượt</div>
+      <p class="text-muted mb-12" style="font-size:12px">
+        Cấu hình danh sách nhiệm vụ trong popup khi click nút Nhận Lượt. Nội dung cho phép HTML, ví dụ <code class="mono">&lt;b&gt;Nạp gói promotion 109.000đ&lt;/b&gt;&lt;br&gt;(+ 6 lượt/ngày)</code>.
+      </p>
+      <div class="table-overflow">
+        <table class="data-table" id="missionTable">
+          <thead>
+            <tr>
+              <th style="width:40px">#</th>
+              <th style="width:130px">Loại</th>
+              <th>Nội dung HTML</th>
+              <th style="width:130px">Nút</th>
+              <th style="width:90px">Enabled</th>
+              <th style="width:60px">Xoá</th>
+            </tr>
+          </thead>
+          <tbody id="missionTbody"></tbody>
+        </table>
+      </div>
+      <div class="table-actions">
+        <button class="btn btn-ghost btn-sm" onclick="addMissionRow()">+ Thêm nhiệm vụ</button>
+      </div>
+      <div style="height:16px"></div>
+      <div class="card-title" style="font-size:15px;margin-bottom:8px"><span class="card-title-icon">🎁</span>Tích Lũy Nhận Lượt</div>
+      <p class="text-muted mb-12" style="font-size:12px">
+        Cấu hình các mốc số lượt tích lũy, danh sách quà tặng và ảnh tooltip hiển thị khi hover từng mốc.
+      </p>
+      <div id="spinAccumulationContainer"></div>
+      <div class="table-actions">
+        <button class="btn btn-ghost btn-sm" type="button" onclick="addSpinAccumulationMilestone()">+ Thêm mốc tích lũy</button>
+      </div>
     </div>
   </div>
 
-  <!-- 3. Đổi quà -->
-  <div class="card">
-    <div class="card-title"><span class="card-title-icon">🎁</span>Đổi Quà</div>
-    <div class="table-overflow">
-      <table class="data-table" id="shopTable">
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>Tên vật phẩm</th>
-            <th style="width:110px">Điểm cần</th>
-            <th style="width:110px">Tồn kho</th>
-            <th style="width:90px">Enabled</th>
-            <th style="width:60px">Xoá</th>
-          </tr>
-        </thead>
-        <tbody id="shopTbody"></tbody>
-      </table>
+  <!-- 3. Tích bánh mở quà Vip -->
+  <div class="card collapsible-card collapsed" id="card-shop-vip">
+    <div class="card-title">
+      <span class="card-title-icon">🎁</span><span class="collapsible-title-text">Tích bánh mở quà Vip</span>
+      <button class="collapse-toggle" type="button" aria-label="Mở rộng module" aria-expanded="false">⌄</button>
     </div>
-    <div class="table-actions">
-      <button class="btn btn-ghost btn-sm" onclick="addShopRow()">+ Thêm vật phẩm</button>
+    <div class="collapsible-body">
+      <div class="table-overflow">
+        <table class="data-table" id="shopTable">
+          <thead>
+            <tr>
+              <th style="width:60px">STT</th>
+              <th>Vật Phẩm</th>
+              <th style="width:110px">Số lượng</th>
+              <th style="width:160px">Số Bánh Tích Lũy(Để mở)</th>
+              <th>Hình Ảnh (Link ảnh tooltip)</th>
+              <th style="width:60px">Xoá</th>
+            </tr>
+          </thead>
+          <tbody id="shopTbody"></tbody>
+        </table>
+      </div>
+      <div class="table-actions">
+        <button class="btn btn-ghost btn-sm" onclick="addShopRow()">+ Thêm vật phẩm</button>
+      </div>
     </div>
   </div>
 
@@ -663,12 +694,12 @@
       <div id="milestoneProgress"></div>
     </div>
 
-    <!-- Tồn kho -->
+    <!-- Tích bánh mở quà Vip -->
     <div class="card">
-      <div class="card-title"><span class="card-title-icon">📦</span>Tồn Kho Đổi Quà</div>
+      <div class="card-title"><span class="card-title-icon">📦</span>Tích bánh mở quà Vip</div>
       <table class="data-table" id="stockTable">
         <thead>
-          <tr><th>Vật phẩm</th><th>Điểm</th><th style="text-align:right">Còn lại</th></tr>
+          <tr><th>Vật phẩm</th><th>Số lượng</th><th>Số bánh</th><th style="text-align:right">Ảnh</th></tr>
         </thead>
         <tbody id="stockTbody"></tbody>
       </table>
@@ -726,6 +757,7 @@ const GIFT_ITEM_OPTIONS = [
 ];
 
 const SPIN_ITEM_IMG_BASE = 'https://cdn-mainsite-aka.vnggames.com/products/dt3q/landing/2026-sinh-nhat-7-ai/dist/optimized/dt3q-ld-sinhnhat-vongquay/images/';
+const SHOP_ITEM_IMG_BASE = 'https://cdn-mainsite-aka.vnggames.com/products/dt3q/landing/2026-sinh-nhat-7-ai/dist/optimized/dt3q-ld-sinhnhat-doiqua/images/';
 
 /* Cấu hình mẫu mặc định 4 mốc khi chưa có dữ liệu localStorage */
 const DEFAULT_THIEP_MOI = [
@@ -766,9 +798,17 @@ const MOCK = {
     { name: 'Gối Ôm Tiểu Kiều', tooltipImg: SPIN_ITEM_IMG_BASE + 'item-11.png', rate: 8, stock: 300 },
   ],
   shop: [
-    { name: 'Móc khóa DT3Q', points: 50, stock: 500, enabled: true },
-    { name: 'Gối ôm DT3Q', points: 200, stock: 200, enabled: true },
-    { name: 'Quà đặc biệt', points: 500, stock: 50, enabled: true },
+    { name: 'Rương Chọn Đá Thô', qty: 1, cakes: 1, tooltipImg: SHOP_ITEM_IMG_BASE + 'banh-1.webp' },
+    { name: 'Quà Đặc Biệt', qty: 1, cakes: 2, tooltipImg: SHOP_ITEM_IMG_BASE + 'banh-2.webp' },
+    { name: 'Thức Tỉnh Đơn', qty: 5, cakes: 3, tooltipImg: SHOP_ITEM_IMG_BASE + 'banh-3.webp' },
+    { name: 'Rương Tướng Hán Ngẫu Nhiên', qty: 1, cakes: 4, tooltipImg: SHOP_ITEM_IMG_BASE + 'banh-4.webp' },
+    { name: 'Rương Đỏ/Kim Ngẫu Nhiên', qty: 1, cakes: 5, tooltipImg: SHOP_ITEM_IMG_BASE + 'banh-5.webp' },
+    { name: 'Bánh Sinh Nhật', qty: 10, cakes: 6, tooltipImg: SHOP_ITEM_IMG_BASE + 'banh-6.webp' },
+    { name: 'Móc Khóa', qty: 1, cakes: 7, tooltipImg: SHOP_ITEM_IMG_BASE + 'banh-7.webp' },
+    { name: 'Rương Chọn Mảnh Tướng Tân', qty: 1, cakes: 8, tooltipImg: SHOP_ITEM_IMG_BASE + 'banh-8.webp' },
+    { name: 'Rương Nhân Phẩm Vô Cực', qty: 1, cakes: 9, tooltipImg: SHOP_ITEM_IMG_BASE + 'banh-9.webp' },
+    { name: 'Rương Chọn Mảnh Thập Giới', qty: 1, cakes: 10, tooltipImg: SHOP_ITEM_IMG_BASE + 'banh-10.webp' },
+    { name: 'Gối Ôm Tiểu Kiều', qty: 1, cakes: 11, tooltipImg: SHOP_ITEM_IMG_BASE + 'banh-11.webp' },
   ],
   milestone: [
     { target: 1000, reward: 'Quà mốc Q1', status: 'unlocked' },
@@ -965,19 +1005,23 @@ function renderShopTable() {
     const tr = document.createElement('tr');
     tr.innerHTML = `
       <td class="mono text-muted">${i+1}</td>
-      <td><input type="text" value="${esc(row.name)}" onchange="shopData[${i}].name=this.value"></td>
-      <td><input type="number" min="0" value="${row.points}" onchange="shopData[${i}].points=parseInt(this.value)||0"></td>
-      <td><input type="number" min="0" value="${row.stock}" onchange="shopData[${i}].stock=parseInt(this.value)||0"></td>
-      <td>
-        <label class="toggle"><input type="checkbox" ${row.enabled?'checked':''} onchange="shopData[${i}].enabled=this.checked">
-        <span class="toggle-slider"></span></label>
-      </td>
+      <td><select onchange="shopData[${i}].name=this.value">${buildGiftSelectOptions(row.name)}</select></td>
+      <td><input type="number" min="1" value="${row.qty || 1}" onchange="shopData[${i}].qty=parseInt(this.value,10)||1"></td>
+      <td><input type="number" min="0" value="${row.cakes}" onchange="shopData[${i}].cakes=parseInt(this.value,10)||0"></td>
+      <td><input type="text" value="${esc(row.tooltipImg)}" placeholder="https://..." onchange="shopData[${i}].tooltipImg=this.value"></td>
       <td><button class="btn btn-danger btn-xs" onclick="removeShopRow(${i})">✕</button></td>`;
     tbody.appendChild(tr);
   });
 }
 function addShopRow() {
-  shopData.push({ name: 'Vật phẩm mới', points: 100, stock: 100, enabled: true });
+  const next = shopData.length + 1;
+  const fallbackIndex = ((next - 1) % 11) + 1;
+  shopData.push({
+    name: GIFT_ITEM_OPTIONS[(next - 1) % GIFT_ITEM_OPTIONS.length],
+    qty: 1,
+    cakes: next,
+    tooltipImg: SHOP_ITEM_IMG_BASE + 'banh-' + fallbackIndex + '.webp'
+  });
   renderShopTable();
 }
 function removeShopRow(i) { shopData.splice(i,1); renderShopTable(); }
@@ -1312,10 +1356,16 @@ function runValidation() {
     }
   });
 
-  // 3. Shop stock = 0 but enabled
-  shopData.forEach(r => {
-    if (r.enabled && r.stock === 0) {
-      issues.push({ type:'warning', msg: `Đổi quà "${r.name}": stock = 0 nhưng enabled` });
+  // 3. Tích bánh mở quà Vip validation
+  shopData.forEach((r, i) => {
+    if ((parseInt(r.cakes, 10) || 0) <= 0) {
+      issues.push({ type:'error', msg: `Tích bánh mở quà Vip #${i + 1}: số bánh phải lớn hơn 0` });
+    }
+    if ((parseInt(r.qty, 10) || 0) <= 0) {
+      issues.push({ type:'error', msg: `Tích bánh mở quà Vip #${i + 1}: số lượng phải lớn hơn 0` });
+    }
+    if (!(r.tooltipImg || '').trim()) {
+      issues.push({ type:'warning', msg: `Tích bánh mở quà Vip "${r.name || ('#' + (i + 1))}": thiếu link ảnh tooltip` });
     }
   });
 
@@ -1323,7 +1373,7 @@ function runValidation() {
   const tlPairs = [
     ['Global', 'tl_global_start', 'tl_global_end'],
     ['Vòng quay', 'tl_spin_start', 'tl_spin_end'],
-    ['Đổi quà', 'tl_shop_start', 'tl_shop_end'],
+    ['Tích bánh mở quà Vip', 'tl_shop_start', 'tl_shop_end'],
     ['Nhiệm vụ', 'tl_mission_start', 'tl_mission_end'],
   ];
   let tlOk = true;
@@ -1343,7 +1393,8 @@ function runValidation() {
     if (r.rate < 0 || r.rate > 100 || r.stock < 0) { issues.push({ type:'error', msg: `Vòng quay "${r.name}": rate phải từ 0 đến 100 và stock không được âm` }); numOk = false; }
   });
   [...shopData].forEach(r => {
-    if (r.points < 0 || r.stock < 0) { issues.push({ type:'error', msg: `Đổi quà "${r.name}": giá trị âm` }); numOk = false; }
+    if ((parseInt(r.cakes, 10) || 0) < 0) { issues.push({ type:'error', msg: `Tích bánh mở quà Vip "${r.name}": số bánh không được âm` }); numOk = false; }
+    if ((parseInt(r.qty, 10) || 0) < 0) { issues.push({ type:'error', msg: `Tích bánh mở quà Vip "${r.name}": số lượng không được âm` }); numOk = false; }
   });
   [...spinAccumulationData].forEach((r, i) => {
     if ((parseInt(r.target, 10) || 0) <= 0) { issues.push({ type:'error', msg: `Tích lũy nhận lượt #${i + 1}: số lượt tích lũy phải lớn hơn 0` }); numOk = false; }
@@ -1354,6 +1405,7 @@ function runValidation() {
   const emptyName = [...spinData, ...shopData, ...packageData].some(r => !r.name || r.name.trim() === '') ||
     missionData.some(r => !(r.contentHtml || r.name || '').trim()) ||
     spinData.some(r => !(r.tooltipImg || '').trim()) ||
+    shopData.some(r => !(r.tooltipImg || '').trim()) ||
     spinAccumulationData.some(r => !(r.gifts || []).length || !(r.tooltipImg || '').trim());
   if (emptyName) issues.push({ type:'warning', msg: 'Có dòng thiếu tên/nội dung/quà hoặc tooltip' });
 
@@ -1455,7 +1507,7 @@ function applyConfig(cfg) {
     if (el) el.value = v;
   });
   spinData = normalizeSpinConfig(cfg.spin);
-  shopData = cfg.shop || [...MOCK.shop];
+  shopData = normalizeShopConfig(cfg.shop);
   milestoneData = cfg.milestones || [...MOCK.milestone];
   missionData = cfg.missions || [...MOCK.mission];
   spinAccumulationData = (cfg.spinAccumulation || cfg.accumulations || MOCK.spinAccumulation).map(r => ({...r, gifts: (r.gifts || []).map(g => ({...g}))}));
@@ -1494,6 +1546,32 @@ function normalizeSpinConfig(rows) {
       tooltipImg: row.tooltipImg || row.img || source.tooltipImg,
       rate: parseFloat(row.rate) || 0,
       stock: parseInt(row.stock, 10) || 0
+    };
+  });
+}
+
+function normalizeShopConfig(rows) {
+  if (!Array.isArray(rows) || !rows.length) return MOCK.shop.map(r => ({...r}));
+
+  const legacyNames = ['Móc khóa DT3Q', 'Gối ôm DT3Q', 'Quà đặc biệt'];
+  const isLegacyShopMock = rows.length <= legacyNames.length &&
+    rows.every((row, index) => row && row.name === legacyNames[index]);
+  const isPreviousVipMock = rows.every(row => row && /^Quà Vip \d+$/.test(row.name || ''));
+  const isOldShopSchema = rows.every(row => row && row.cakes === undefined && row.tooltipImg === undefined && row.img === undefined && row.image === undefined);
+  if (isLegacyShopMock || isPreviousVipMock || isOldShopSchema) return MOCK.shop.map(r => ({...r}));
+
+  return rows.map((row, index) => {
+    const fallback = MOCK.shop[index] || {
+      name: GIFT_ITEM_OPTIONS[index % GIFT_ITEM_OPTIONS.length],
+      qty: 1,
+      cakes: index + 1,
+      tooltipImg: SHOP_ITEM_IMG_BASE + 'banh-' + (((index) % 11) + 1) + '.webp'
+    };
+    return {
+      name: row.name || row.label || fallback.name || GIFT_ITEM_OPTIONS[0],
+      qty: parseInt(row.qty ?? row.quantity ?? row.amount ?? fallback.qty ?? 1, 10) || 1,
+      cakes: parseInt(row.cakes ?? row.points ?? row.cost ?? fallback.cakes, 10) || fallback.cakes,
+      tooltipImg: row.tooltipImg || row.img || row.image || fallback.tooltipImg
     };
   });
 }
@@ -1643,11 +1721,11 @@ function renderStockTable() {
   tbody.innerHTML = '';
   shopData.forEach(item => {
     const tr = document.createElement('tr');
-    const stockCls = item.stock === 0 ? 'text-red' : item.stock < 20 ? 'text-yellow' : 'text-green';
     tr.innerHTML = `
       <td>${esc(item.name)}</td>
-      <td class="mono">${item.points}đ</td>
-      <td style="text-align:right" class="mono ${stockCls}">${fmt(item.stock)}</td>`;
+      <td class="mono">${fmt(parseInt(item.qty, 10) || 1)}</td>
+      <td class="mono">${fmt(parseInt(item.cakes, 10) || 0)}</td>
+      <td style="text-align:right"><a href="${esc(item.tooltipImg || '')}" target="_blank" rel="noopener" class="mono">Xem ảnh</a></td>`;
     tbody.appendChild(tr);
   });
 }
@@ -1706,9 +1784,38 @@ function fmtVnd(n) {
 // ═══════════════════════════════════════════
 // INIT
 // ═══════════════════════════════════════════
+function initCollapsibleCards() {
+  document.querySelectorAll('.collapsible-card').forEach(card => {
+    const title = card.querySelector(':scope > .card-title');
+    const toggle = card.querySelector(':scope > .card-title .collapse-toggle');
+    if (!title || !toggle || card.dataset.collapseReady === '1') return;
+
+    const sync = () => {
+      const expanded = !card.classList.contains('collapsed');
+      toggle.setAttribute('aria-expanded', String(expanded));
+      toggle.setAttribute('aria-label', expanded ? 'Thu gọn module' : 'Mở rộng module');
+    };
+
+    title.addEventListener('click', () => {
+      card.classList.toggle('collapsed');
+      sync();
+    });
+
+    toggle.addEventListener('click', event => {
+      event.stopPropagation();
+      card.classList.toggle('collapsed');
+      sync();
+    });
+
+    card.dataset.collapseReady = '1';
+    sync();
+  });
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   loadConfig();
   loadThiepMoiConfig();
+  initCollapsibleCards();
 });
 </script>
 </body>
