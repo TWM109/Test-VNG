@@ -529,6 +529,7 @@
               <th style="width:40px">#</th>
               <th style="width:130px">Loại</th>
               <th>Nội dung HTML</th>
+              <th style="width:110px">Lượt quay</th>
               <th style="width:130px">Nút</th>
               <th style="width:90px">Enabled</th>
               <th style="width:60px">Xoá</th>
@@ -991,7 +992,7 @@ function renderSpinTable() {
     row.name = row.name || GIFT_ITEM_OPTIONS[0];
     row.tooltipImg = row.tooltipImg || row.img || '';
     row.rate = parseFloat(row.rate) || 0;
-    row.stock = parseInt(row.stock, 10) || 0;
+    row.stock = row.stock ?? 0;
     const tr = document.createElement('tr');
     tr.innerHTML = `
       <td class="mono text-muted">${i+1}</td>
@@ -1002,7 +1003,7 @@ function renderSpinTable() {
       </td>
       <td><input type="text" value="${esc(row.tooltipImg)}" placeholder="https://..." onchange="spinData[${i}].tooltipImg=this.value"></td>
       <td><input type="number" min="0" max="100" step="0.01" value="${row.rate}" onchange="setSpinRate(${i}, this)"></td>
-      <td><input type="number" min="0" value="${row.stock}" onchange="spinData[${i}].stock=parseInt(this.value)||0"></td>
+      <td><input type="text" inputmode="numeric" pattern="[1-9][0-9]*" value="${esc(row.stock)}" oninput="sanitizePositiveIntegerInput(this, spinData[${i}], 'stock')" onchange="sanitizePositiveIntegerInput(this, spinData[${i}], 'stock')"></td>
       <td><button class="btn btn-danger btn-xs" onclick="removeSpinRow(${i})">✕</button></td>`;
     tbody.appendChild(tr);
   });
@@ -1029,6 +1030,16 @@ function updateSpinSum() {
   const el = document.getElementById('spinRateSum');
   el.textContent = 'Tổng: ' + sum.toFixed(2) + '%';
   el.style.color = Math.abs(sum - 100) < 0.01 ? 'var(--green)' : 'var(--red)';
+}
+
+function sanitizePositiveIntegerInput(input, target, prop) {
+  let value = String(input.value || '');
+  const firstInvalid = value.search(/\D/);
+  if (firstInvalid !== -1) value = value.slice(0, firstInvalid);
+  value = value.replace(/^0+/, '');
+  input.value = value;
+  if (target && prop) target[prop] = value;
+  return value;
 }
 
 // ── Shop ──
@@ -1087,12 +1098,24 @@ function addMilestoneRow() {
 function removeMilestoneRow(i) { milestoneData.splice(i,1); renderMilestoneTable(); }
 
 // ── Mission ──
+function deriveMissionTurns(row) {
+  if (row && row.turns !== undefined) return parseInt(row.turns, 10) || 0;
+  const text = String((row && (row.contentHtml || row.html || row.name)) || '').replace(/<[^>]*>/g, ' ');
+  const match = text.match(/(\d+)\s*lượt/i);
+  return match ? (parseInt(match[1], 10) || 1) : 1;
+}
+
+function setMissionTurns(index, input) {
+  sanitizePositiveIntegerInput(input, missionData[index], 'turns');
+}
+
 function renderMissionTable() {
   const tbody = document.getElementById('missionTbody');
   tbody.innerHTML = '';
   missionData.forEach((row, i) => {
     row.type = row.type || 'daily';
     row.contentHtml = row.contentHtml || row.html || row.name || '';
+    row.turns = deriveMissionTurns(row);
     row.action = row.action || 'Thực Hiện';
     if (row.action !== 'Thực Hiện' && row.action !== 'Nhận Lượt') row.action = 'Thực Hiện';
     const tr = document.createElement('tr');
@@ -1107,6 +1130,7 @@ function renderMissionTable() {
       <td>
         <textarea rows="3" style="width:100%;min-width:360px;resize:vertical" onchange="missionData[${i}].contentHtml=this.value">${esc(row.contentHtml)}</textarea>
       </td>
+      <td><input type="text" inputmode="numeric" pattern="[1-9][0-9]*" value="${row.turns || ''}" oninput="setMissionTurns(${i}, this)" onchange="setMissionTurns(${i}, this)"></td>
       <td>
         <select onchange="missionData[${i}].action=this.value">
           <option value="Thực Hiện" ${row.action==='Thực Hiện'?'selected':''}>Thực Hiện</option>
@@ -1122,7 +1146,7 @@ function renderMissionTable() {
   });
 }
 function addMissionRow() {
-  missionData.push({ type: 'daily', contentHtml: '<b>Nhiệm vụ mới</b><br>(+ 1 lượt/ngày)', action: 'Thực Hiện', enabled: true });
+  missionData.push({ type: 'daily', contentHtml: '<b>Nhiệm vụ mới</b><br>(+ 1 lượt/ngày)', turns: 1, action: 'Thực Hiện', enabled: true });
   renderMissionTable();
 }
 function removeMissionRow(i) { missionData.splice(i,1); renderMissionTable(); }
@@ -1143,8 +1167,8 @@ function renderSpinAccumulationUI() {
       return '<div class="thiep-gift-row" data-gift-index="' + gi + '">' +
         '<select onchange="spinAccumulationData[' + mi + '].gifts[' + gi + '].name=this.value">' +
         buildGiftSelectOptions(gift.name) + '</select>' +
-        '<input type="number" min="1" value="' + (gift.qty || 1) + '" ' +
-        'onchange="spinAccumulationData[' + mi + '].gifts[' + gi + '].qty=parseInt(this.value,10)||1">' +
+        '<input type="text" inputmode="numeric" pattern="[1-9][0-9]*" value="' + esc(gift.qty || 1) + '" ' +
+        'oninput="sanitizePositiveIntegerInput(this, spinAccumulationData[' + mi + '].gifts[' + gi + '], \'qty\')" onchange="sanitizePositiveIntegerInput(this, spinAccumulationData[' + mi + '].gifts[' + gi + '], \'qty\')">' +
         '<button class="btn btn-danger btn-xs" type="button" onclick="removeSpinAccumulationGift(' + mi + ',' + gi + ')">❌ Xóa</button>' +
         '</div>';
     }).join('');
@@ -1154,8 +1178,8 @@ function renderSpinAccumulationUI() {
       '<div class="thiep-moc-header">' +
         '<div class="form-group">' +
           '<label>Số lượt tích lũy</label>' +
-          '<input type="number" min="1" value="' + (milestone.target || 0) + '" ' +
-          'onchange="spinAccumulationData[' + mi + '].target=parseInt(this.value,10)||0">' +
+          '<input type="text" inputmode="numeric" pattern="[1-9][0-9]*" value="' + esc(milestone.target || 0) + '" ' +
+          'oninput="sanitizePositiveIntegerInput(this, spinAccumulationData[' + mi + '], \'target\')" onchange="sanitizePositiveIntegerInput(this, spinAccumulationData[' + mi + '], \'target\')">' +
         '</div>' +
         '<div class="form-group">' +
           '<label>Link ảnh Tooltip</label>' +
@@ -1254,8 +1278,8 @@ function renderThiepMoiUI() {
       return '<div class="thiep-gift-row" data-gift-index="' + gi + '">' +
         '<select onchange="thiepMoiData[' + mi + '].gifts[' + gi + '].name=this.value">' +
         buildGiftSelectOptions(gift.name) + '</select>' +
-        '<input type="number" min="1" value="' + (gift.qty || 1) + '" ' +
-        'onchange="thiepMoiData[' + mi + '].gifts[' + gi + '].qty=parseInt(this.value,10)||1">' +
+        '<input type="text" inputmode="numeric" pattern="[1-9][0-9]*" value="' + esc(gift.qty || 1) + '" ' +
+        'oninput="sanitizePositiveIntegerInput(this, thiepMoiData[' + mi + '].gifts[' + gi + '], \'qty\')" onchange="sanitizePositiveIntegerInput(this, thiepMoiData[' + mi + '].gifts[' + gi + '], \'qty\')">' +
         '<button class="btn btn-danger btn-xs" type="button" onclick="removeThiepMoiGift(' + mi + ',' + gi + ')">❌ Xóa</button>' +
         '</div>';
     }).join('');
@@ -1265,8 +1289,8 @@ function renderThiepMoiUI() {
       '<div class="thiep-moc-header">' +
         '<div class="form-group">' +
           '<label>Số mốc tích lũy</label>' +
-          '<input type="number" min="1" value="' + (milestone.moc || 0) + '" ' +
-          'onchange="thiepMoiData[' + mi + '].moc=parseInt(this.value,10)||0">' +
+          '<input type="text" inputmode="numeric" pattern="[1-9][0-9]*" value="' + esc(milestone.moc || 0) + '" ' +
+          'oninput="sanitizePositiveIntegerInput(this, thiepMoiData[' + mi + '], \'moc\')" onchange="sanitizePositiveIntegerInput(this, thiepMoiData[' + mi + '], \'moc\')">' +
         '</div>' +
         '<div class="form-group">' +
           '<label>Link ảnh Tooltip</label>' +
@@ -1412,6 +1436,10 @@ function gatherRulesConfig() {
   return cloneRules(rulesData);
 }
 
+function isPositiveIntegerValue(value) {
+  return /^[1-9]\d*$/.test(String(value ?? '').trim());
+}
+
 function runValidation() {
   const issues = [];
 
@@ -1429,12 +1457,43 @@ function runValidation() {
     if (rate < 0 || rate > 100) {
       issues.push({ type:'error', msg: `Vòng quay "${r.name}": rate phải nằm trong khoảng 0% đến 100%` });
     }
-    if ((parseInt(r.stock, 10) || 0) === 0) {
-      issues.push({ type:'warning', msg: `Vòng quay "${r.name}": stock = 0` });
+    if (!isPositiveIntegerValue(r.stock)) {
+      issues.push({ type:'error', msg: `Mở quà sinh nhật "${r.name || ''}": Stock phải là số tự nhiên lớn hơn 0 và không được là số thập phân` });
     }
   });
 
-  // 3. Tích bánh mở quà Vip validation
+  // 3. Mission lượt quay validation
+  missionData.forEach((r, i) => {
+    if (!isPositiveIntegerValue(r.turns)) {
+      issues.push({ type:'error', msg: `Nhiệm vụ nhận lượt #${i + 1}: Lượt quay phải là số tự nhiên lớn hơn 0 và không được là số thập phân` });
+    }
+  });
+
+  // 4. Thiệp Mời Đại Tiệc validation
+  thiepMoiData.forEach((m, i) => {
+    if (!isPositiveIntegerValue(m.moc)) {
+      issues.push({ type:'error', msg: `Thiệp Mời Đại Tiệc mốc #${i + 1}: Số mốc tích lũy phải là số tự nhiên lớn hơn 0 và không được là số thập phân` });
+    }
+    (m.gifts || []).forEach((g, gi) => {
+      if (!isPositiveIntegerValue(g.qty)) {
+        issues.push({ type:'error', msg: `Thiệp Mời Đại Tiệc mốc #${i + 1}, quà #${gi + 1}: Quantity phải là số tự nhiên lớn hơn 0 và không được là số thập phân` });
+      }
+    });
+  });
+
+  // 5. Tích Lũy Nhận Lượt validation
+  spinAccumulationData.forEach((m, i) => {
+    if (!isPositiveIntegerValue(m.target)) {
+      issues.push({ type:'error', msg: `Tích Lũy Nhận Lượt mốc #${i + 1}: Số lượt tích lũy phải là số tự nhiên lớn hơn 0 và không được là số thập phân` });
+    }
+    (m.gifts || []).forEach((g, gi) => {
+      if (!isPositiveIntegerValue(g.qty)) {
+        issues.push({ type:'error', msg: `Tích Lũy Nhận Lượt mốc #${i + 1}, item #${gi + 1}: Số lượng phải là số tự nhiên lớn hơn 0 và không được là số thập phân` });
+      }
+    });
+  });
+
+  // 6. Tích bánh mở quà Vip validation
   shopData.forEach((r, i) => {
     if ((parseInt(r.cakes, 10) || 0) <= 0) {
       issues.push({ type:'error', msg: `Tích bánh mở quà Vip #${i + 1}: số bánh phải lớn hơn 0` });
@@ -1447,7 +1506,7 @@ function runValidation() {
     }
   });
 
-  // 4. Timeline: end < start
+  // 7. Timeline: end < start
   const tlPairs = [
     ['Global', 'tl_global_start', 'tl_global_end'],
     ['Vòng quay', 'tl_spin_start', 'tl_spin_end'],
@@ -1465,7 +1524,7 @@ function runValidation() {
   });
   if (tlOk) issues.push({ type:'ok', msg: 'Tất cả timeline: End date hợp lệ ✓' });
 
-  // 5. Negative numbers
+  // 8. Negative numbers
   let numOk = true;
   [...spinData].forEach(r => {
     if (r.rate < 0 || r.rate > 100 || r.stock < 0) { issues.push({ type:'error', msg: `Vòng quay "${r.name}": rate phải từ 0 đến 100 và stock không được âm` }); numOk = false; }
@@ -1474,12 +1533,9 @@ function runValidation() {
     if ((parseInt(r.cakes, 10) || 0) < 0) { issues.push({ type:'error', msg: `Tích bánh mở quà Vip "${r.name}": số bánh không được âm` }); numOk = false; }
     if ((parseInt(r.qty, 10) || 0) < 0) { issues.push({ type:'error', msg: `Tích bánh mở quà Vip "${r.name}": số lượng không được âm` }); numOk = false; }
   });
-  [...spinAccumulationData].forEach((r, i) => {
-    if ((parseInt(r.target, 10) || 0) <= 0) { issues.push({ type:'error', msg: `Tích lũy nhận lượt #${i + 1}: số lượt tích lũy phải lớn hơn 0` }); numOk = false; }
-  });
   if (numOk) issues.push({ type:'ok', msg: 'Không có giá trị âm ✓' });
 
-  // 6. Empty names
+  // 9. Empty names
   const emptyName = [...spinData, ...shopData, ...packageData].some(r => !r.name || r.name.trim() === '') ||
     missionData.some(r => !(r.contentHtml || r.name || '').trim()) ||
     spinData.some(r => !(r.tooltipImg || '').trim()) ||

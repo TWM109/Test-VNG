@@ -608,9 +608,11 @@
   function normalizeMission(m) {
     var type = m && m.type === 'fixed' ? 'fixed' : 'daily';
     var action = m && m.action === 'Nhận Lượt' ? 'Nhận Lượt' : 'Thực Hiện';
+    var turns = parseInt(m && (m.turns || m.spin || m.point || m.value), 10) || 1;
     return {
       type: type,
       contentHtml: (m && (m.contentHtml || m.html || m.name)) || '',
+      turns: turns,
       action: action,
       enabled: !m || m.enabled !== false
     };
@@ -627,7 +629,7 @@
   function renderMissionGroup(title, list) {
     if (!list.length) return '';
     return '<p class="subtitle">' + title + '</p>' + list.map(function(m) {
-      return '<div class="gr_nhiemvu">' +
+      return '<div class="gr_nhiemvu" data-turns="' + escAttr(m.turns) + '">' +
         '<div class="d-flex"><div class="text">' + m.contentHtml + '</div></div>' +
         buildMissionButton(m) +
         '</div>';
