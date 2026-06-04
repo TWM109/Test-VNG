@@ -555,6 +555,7 @@
               <th>Nội dung HTML</th>
               <th style="width:110px">Lượt quay</th>
               <th style="width:130px">Nút</th>
+              <th style="width:220px">Direct Url</th>
               <th style="width:90px">Enabled</th>
               <th style="width:60px">Xoá</th>
             </tr>
@@ -658,6 +659,7 @@
               <th>Nội dung HTML</th>
               <th style="width:110px">Lượt quay</th>
               <th style="width:130px">Nút</th>
+              <th style="width:220px">Direct Url</th>
               <th style="width:90px">Enabled</th>
               <th style="width:60px">Xoá</th>
             </tr>
@@ -1232,6 +1234,7 @@ function renderMissionTable() {
     row.type = row.type || 'daily';
     row.contentHtml = row.contentHtml || row.html || row.name || '';
     row.turns = deriveMissionTurns(row);
+    row.directUrl = row.directUrl || row.url || row.link || '';
     row.action = row.action || 'Thực Hiện';
     if (row.action !== 'Thực Hiện' && row.action !== 'Nhận Lượt') row.action = 'Thực Hiện';
     const tr = document.createElement('tr');
@@ -1253,6 +1256,7 @@ function renderMissionTable() {
           <option value="Nhận Lượt" ${row.action==='Nhận Lượt'?'selected':''}>Nhận Lượt</option>
         </select>
       </td>
+      <td><input type="text" value="${esc(row.directUrl)}" placeholder="https://..." onchange="missionData[${i}].directUrl=this.value.trim()"></td>
       <td>
         <label class="toggle"><input type="checkbox" ${row.enabled?'checked':''} onchange="missionData[${i}].enabled=this.checked">
         <span class="toggle-slider"></span></label>
@@ -1279,6 +1283,7 @@ function renderBirthdayTableMissionTable() {
     row.type = row.type || 'daily';
     row.contentHtml = row.contentHtml || row.html || row.name || '';
     row.turns = deriveMissionTurns(row);
+    row.directUrl = row.directUrl || row.url || row.link || '';
     row.action = row.action || 'Thực Hiện';
     if (row.action !== 'Thực Hiện' && row.action !== 'Nhận Lượt') row.action = 'Thực Hiện';
     const tr = document.createElement('tr');
@@ -1300,6 +1305,7 @@ function renderBirthdayTableMissionTable() {
           <option value="Nhận Lượt" ${row.action==='Nhận Lượt'?'selected':''}>Nhận Lượt</option>
         </select>
       </td>
+      <td><input type="text" value="${esc(row.directUrl)}" placeholder="https://..." onchange="birthdayTableMissionData[${i}].directUrl=this.value.trim()"></td>
       <td>
         <label class="toggle"><input type="checkbox" ${row.enabled?'checked':''} onchange="birthdayTableMissionData[${i}].enabled=this.checked">
         <span class="toggle-slider"></span></label>

@@ -1,50 +1,104 @@
-# DT3Q Sinh Nhat 7 Tuoi
+# DT3Q Sinh Nhat 7 Tuoi - Admin Operation Tool
 
-## 2 file
+## 1. Muc tieu
 
-| File | Muc dich |
-|------|----------|
-| **`admin.html`** | Operation Tool — **3 tabs**: Config+Validation, Report, FE Preview |
-| **`vng.html`** | Trang event nguoi choi (muc 1-4, scroll 1 luong) |
+Tool nay phuc vu viec cau hinh va van hanh promotion sinh nhat DT3Q 7 tuoi. Admin cau hinh tai `index.html`, sau do preview ket qua tren FE `vng.html`.
 
-Mo **`admin.html`** de lam viec hang ngay. Tab 3 preview nhung `vng.html` trong iframe.
+Pham vi bai tap khong ket noi API that, nen cac so lieu thong ke, ton kho, claim va doanh thu dang la mock/estimate de minh hoa workflow van hanh.
 
-## Cau truc trang event (`vng.html`, scroll 1 luong)
+## 2. Promotion gom bao nhieu module?
 
-| Muc | Section ID | Noi dung |
-|-----|------------|----------|
-| 1 | `#dt3q-ld-sinhnhat-header` | Thiep moi dai tiec |
-| 2 | `#dt3q-ld-sinhnhat-vongquay` | Mo qua sinh nhat |
-| 3 | `#dt3q-ld-sinhnhat-doiqua` | Tich banh mo qua VIP |
-| 4 | `#dt3q-loichuc` | Ban tiec / binh chon / loi chuc (frame4 nhung truc tiep) |
+Promotion hien duoc hieu la 4 module chinh:
 
-Truoc day muc 4 dung `<iframe src="vote-sinh-nhat">` nen nhin nhu `1 2 3` roi lai mot layout moi.  
-Hien tai da **bo iframe**, nhung truc tiep HTML + `frame4.css` vao muc 4.
+| Module | Mapping trong bai | Noi dung cau hinh |
+|---|---|---|
+| Thiep Moi Dai Tiec | Community Milestone | Start/end date, cac moc tich luy, anh tooltip, danh sach qua theo tung moc, the le HTML |
+| Mo Qua Sinh Nhat | Vong quay + Nhiem vu + Tich luy nhan luot | Start/end date, danh sach phan thuong, rate (%), stock/limit moi giai, nhiem vu nhan luot, direct URL, moc tich luy nhan luot, the le HTML |
+| Tich Banh Mo Qua VIP | Doi qua | Start/end date, vat pham doi, so luong item nhan, so banh dieu kien doi, anh tooltip, the le HTML |
+| Ban Tiec Sinh Nhat | Loi chuc / binh chon / mission phu | Start/end date, the le HTML, danh sach nhiem vu nhan luot, direct URL |
 
-## Lam duoc gi
+## 3. Persona nguoi dung tool
 
-- Scroll lien tuc tu muc 1 -> 4 tren cung 1 trang.
-- Muc 4 co UI binh chon/loi chuc (mock 6 loi chuc mau).
-- Nut The le / Nhiem vu / Gui loi chuc mo popup co san tren trang.
-- Tat auto popup dang nhap cho demo local (`offAutoShowFormLogin`, `isRequireLogin = 0`).
+### Primary persona: Event Operation Admin
 
-## Cach chay
+Nguoi van hanh su kien hang ngay. Ho khong can code, nhung can sua nhanh cau hinh promotion va xem preview truoc khi publish.
 
-**Admin (3 tabs):** mo `admin.html`  
-**Event FE:** mo `vng.html` hoac xem trong Tab 3 cua admin
+Cong viec hang ngay:
 
-1. Double-click `admin.html` hoac `vng.html`.
-2. Admin Tab 1: config + validation → Save.
-3. Admin Tab 2: report (mac dinh Today).
-4. Admin Tab 3: preview `vng.html` (Reload Preview sau khi save).
+- Cap nhat thoi gian bat dau/ket thuc tung module.
+- Dieu chinh danh sach qua, rate, stock/limit va dieu kien doi.
+- Bat/tat nhiem vu, sua so luot thuong va link dieu huong.
+- Sua noi dung the le HTML theo yeu cau campaign.
+- Chay validation truoc khi save.
+- Mo FE preview de dam bao cau hinh hien thi dung.
+- Xem dashboard mock de theo doi tinh trang event.
 
-## Chua lam duoc / gioi han
+### Secondary persona: Campaign Owner / PO
 
-- Vote/gui loi chuc that can API `event-vn.vnggames.com` (chi demo UI + alert).
-- Khong load `vote.js` / `frame4.js` day du de tranh redirect ve trang khac va popup login iframe.
-- **Promotion 1 (moc Q1–Q7):** Admin Save → `localStorage` `dt3q_7y_config` → `vng.html` cap nhat **nguong moc** (`<span>`) + **active/off**. Mo ta qua / URL anh trong admin la **CMS only** (chua wire len tooltip anh).
+Nguoi review tinh dung cua campaign:
 
-## Nguon
+- Kiem tra module co dung scope promotion khong.
+- Kiem tra copywriting, the le, moc thuong.
+- Kiem tra rui ro cau hinh sai: rate khong du 100%, end date nho hon start date, stock/quantity khong hop le.
 
-- `libraryMainsite`, `DT3Q.css`, `frame4.css` tu CDN VNGGames.
-- Mock loi chuc lay tu du lieu mau trang vote-sinh-nhat.
+## 4. Cac tinh nang da co
+
+### Configuration
+
+- Cau hinh start/end date theo module.
+- Cau hinh Thiep Moi Dai Tiec nhu Community Milestone.
+- Cau hinh Mo Qua Sinh Nhat: phan thuong, rate, stock/limit, nhiem vu, direct URL, tich luy nhan luot.
+- Cau hinh Tich Banh Mo Qua VIP nhu Doi Qua.
+- Cau hinh Ban Tiec Sinh Nhat: the le va nhiem vu.
+- Cau hinh the le HTML cho cac module chinh.
+- FE preview doc config tu `localStorage` va reflect len `vng.html`.
+
+### Validation
+
+- Tong rate vong quay phai bang 100%.
+- Start/end date: end date phai lon hon start date.
+- Cac field so tu nhien lon hon 0 duoc chan ngay luc nhap voi cac field quan trong.
+- Stock, moc tich luy, luot quay, quantity item khong duoc la so thap phan/chu/<= 0.
+
+### Dashboard / Report
+
+- KPI tong participants, conversion, doanh thu uoc tinh, tong luot quay da dung.
+- Chart participants theo ngay.
+- Chart top rewards claimed dang dung mock data.
+- Widget milestone progress.
+- Bang trang thai vat pham doi qua.
+- Conversion funnel mock.
+
+## 5. Gioi han hien tai
+
+Do bai tap khong ket noi API, cac muc sau chi la mock/estimate:
+
+- Ton kho thuc te cua vat pham.
+- So luot quay da dung/con lai theo tung giai.
+- Claim rate thuc te so voi cau hinh.
+- Top 10 phan thuong nhan nhieu nhat.
+- Conversion that theo chuoi visit -> login -> mission done.
+- Doanh thu that tu goi nap.
+
+## 6. Ghi chu nghiep vu ve Stock / Ton kho
+
+Trong bai tap nay nen tach ro 2 khai niem:
+
+- `quantity`: so luong item nguoi choi nhan duoc moi lan claim/doi.
+- `stock` hoac `limit`: tong so luong toi da co the phat trong su kien.
+
+Khong co API thi khong the biet ton kho realtime. Tuy nhien admin tool van nen cho cau hinh `stock/limit` ban dau de validation va dashboard mock co co so tinh:
+
+- remaining = configured stock - mock claimed count
+- warning khi stock = 0 nhung reward/item van enabled
+- warning khi claimed count mock > configured stock
+
+Neu can nhe scope, co the coi `stock` la "gioi han phat thuong" thay vi "ton kho realtime".
+
+## 7. Cach chay
+
+1. Mo `index.html` de cau hinh admin.
+2. Chay validation.
+3. Save Config hoac Save & Preview.
+4. FE preview mo `vng.html` va doc config tu `localStorage`.
+

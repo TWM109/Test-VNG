@@ -621,16 +621,20 @@
       contentHtml: (m && (m.contentHtml || m.html || m.name)) || '',
       turns: turns,
       action: action,
+      directUrl: (m && (m.directUrl || m.url || m.link || m.href)) || '',
       enabled: !m || m.enabled !== false
     };
   }
 
   function buildMissionButton(m) {
+    var directUrl = String(m.directUrl || '').trim();
+    var href = directUrl || 'javascript:void(0)';
+    var directAttrs = directUrl ? ' data-direct-url="' + escAttr(directUrl) + '" target="_self"' : '';
     if (m.action === 'Nhận Lượt') {
-      return '<a href="javascript:void(0)" class="btn_get MS__hover pm__menu-date">Nhận Lượt</a>';
+      return '<a href="' + escAttr(href) + '" class="btn_get MS__hover pm__menu-date"' + directAttrs + '>Nhận Lượt</a>';
     }
 
-    return '<a href="javascript:void(0)" class="btn_get MS__hover pm__menu-cash">' + escAttr(m.action) + '</a>';
+    return '<a href="' + escAttr(href) + '" class="btn_get MS__hover pm__menu-cash"' + directAttrs + '>' + escAttr(m.action) + '</a>';
   }
 
   function renderMissionGroup(title, list) {
@@ -894,6 +898,18 @@
   loadAndApplyMissionConfig();
 
   document.addEventListener('click', function(e) {
+    var directMissionBtn = e.target.closest('#popup_getlist .btn_get[data-direct-url]');
+    if (directMissionBtn) {
+      var directUrl = directMissionBtn.getAttribute('data-direct-url');
+      if (directUrl) {
+        e.preventDefault();
+        e.stopPropagation();
+        e.stopImmediatePropagation();
+        window.location.href = directUrl;
+      }
+      return;
+    }
+
     var birthdayBtn = e.target.closest('#btn-nhiemvu-muc4');
     if (birthdayBtn) {
       activeMissionPopup = 'birthday_table';
