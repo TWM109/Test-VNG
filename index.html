@@ -335,7 +335,7 @@
   }
   .thiep-moc-header {
     display: grid;
-    grid-template-columns: 120px 1fr auto;
+    grid-template-columns: 120px 1fr 1fr auto;
     gap: 12px;
     align-items: end;
     margin-bottom: 12px;
@@ -362,11 +362,25 @@
     letter-spacing: .6px;
     margin-bottom: 8px;
   }
+  .thiep-gift-header,
   .thiep-gift-row {
     display: grid;
     grid-template-columns: 1fr 90px auto;
     gap: 8px;
     align-items: center;
+  }
+  .thiep-gift-header {
+    color: var(--muted);
+    font-size: 11px;
+    font-weight: 600;
+    margin-bottom: 6px;
+    text-transform: uppercase;
+    letter-spacing: .4px;
+  }
+  .thiep-gift-header .qty-label {
+    transform: translateX(-50px);
+  }
+  .thiep-gift-row {
     margin-bottom: 6px;
   }
   .thiep-gift-row select,
@@ -471,65 +485,6 @@
 ═══════════════════════════════════════════ -->
 <div id="tab-config" class="tab-content active">
 
-  <!-- 1. Timeline -->
-  <div class="card">
-    <div class="card-title"><span class="card-title-icon">🗓️</span>Timeline & Schedule</div>
-    <div class="grid-2">
-      <div>
-        <p class="section-title">Toàn sự kiện</p>
-        <div class="form-row grid-2">
-          <div class="form-group">
-            <label>Global Start</label>
-            <input type="datetime-local" id="tl_global_start">
-          </div>
-          <div class="form-group">
-            <label>Global End</label>
-            <input type="datetime-local" id="tl_global_end">
-          </div>
-        </div>
-      </div>
-      <div>
-        <p class="section-title">Vòng quay</p>
-        <div class="form-row grid-2">
-          <div class="form-group">
-            <label>Spin Start</label>
-            <input type="datetime-local" id="tl_spin_start">
-          </div>
-          <div class="form-group">
-            <label>Spin End</label>
-            <input type="datetime-local" id="tl_spin_end">
-          </div>
-        </div>
-      </div>
-      <div>
-        <p class="section-title">Tích bánh mở quà Vip</p>
-        <div class="form-row grid-2">
-          <div class="form-group">
-            <label>Tích bánh Start</label>
-            <input type="datetime-local" id="tl_shop_start">
-          </div>
-          <div class="form-group">
-            <label>Tích bánh End</label>
-            <input type="datetime-local" id="tl_shop_end">
-          </div>
-        </div>
-      </div>
-      <div>
-        <p class="section-title">Nhiệm vụ</p>
-        <div class="form-row grid-2">
-          <div class="form-group">
-            <label>Mission Start</label>
-            <input type="datetime-local" id="tl_mission_start">
-          </div>
-          <div class="form-group">
-            <label>Mission End</label>
-            <input type="datetime-local" id="tl_mission_end">
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
   <!-- 2. Thiệp Mời Đại Tiệc — Mốc tích lũy -->
   <div class="card collapsible-card collapsed" id="card-thiep-moi">
     <div class="card-title">
@@ -538,7 +493,7 @@
     </div>
     <div class="collapsible-body">
       <p class="text-muted mb-12" style="font-size:12px">
-        Cấu hình số mốc, ảnh tooltip và danh sách quà tặng cho từng mốc. Dữ liệu đồng bộ sang Client qua localStorage key <code class="mono">dt3q_thiep_moi_cfg</code>.
+        Cấu hình số mốc, ảnh quà, ảnh tooltip và danh sách quà tặng cho từng mốc. Dữ liệu đồng bộ sang Client qua localStorage key <code class="mono">dt3q_thiep_moi_cfg</code>.
       </p>
       <div class="form-row grid-2">
         <div class="form-group">
@@ -869,7 +824,7 @@
         <tr>
           <td>Thiệp Mời Đại Tiệc</td>
           <td>Community Milestone</td>
-          <td>Start/end date, các mốc tích lũy, ảnh tooltip, danh sách quà theo từng mốc, thể lệ HTML.</td>
+          <td>Start/end date, các mốc tích lũy, ảnh quà, ảnh tooltip, danh sách quà theo từng mốc, thể lệ HTML.</td>
         </tr>
         <tr>
           <td>Mở Quà Sinh Nhật</td>
@@ -999,6 +954,7 @@ let rulesData = {};
 
 /* Danh sách vật phẩm gợi ý cho select quà tặng mốc Thiệp Mời */
 const GIFT_ITEM_OPTIONS = [
+  'Mock Data',
   'KNB', 'Đá Cường Hóa', 'Thần Tướng Lệnh', 'Vé Quay', 'Mảnh Tướng Vũ Hoàng',
   'Thức Tỉnh Đơn', 'Rương Đỏ', 'Rương Kim', 'Vàng', 'Bánh Kem', 'Tinh Túy', 'Rương Chọn Đá',
   'Rương Chọn Đá Thô', 'Quà Đặc Biệt', 'Rương Tướng Hán Ngẫu Nhiên',
@@ -1029,27 +985,49 @@ const DEFAULT_RULES = {
   }
 };
 
-/* Cấu hình mẫu mặc định 4 mốc khi chưa có dữ liệu localStorage */
+/* Cấu hình mẫu mặc định 7 mốc khi chưa có dữ liệu localStorage */
 const DEFAULT_THIEP_MOI = [
   {
-    moc: 100,
+    moc: 1000,
+    giftImg: 'https://cdn-mainsite-aka.vnggames.com/products/dt3q/landing/2026-sinh-nhat-7-ai/dist/optimized/dt3q-ld-sinhnhat-header/images/moc-1.png',
     tooltipImg: 'https://cdn-mainsite-aka.vnggames.com/products/dt3q/landing/2026-sinh-nhat-7-ai/dist/optimized/dt3q-ld-sinhnhat-header/images/tooltip-1.webp',
     gifts: [{ name: 'KNB', qty: 500 }, { name: 'Vàng', qty: 500 }]
   },
   {
     moc: 5000,
+    giftImg: 'https://cdn-mainsite-aka.vnggames.com/products/dt3q/landing/2026-sinh-nhat-7-ai/dist/optimized/dt3q-ld-sinhnhat-header/images/moc-2.png',
     tooltipImg: 'https://cdn-mainsite-aka.vnggames.com/products/dt3q/landing/2026-sinh-nhat-7-ai/dist/optimized/dt3q-ld-sinhnhat-header/images/tooltip-2.webp',
     gifts: [{ name: 'Thần Tướng Lệnh', qty: 5 }, { name: 'Thức Tỉnh Đơn', qty: 1000 }]
   },
   {
     moc: 10000,
+    giftImg: 'https://cdn-mainsite-aka.vnggames.com/products/dt3q/landing/2026-sinh-nhat-7-ai/dist/optimized/dt3q-ld-sinhnhat-header/images/moc-3.png',
     tooltipImg: 'https://cdn-mainsite-aka.vnggames.com/products/dt3q/landing/2026-sinh-nhat-7-ai/dist/optimized/dt3q-ld-sinhnhat-header/images/tooltip-3.webp',
     gifts: [{ name: 'Rương Đỏ', qty: 2 }, { name: 'Rương Kim', qty: 2 }]
   },
   {
     moc: 20000,
+    giftImg: 'https://cdn-mainsite-aka.vnggames.com/products/dt3q/landing/2026-sinh-nhat-7-ai/dist/optimized/dt3q-ld-sinhnhat-header/images/moc-4.png',
     tooltipImg: 'https://cdn-mainsite-aka.vnggames.com/products/dt3q/landing/2026-sinh-nhat-7-ai/dist/optimized/dt3q-ld-sinhnhat-header/images/tooltip-4.webp',
     gifts: [{ name: 'Đá Cường Hóa', qty: 10 }, { name: 'Vé Quay', qty: 20 }]
+  },
+  {
+    moc: 30000,
+    giftImg: 'https://cdn-mainsite-aka.vnggames.com/products/dt3q/landing/2026-sinh-nhat-7-ai/dist/optimized/dt3q-ld-sinhnhat-header/images/moc-5.png',
+    tooltipImg: 'https://cdn-mainsite-aka.vnggames.com/products/dt3q/landing/2026-sinh-nhat-7-ai/dist/optimized/dt3q-ld-sinhnhat-header/images/tooltip-5.webp',
+    gifts: [{ name: 'Rương Chọn Đá', qty: 1 }, { name: 'Thức Tỉnh Đơn', qty: 50 }]
+  },
+  {
+    moc: 50000,
+    giftImg: 'https://cdn-mainsite-aka.vnggames.com/products/dt3q/landing/2026-sinh-nhat-7-ai/dist/optimized/dt3q-ld-sinhnhat-header/images/moc-6.png',
+    tooltipImg: 'https://cdn-mainsite-aka.vnggames.com/products/dt3q/landing/2026-sinh-nhat-7-ai/dist/optimized/dt3q-ld-sinhnhat-header/images/tooltip-6.webp',
+    gifts: [{ name: 'Rương Chọn Đá', qty: 2 }, { name: 'Vé Quay', qty: 50 }]
+  },
+  {
+    moc: 100000,
+    giftImg: 'https://cdn-mainsite-aka.vnggames.com/products/dt3q/landing/2026-sinh-nhat-7-ai/dist/optimized/dt3q-ld-sinhnhat-header/images/moc-7.png',
+    tooltipImg: 'https://cdn-mainsite-aka.vnggames.com/products/dt3q/landing/2026-sinh-nhat-7-ai/dist/optimized/dt3q-ld-sinhnhat-header/images/tooltip-7.webp',
+    gifts: [{ name: 'Quà Đặc Biệt', qty: 1 }, { name: 'Rương Kim', qty: 5 }]
   },
 ];
 
@@ -1224,16 +1202,17 @@ function showToast(msg, type = 'success') {
   toastTimer = setTimeout(() => { t.className = ''; }, 3000);
 }
 
+function getInputValue(id) {
+  const el = document.getElementById(id);
+  return el ? el.value : '';
+}
+
 function getTimelinePairs() {
   return [
-    ['Global', 'tl_global_start', 'tl_global_end'],
     ['Thiệp Mời Đại Tiệc', 'tl_thiep_start', 'tl_thiep_end'],
     ['Mở quà sinh nhật', 'tl_open_gift_start', 'tl_open_gift_end'],
     ['Tích bánh mở quà Vip', 'tl_vip_start', 'tl_vip_end'],
     ['Bàn tiệc sinh nhật', 'tl_birthday_table_start', 'tl_birthday_table_end'],
-    ['Vòng quay', 'tl_spin_start', 'tl_spin_end'],
-    ['Tích bánh mở quà Vip', 'tl_shop_start', 'tl_shop_end'],
-    ['Nhiệm vụ', 'tl_mission_start', 'tl_mission_end'],
   ];
 }
 
@@ -1670,7 +1649,12 @@ function renderThiepMoiUI() {
           'oninput="sanitizePositiveIntegerInput(this, thiepMoiData[' + mi + '], \'moc\')" onchange="sanitizePositiveIntegerInput(this, thiepMoiData[' + mi + '], \'moc\')">' +
         '</div>' +
         '<div class="form-group">' +
-          '<label>Link ảnh Tooltip</label>' +
+          '<label>Link ảnh quà</label>' +
+          '<input type="text" value="' + esc(milestone.giftImg || '') + '" ' +
+          'placeholder="https://..." onchange="thiepMoiData[' + mi + '].giftImg=this.value">' +
+        '</div>' +
+        '<div class="form-group">' +
+          '<label>Link ảnh tool tips</label>' +
           '<input type="text" value="' + esc(milestone.tooltipImg || '') + '" ' +
           'placeholder="https://..." onchange="thiepMoiData[' + mi + '].tooltipImg=this.value">' +
         '</div>' +
@@ -1678,6 +1662,11 @@ function renderThiepMoiUI() {
       '</div>' +
       '<div class="thiep-gifts-section">' +
         '<div class="thiep-gifts-title">Danh sách quà tặng</div>' +
+        '<div class="thiep-gift-header">' +
+          '<span>Quà tặng</span>' +
+          '<span class="qty-label">Số lượng</span>' +
+          '<span></span>' +
+        '</div>' +
         '<div class="thiep-gifts-list" id="thiepGifts-' + mi + '">' + giftsHtml + '</div>' +
         '<button class="btn btn-ghost btn-xs mt-12" type="button" onclick="addThiepMoiGift(' + mi + ')">➕ Thêm quà</button>' +
       '</div>';
@@ -1705,6 +1694,7 @@ function removeThiepMoiGift(milestoneIndex, giftIndex) {
 function addThiepMoiMilestone() {
   thiepMoiData.push({
     moc: 1000,
+    giftImg: '',
     tooltipImg: '',
     gifts: [{ name: GIFT_ITEM_OPTIONS[0], qty: 1 }]
   });
@@ -1726,11 +1716,18 @@ function loadThiepMoiConfig() {
   if (raw) {
     try {
       var parsed = JSON.parse(raw);
-      if (Array.isArray(parsed) && parsed.length) {
-        thiepMoiData = parsed.map(function(m) {
+      var rows = Array.isArray(parsed) ? parsed : (parsed && Array.isArray(parsed.milestones) ? parsed.milestones : []);
+      if (rows.length) {
+        var normalizedRows = rows.slice();
+        if (normalizedRows.length < DEFAULT_THIEP_MOI.length) {
+          normalizedRows = normalizedRows.concat(DEFAULT_THIEP_MOI.slice(normalizedRows.length));
+        }
+        thiepMoiData = normalizedRows.map(function(m, index) {
+          var fallback = DEFAULT_THIEP_MOI[index] || {};
           return {
             moc: parseInt(m.moc, 10) || 0,
-            tooltipImg: m.tooltipImg || m.img || '',
+            giftImg: m.giftImg || m.giftImage || fallback.giftImg || '',
+            tooltipImg: m.tooltipImg || m.img || fallback.tooltipImg || '',
             gifts: (m.gifts || []).map(function(g) {
               return { name: g.name || GIFT_ITEM_OPTIONS[0], qty: parseInt(g.qty, 10) || 1 };
             })
@@ -1754,6 +1751,7 @@ function saveThiepMoiConfig(silent) {
   var payload = thiepMoiData.map(function(m) {
     return {
       moc: parseInt(m.moc, 10) || 0,
+      giftImg: m.giftImg || '',
       tooltipImg: m.tooltipImg || '',
       gifts: (m.gifts || []).map(function(g) {
         return { name: g.name || '', qty: parseInt(g.qty, 10) || 1 };
@@ -1862,6 +1860,12 @@ function runValidation() {
     if (!isPositiveIntegerValue(m.moc)) {
       issues.push({ type:'error', msg: `Thiệp Mời Đại Tiệc mốc #${i + 1}: Số mốc tích lũy phải là số tự nhiên lớn hơn 0 và không được là số thập phân` });
     }
+    if (!(m.giftImg || '').trim()) {
+      issues.push({ type:'warning', msg: `Thiệp Mời Đại Tiệc mốc #${i + 1}: thiếu link ảnh quà` });
+    }
+    if (!(m.tooltipImg || '').trim()) {
+      issues.push({ type:'warning', msg: `Thiệp Mời Đại Tiệc mốc #${i + 1}: thiếu link ảnh tool tips` });
+    }
     (m.gifts || []).forEach((g, gi) => {
       if (!isPositiveIntegerValue(g.qty)) {
         issues.push({ type:'error', msg: `Thiệp Mời Đại Tiệc mốc #${i + 1}, quà #${gi + 1}: Quantity phải là số tự nhiên lớn hơn 0 và không được là số thập phân` });
@@ -1926,6 +1930,7 @@ function runValidation() {
     birthdayTableMissionData.some(r => !(r.contentHtml || r.name || '').trim()) ||
     spinData.some(r => !(r.tooltipImg || '').trim()) ||
     shopData.some(r => !(r.tooltipImg || '').trim()) ||
+    thiepMoiData.some(r => !(r.gifts || []).length || !(r.giftImg || '').trim() || !(r.tooltipImg || '').trim()) ||
     spinAccumulationData.some(r => !(r.gifts || []).length || !(r.tooltipImg || '').trim());
   if (emptyName) issues.push({ type:'warning', msg: 'Có dòng thiếu tên/nội dung/quà hoặc tooltip' });
 
@@ -1948,22 +1953,14 @@ function runValidation() {
 function gatherConfig() {
   return {
     timeline: {
-      global_start: document.getElementById('tl_global_start').value,
-      global_end:   document.getElementById('tl_global_end').value,
-      thiep_start: document.getElementById('tl_thiep_start').value,
-      thiep_end:   document.getElementById('tl_thiep_end').value,
-      open_gift_start: document.getElementById('tl_open_gift_start').value,
-      open_gift_end:   document.getElementById('tl_open_gift_end').value,
-      vip_start: document.getElementById('tl_vip_start').value,
-      vip_end:   document.getElementById('tl_vip_end').value,
-      birthday_table_start: document.getElementById('tl_birthday_table_start').value,
-      birthday_table_end:   document.getElementById('tl_birthday_table_end').value,
-      spin_start:   document.getElementById('tl_spin_start').value,
-      spin_end:     document.getElementById('tl_spin_end').value,
-      shop_start:   document.getElementById('tl_shop_start').value,
-      shop_end:     document.getElementById('tl_shop_end').value,
-      mission_start: document.getElementById('tl_mission_start').value,
-      mission_end:   document.getElementById('tl_mission_end').value,
+      thiep_start: getInputValue('tl_thiep_start'),
+      thiep_end:   getInputValue('tl_thiep_end'),
+      open_gift_start: getInputValue('tl_open_gift_start'),
+      open_gift_end:   getInputValue('tl_open_gift_end'),
+      vip_start: getInputValue('tl_vip_start'),
+      vip_end:   getInputValue('tl_vip_end'),
+      birthday_table_start: getInputValue('tl_birthday_table_start'),
+      birthday_table_end:   getInputValue('tl_birthday_table_end'),
     },
     spin: JSON.parse(JSON.stringify(spinData)),
     shop: JSON.parse(JSON.stringify(shopData)),

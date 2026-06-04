@@ -82,19 +82,40 @@
 (function() {
   'use strict';
   var LS_KEY = 'dt3q_thiep_moi_cfg';
+  var IMG_BASE = 'https://cdn-mainsite-aka.vnggames.com/products/dt3q/landing/2026-sinh-nhat-7-ai/dist/optimized/dt3q-ld-sinhnhat-header/images/';
+  var DEFAULT_THIEP_MOI = [1000, 5000, 10000, 20000, 30000, 50000, 100000].map(function(moc, index) {
+    var number = index + 1;
+    return {
+      moc: moc,
+      giftImg: IMG_BASE + 'moc-' + number + '.png',
+      tooltipImg: IMG_BASE + 'tooltip-' + number + '.webp',
+      gifts: [{ name: 'Quà mốc Q' + number, qty: 1 }]
+    };
+  });
 
   /** Đọc cấu hình mốc từ localStorage */
   function readThiepMoiCfg() {
     try {
       var raw = localStorage.getItem(LS_KEY);
-      if (!raw) return { milestones: [] };
+      if (!raw) return { milestones: DEFAULT_THIEP_MOI };
       var data = JSON.parse(raw);
-      if (Array.isArray(data)) return { milestones: data };
-      if (data && Array.isArray(data.milestones)) return data;
-      return { milestones: [] };
+      if (Array.isArray(data)) return { milestones: normalizeMilestones(data) };
+      if (data && Array.isArray(data.milestones)) {
+        data.milestones = normalizeMilestones(data.milestones);
+        return data;
+      }
+      return { milestones: DEFAULT_THIEP_MOI };
     } catch (e) {
-      return { milestones: [] };
+      return { milestones: DEFAULT_THIEP_MOI };
     }
+  }
+
+  function normalizeMilestones(rows) {
+    rows = Array.isArray(rows) ? rows.slice() : [];
+    if (rows.length < DEFAULT_THIEP_MOI.length) {
+      rows = rows.concat(DEFAULT_THIEP_MOI.slice(rows.length));
+    }
+    return rows;
   }
 
   /** Định dạng số mốc hiển thị */
@@ -237,6 +258,7 @@
   function applyConfiguredMilestoneHTML(el, m, target, originalHTML) {
     var label = m.label || m.reward || fmtMoc(target);
     var tooltipUrl = m.tooltipImg || m.img || '';
+    var giftUrl = m.giftImg || m.giftImage || m.rewardImg || '';
 
     if (originalHTML !== undefined) {
       el.innerHTML = originalHTML;
@@ -248,6 +270,30 @@
       el.appendChild(span);
     }
     span.textContent = label;
+
+    if (giftUrl) {
+      var giftImg = el.querySelector(':scope > img');
+      if (giftImg) {
+        giftImg.style.visibility = 'hidden';
+        giftImg.onload = function() {
+          giftImg.style.visibility = '';
+          giftImg.onload = null;
+        };
+        giftImg.onerror = function() {
+          giftImg.style.visibility = 'hidden';
+          giftImg.onerror = null;
+        };
+        giftImg.removeAttribute('src');
+        giftImg.removeAttribute('data-src');
+        giftImg.setAttribute('data-src', giftUrl);
+        giftImg.classList.remove('MJ__lazyload');
+        giftImg.src = giftUrl;
+        if (giftImg.complete && giftImg.naturalWidth) {
+          giftImg.style.visibility = '';
+          giftImg.onload = null;
+        }
+      }
+    }
 
     if (tooltipUrl) {
       var tooltipImg = el.querySelector('.tooltip img');
