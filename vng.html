@@ -38,6 +38,31 @@
       #dt3q-loichuc #dt3q-ld-sinhnhat-loichuc {
             width: 100%;
       }
+      .MS__popup {
+            position: fixed !important;
+            inset: 0 !important;
+            width: 100vw !important;
+            height: 100vh !important;
+            min-height: 100vh !important;
+            z-index: 9999 !important;
+            overflow: hidden !important;
+      }
+      .MS__popup > .MS__opacity {
+            position: fixed !important;
+            inset: 0 !important;
+            width: 100vw !important;
+            height: 100vh !important;
+            min-height: 100vh !important;
+            background: rgba(0, 0, 0, .82) !important;
+      }
+      .MS__popup > .MS__box {
+            position: absolute !important;
+            top: 50% !important;
+            left: 50% !important;
+            z-index: 1;
+            margin: 0 !important;
+            transform: translate(-50%, -50%) !important;
+      }
 </style><script src="https://global-mainsite.mto.zing.vn/products/libraryMainsite/vendor/fancybox.umd.min.js"></script><link rel="stylesheet" href="https://global-mainsite.mto.zing.vn/products/libraryMainsite/vendor/fancybox.min.css"><script src="https://global-mainsite.mto.zing.vn/products/libraryMainsite/vendor/swiper-bundle.min.js"></script><link rel="stylesheet" href="https://global-mainsite.mto.zing.vn/products/libraryMainsite/vendor/swiper-bundle.min.css"><style id="deviceHeightStyleTag">
                 .maxDeviceHeight {
                     max-height: calc(100vh * 1.0416666666666667)
@@ -53,6 +78,24 @@
             </style></head>
 
 <body class="vn" style="height: 3194.31px;" data-scale-ratio="0.615" data-device-type="desktop">
+      <script>
+      (function() {
+            function hoistPopupsToBody() {
+                  document.querySelectorAll('.MS__popup').forEach(function(popup) {
+                        if (popup.parentElement !== document.body) {
+                              document.body.appendChild(popup);
+                        }
+                  });
+            }
+
+            if (document.readyState === 'loading') {
+                  document.addEventListener('DOMContentLoaded', hoistPopupsToBody);
+            } else {
+                  hoistPopupsToBody();
+            }
+            window.addEventListener('load', hoistPopupsToBody);
+      })();
+      </script>
 	<script>
     let isAgreeMarketingConsent = 0;
     let isAgreePolicyConsent = 0;
