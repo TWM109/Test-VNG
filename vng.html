@@ -451,7 +451,141 @@
     line-height: 1.2;
     pointer-events: none;
   }
+  #popup_rule .admin-rule-content {
+    display: none;
+    position: relative;
+    z-index: 2;
+    width: 78%;
+    height: 68%;
+    margin: 92px auto 0;
+    padding: 12px 18px;
+    overflow: auto;
+    color: #3f1d0b;
+    font-size: 18px;
+    line-height: 1.55;
+    text-align: left;
+  }
+  #popup_rule .admin-rule-content h1,
+  #popup_rule .admin-rule-content h2,
+  #popup_rule .admin-rule-content h3 {
+    margin: 0 0 12px;
+    color: #8a2e11;
+    font-weight: 700;
+    text-align: center;
+  }
+  #popup_rule .admin-rule-content p,
+  #popup_rule .admin-rule-content ul,
+  #popup_rule .admin-rule-content ol {
+    margin: 0 0 10px;
+  }
+  #popup_rule .admin-rule-content ul,
+  #popup_rule .admin-rule-content ol {
+    padding-left: 24px;
+  }
+  #popup_rule.admin-rule-mode iframe {
+    display: none !important;
+  }
+  #popup_rule.admin-rule-mode .admin-rule-content {
+    display: block;
+  }
 </style>
+<script>
+// THỂ LỆ — Render HTML cấu hình từ Admin thay cho iframe URL cứng.
+(function() {
+  'use strict';
+  var LS_KEY = 'dt3q_7y_config';
+  var DEFAULT_RULES = {
+    thiep_moi: {
+      sourceUrl: 'https://dt3q.zing.vn/sinh-nhat-3-tuoi/promotion/the-le-thiep-moi-dai-tiec.html',
+      html: '<h2>Thể lệ Thiệp Mời Đại Tiệc</h2><p>Người chơi gửi lời chúc để tích lũy mốc Thiệp Mời Đại Tiệc. Khi tổng lượt đạt mốc cấu hình, người chơi đủ điều kiện nhận phần thưởng tương ứng.</p><ul><li>Mỗi mốc chỉ nhận thưởng một lần.</li><li>Phần thưởng được trao theo cấu hình mốc hiện tại trên admin.</li></ul>'
+    },
+    open_gift: {
+      sourceUrl: 'https://dt3q.zing.vn/sinh-nhat-3-tuoi/promotion/the-le-mo-qua-sinh-nhat-7-tuoi.html',
+      html: '<h2>Thể lệ Mở Quà Sinh Nhật</h2><p>Người chơi hoàn thành nhiệm vụ hoặc nạp các gói hợp lệ để nhận lượt mở quà sinh nhật. Mỗi lượt mở quà sẽ nhận một phần thưởng theo tỉ lệ và tồn kho đã cấu hình.</p><ul><li>Lượt mở quà chỉ dùng trong thời gian sự kiện.</li><li>Phần thưởng phát sinh theo danh sách quà và rate trong admin.</li></ul>'
+    },
+    shop_vip: {
+      sourceUrl: 'https://dt3q.zing.vn/sinh-nhat-3-tuoi/promotion/the-le-tich-l-y-banh-mo-qua-vip.html',
+      html: '<h2>Thể lệ Tích Bánh Mở Quà VIP</h2><p>Người chơi tích lũy Bánh Kem trong sự kiện để mở các phần quà VIP. Mỗi vật phẩm yêu cầu số Bánh Kem tương ứng theo cấu hình admin.</p><ul><li>Số Bánh Kem sẽ được trừ khi đổi quà thành công.</li><li>Mỗi phần quà hiển thị theo ảnh tooltip và số lượng admin cấu hình.</li></ul>'
+    }
+  };
+
+  function readRules() {
+    try {
+      var raw = localStorage.getItem(LS_KEY);
+      var cfg = raw ? JSON.parse(raw) : {};
+      var rules = cfg && cfg.rules ? cfg.rules : {};
+      return {
+        thiep_moi: normalizeRule(rules.thiep_moi, DEFAULT_RULES.thiep_moi),
+        open_gift: normalizeRule(rules.open_gift, DEFAULT_RULES.open_gift),
+        shop_vip: normalizeRule(rules.shop_vip, DEFAULT_RULES.shop_vip)
+      };
+    } catch (e) {
+      return DEFAULT_RULES;
+    }
+  }
+
+  function normalizeRule(rule, fallback) {
+    if (typeof rule === 'string') rule = { html: rule };
+    rule = rule || {};
+    return {
+      sourceUrl: rule.sourceUrl || fallback.sourceUrl,
+      html: rule.html || fallback.html
+    };
+  }
+
+  function getRuleKey(trigger) {
+    if (!trigger) return '';
+    if (trigger.closest('#dt3q-ld-sinhnhat-header') && trigger.matches('.MS__sprite-btn-thele1')) return 'thiep_moi';
+    if (trigger.closest('#dt3q-ld-sinhnhat-vongquay') && trigger.matches('.MS__sprite-btn-thele')) return 'open_gift';
+    if (trigger.closest('#dt3q-ld-sinhnhat-doiqua') && trigger.matches('.MS__sprite-btn-thele2')) return 'shop_vip';
+    return '';
+  }
+
+  function ensureRuleContent(popup) {
+    var content = popup.querySelector('.admin-rule-content');
+    if (!content) {
+      content = document.createElement('div');
+      content.className = 'admin-rule-content';
+      var iframe = popup.querySelector('iframe');
+      if (iframe && iframe.parentNode) {
+        iframe.parentNode.insertBefore(content, iframe);
+      } else {
+        popup.querySelector('.MS__content')?.appendChild(content);
+      }
+    }
+    return content;
+  }
+
+  function openConfiguredRule(key) {
+    var popup = document.getElementById('popup_rule');
+    if (!popup) return;
+    var rules = readRules();
+    var rule = rules[key] || DEFAULT_RULES[key];
+    var content = ensureRuleContent(popup);
+    var iframe = popup.querySelector('iframe');
+    if (iframe) iframe.setAttribute('src', '');
+    content.innerHTML = rule.html || '';
+    popup.classList.add('admin-rule-mode');
+    popup.classList.add('active');
+  }
+
+  document.addEventListener('click', function(e) {
+    var trigger = e.target.closest('.MS__sprite-btn-thele1, .MS__sprite-btn-thele, .MS__sprite-btn-thele2');
+    var key = getRuleKey(trigger);
+    if (!key) return;
+    e.preventDefault();
+    e.stopPropagation();
+    e.stopImmediatePropagation();
+    openConfiguredRule(key);
+  }, true);
+
+  document.addEventListener('click', function(e) {
+    if (!e.target.closest('.MJ__close-popup, .MS__popup-close')) return;
+    var popup = document.getElementById('popup_rule');
+    if (popup) popup.classList.remove('admin-rule-mode');
+  }, true);
+})();
+</script>
 <script>
 // MỞ QUÀ SINH NHẬT — Đồng bộ cấu hình nhiệm vụ nhận lượt từ Admin (localStorage: dt3q_7y_config)
 (function() {

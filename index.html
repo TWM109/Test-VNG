@@ -120,14 +120,15 @@
   /* ── FORM ELEMENTS ── */
   label { display: block; font-size: 12px; color: var(--muted); margin-bottom: 5px; font-weight: 500; }
   input[type="datetime-local"], input[type="text"], input[type="number"],
-  input[type="date"], select {
+  input[type="date"], select, textarea {
     width: 100%; background: var(--bg); border: 1px solid var(--border);
     border-radius: 6px; color: var(--text); font-family: var(--sans);
     font-size: 13px; padding: 8px 10px; outline: none;
     transition: border-color .2s;
   }
-  input:focus, select:focus { border-color: var(--blue); }
+  input:focus, select:focus, textarea:focus { border-color: var(--blue); }
   input[type="number"] { font-family: var(--mono); }
+  textarea { resize: vertical; line-height: 1.45; }
   .form-row { margin-bottom: 12px; }
   .form-group { display: flex; flex-direction: column; }
 
@@ -366,6 +367,11 @@
   }
   .thiep-gift-row select,
   .thiep-gift-row input { font-size: 12px; padding: 6px 8px; }
+  .rule-editor {
+    min-height: 170px;
+    font-family: var(--mono);
+    font-size: 12px;
+  }
 </style>
 </head>
 <body>
@@ -474,6 +480,10 @@
         Cấu hình số mốc, ảnh tooltip và danh sách quà tặng cho từng mốc. Dữ liệu đồng bộ sang Client qua localStorage key <code class="mono">dt3q_thiep_moi_cfg</code>.
       </p>
       <div id="thiepMoiContainer"></div>
+      <div class="form-row mt-12">
+        <label>Thể lệ (HTML)</label>
+        <textarea class="rule-editor" id="rule_thiep_moi" placeholder="<h2>...</h2>"></textarea>
+      </div>
       <div class="table-actions">
         <button class="btn btn-ghost btn-sm" type="button" onclick="addThiepMoiMilestone()">+ Thêm mốc</button>
         <button class="btn btn-primary btn-sm" type="button" onclick="saveThiepMoiConfig()" style="margin-left:auto">💾 Lưu mốc Thiệp Mời</button>
@@ -539,6 +549,10 @@
       <div class="table-actions">
         <button class="btn btn-ghost btn-sm" type="button" onclick="addSpinAccumulationMilestone()">+ Thêm mốc tích lũy</button>
       </div>
+      <div class="form-row mt-12">
+        <label>Thể lệ (HTML)</label>
+        <textarea class="rule-editor" id="rule_open_gift" placeholder="<h2>...</h2>"></textarea>
+      </div>
     </div>
   </div>
 
@@ -566,6 +580,10 @@
       </div>
       <div class="table-actions">
         <button class="btn btn-ghost btn-sm" onclick="addShopRow()">+ Thêm vật phẩm</button>
+      </div>
+      <div class="form-row mt-12">
+        <label>Thể lệ (HTML)</label>
+        <textarea class="rule-editor" id="rule_shop_vip" placeholder="<h2>...</h2>"></textarea>
       </div>
     </div>
   </div>
@@ -745,6 +763,7 @@ let missionData = [];
 let packageData = [];
 let thiepMoiData = [];
 let spinAccumulationData = [];
+let rulesData = {};
 
 /* Danh sách vật phẩm gợi ý cho select quà tặng mốc Thiệp Mời */
 const GIFT_ITEM_OPTIONS = [
@@ -758,6 +777,21 @@ const GIFT_ITEM_OPTIONS = [
 
 const SPIN_ITEM_IMG_BASE = 'https://cdn-mainsite-aka.vnggames.com/products/dt3q/landing/2026-sinh-nhat-7-ai/dist/optimized/dt3q-ld-sinhnhat-vongquay/images/';
 const SHOP_ITEM_IMG_BASE = 'https://cdn-mainsite-aka.vnggames.com/products/dt3q/landing/2026-sinh-nhat-7-ai/dist/optimized/dt3q-ld-sinhnhat-doiqua/images/';
+
+const DEFAULT_RULES = {
+  thiep_moi: {
+    sourceUrl: 'https://dt3q.zing.vn/sinh-nhat-3-tuoi/promotion/the-le-thiep-moi-dai-tiec.html',
+    html: '<h2>Thể lệ Thiệp Mời Đại Tiệc</h2><p>Người chơi gửi lời chúc để tích lũy mốc Thiệp Mời Đại Tiệc. Khi tổng lượt đạt mốc cấu hình, người chơi đủ điều kiện nhận phần thưởng tương ứng.</p><ul><li>Mỗi mốc chỉ nhận thưởng một lần.</li><li>Phần thưởng được trao theo cấu hình mốc hiện tại trên admin.</li><li>Nội dung này được mock từ URL thể lệ hiện có trong FE: <a href="https://dt3q.zing.vn/sinh-nhat-3-tuoi/promotion/the-le-thiep-moi-dai-tiec.html" target="_blank">the-le-thiep-moi-dai-tiec.html</a>.</li></ul>'
+  },
+  open_gift: {
+    sourceUrl: 'https://dt3q.zing.vn/sinh-nhat-3-tuoi/promotion/the-le-mo-qua-sinh-nhat-7-tuoi.html',
+    html: '<h2>Thể lệ Mở Quà Sinh Nhật</h2><p>Người chơi hoàn thành nhiệm vụ hoặc nạp các gói hợp lệ để nhận lượt mở quà sinh nhật. Mỗi lượt mở quà sẽ nhận một phần thưởng theo tỉ lệ và tồn kho đã cấu hình.</p><ul><li>Lượt mở quà chỉ dùng trong thời gian sự kiện.</li><li>Phần thưởng phát sinh theo danh sách quà và rate trong admin.</li><li>Nội dung này được mock từ URL thể lệ hiện có trong FE: <a href="https://dt3q.zing.vn/sinh-nhat-3-tuoi/promotion/the-le-mo-qua-sinh-nhat-7-tuoi.html" target="_blank">the-le-mo-qua-sinh-nhat-7-tuoi.html</a>.</li></ul>'
+  },
+  shop_vip: {
+    sourceUrl: 'https://dt3q.zing.vn/sinh-nhat-3-tuoi/promotion/the-le-tich-l-y-banh-mo-qua-vip.html',
+    html: '<h2>Thể lệ Tích Bánh Mở Quà VIP</h2><p>Người chơi tích lũy Bánh Kem trong sự kiện để mở các phần quà VIP. Mỗi vật phẩm yêu cầu số Bánh Kem tương ứng theo cấu hình admin.</p><ul><li>Số Bánh Kem sẽ được trừ khi đổi quà thành công.</li><li>Mỗi phần quà hiển thị theo ảnh tooltip và số lượng admin cấu hình.</li><li>Nội dung này được mock từ URL thể lệ hiện có trong FE: <a href="https://dt3q.zing.vn/sinh-nhat-3-tuoi/promotion/the-le-tich-l-y-banh-mo-qua-vip.html" target="_blank">the-le-tich-l-y-banh-mo-qua-vip.html</a>.</li></ul>'
+  }
+};
 
 /* Cấu hình mẫu mặc định 4 mốc khi chưa có dữ liệu localStorage */
 const DEFAULT_THIEP_MOI = [
@@ -1334,6 +1368,50 @@ function saveThiepMoiConfig(silent) {
 // ═══════════════════════════════════════════
 // VALIDATION
 // ═══════════════════════════════════════════
+// RULE HTML CONFIG
+function cloneRules(source) {
+  return JSON.parse(JSON.stringify(source || DEFAULT_RULES));
+}
+
+function normalizeRulesConfig(rules) {
+  var source = rules && typeof rules === 'object' ? rules : {};
+  var defaults = cloneRules(DEFAULT_RULES);
+  ['thiep_moi', 'open_gift', 'shop_vip'].forEach(function(key) {
+    var incoming = source[key] || {};
+    if (typeof incoming === 'string') incoming = { html: incoming };
+    defaults[key] = {
+      sourceUrl: incoming.sourceUrl || defaults[key].sourceUrl,
+      html: incoming.html || defaults[key].html
+    };
+  });
+  return defaults;
+}
+
+function renderRulesUI() {
+  var fields = {
+    thiep_moi: document.getElementById('rule_thiep_moi'),
+    open_gift: document.getElementById('rule_open_gift'),
+    shop_vip: document.getElementById('rule_shop_vip')
+  };
+  Object.keys(fields).forEach(function(key) {
+    if (fields[key]) fields[key].value = (rulesData[key] && rulesData[key].html) || '';
+  });
+}
+
+function gatherRulesConfig() {
+  var normalized = normalizeRulesConfig(rulesData);
+  var fields = {
+    thiep_moi: document.getElementById('rule_thiep_moi'),
+    open_gift: document.getElementById('rule_open_gift'),
+    shop_vip: document.getElementById('rule_shop_vip')
+  };
+  Object.keys(fields).forEach(function(key) {
+    if (fields[key]) normalized[key].html = fields[key].value;
+  });
+  rulesData = normalized;
+  return cloneRules(rulesData);
+}
+
 function runValidation() {
   const issues = [];
 
@@ -1443,6 +1521,7 @@ function gatherConfig() {
     missions: JSON.parse(JSON.stringify(missionData)),
     spinAccumulation: JSON.parse(JSON.stringify(spinAccumulationData)),
     packages: JSON.parse(JSON.stringify(packageData)),
+    rules: gatherRulesConfig(),
     savedAt: new Date().toISOString(),
   };
 }
@@ -1512,6 +1591,7 @@ function applyConfig(cfg) {
   missionData = cfg.missions || [...MOCK.mission];
   spinAccumulationData = (cfg.spinAccumulation || cfg.accumulations || MOCK.spinAccumulation).map(r => ({...r, gifts: (r.gifts || []).map(g => ({...g}))}));
   packageData = cfg.packages || [...MOCK.packages];
+  rulesData = normalizeRulesConfig(cfg.rules);
   renderAll();
 }
 
@@ -1527,6 +1607,7 @@ function resetMock() {
   missionData = m.mission.map(r => ({...r}));
   spinAccumulationData = m.spinAccumulation.map(r => ({...r, gifts: (r.gifts || []).map(g => ({...g}))}));
   packageData = m.packages.map(r => ({...r}));
+  rulesData = normalizeRulesConfig(DEFAULT_RULES);
   renderAll();
   showToast('↺ Đã reset về mock data', 'warning');
 }
@@ -1583,6 +1664,7 @@ function renderAll() {
   renderMissionTable();
   renderSpinAccumulationUI();
   renderPackageTable();
+  renderRulesUI();
 }
 
 // ═══════════════════════════════════════════
