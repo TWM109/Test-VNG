@@ -241,6 +241,65 @@
 
   /* Chart containers */
   .chart-wrap { position: relative; height: 220px; }
+  .dashboard-card-wide { grid-column: 1 / -1; }
+  .dashboard-table-wrap { overflow-x: auto; }
+  .dashboard-table-wrap .data-table { min-width: 760px; }
+  .dashboard-module-grid {
+    display: grid;
+    grid-template-columns: minmax(420px, 1fr) minmax(360px, 520px);
+    gap: 14px;
+    margin-bottom: 12px;
+  }
+  .dashboard-table-wrap.compact .data-table {
+    min-width: 0;
+    width: 100%;
+  }
+  .reach-list { display: flex; flex-direction: column; gap: 10px; }
+  .reach-item {
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: rgba(15, 23, 42, .35);
+    padding: 10px;
+  }
+  .reach-item-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 8px;
+  }
+  .reach-milestone {
+    font-size: 12px;
+    font-weight: 700;
+  }
+  .reach-users {
+    text-align: right;
+    font-family: var(--mono);
+    font-size: 13px;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+  .reach-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+    color: var(--muted);
+    font-size: 11px;
+    margin-top: 6px;
+  }
+  .reach-gifts {
+    border-top: 1px solid var(--border);
+    color: var(--text);
+    font-size: 12px;
+    line-height: 1.45;
+    margin-top: 8px;
+    padding-top: 8px;
+    overflow-wrap: anywhere;
+  }
+  @media(max-width:1000px) {
+    .dashboard-module-grid { grid-template-columns: 1fr; }
+  }
 
   /* Filter bar */
   .filter-bar {
@@ -849,28 +908,71 @@
       <div class="chart-wrap"><canvas id="chartLine"></canvas></div>
     </div>
     <div class="card">
-      <div class="card-title"><span class="card-title-icon">📊</span>Top Rewards Claimed</div>
+      <div class="card-title"><span class="card-title-icon">📊</span>Top 10 Rewards Claimed</div>
       <div class="chart-wrap"><canvas id="chartBar"></canvas></div>
+    </div>
+  </div>
+
+  <div class="dashboard-module-grid">
+    <div class="card">
+      <div class="card-title"><span class="card-title-icon">👥</span>Participants theo module</div>
+      <div class="dashboard-table-wrap">
+        <table class="data-table">
+          <thead>
+            <tr><th>Module</th><th>Participants mock</th><th>Tỉ trọng</th><th>Trạng thái</th></tr>
+          </thead>
+          <tbody id="moduleParticipantsTbody"></tbody>
+        </table>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title"><span class="card-title-icon">🧭</span>Tiến độ Thiệp Mời Đại Tiệc</div>
+      <p class="text-muted mb-12" style="font-size:12px">
+        Tiến độ này so sánh tổng lời chúc hiện tại trên FE với các mốc Thiệp Mời đã config.
+      </p>
+      <div id="moduleProgress"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="card-title-icon">🎡</span>Lucky Spin Usage / Remaining / Claim Rate</div>
+    <div class="dashboard-table-wrap">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Giải thưởng</th>
+            <th>Rate config</th>
+            <th>Claim rate mock</th>
+            <th>Đã dùng mock</th>
+            <th>Còn lại mock</th>
+            <th>Giới hạn phát</th>
+            <th>Trạng thái</th>
+          </tr>
+        </thead>
+        <tbody id="spinRewardStatsTbody"></tbody>
+      </table>
     </div>
   </div>
 
   <!-- Bottom row -->
   <div class="grid-3">
-    <!-- Milestone progress -->
+    <!-- Tích Lũy Nhận Lượt reach -->
     <div class="card">
-      <div class="card-title"><span class="card-title-icon">🏆</span>Milestone Progress</div>
-      <div id="milestoneProgress"></div>
+      <div class="card-title"><span class="card-title-icon">🎁</span>Tích Lũy Nhận Lượt</div>
+      <div id="spinAccumulationReach"></div>
     </div>
 
     <!-- Tích bánh mở quà Vip -->
     <div class="card">
       <div class="card-title"><span class="card-title-icon">📦</span>Tích bánh mở quà Vip</div>
-      <table class="data-table" id="stockTable">
-        <thead>
-          <tr><th>Vật phẩm</th><th>Qty/lần</th><th>Số bánh</th><th>Giới hạn</th><th>Đã phát mock</th><th>Còn lại mock</th><th style="text-align:right">Ảnh</th></tr>
-        </thead>
-        <tbody id="stockTbody"></tbody>
-      </table>
+      <div class="dashboard-table-wrap">
+        <table class="data-table" id="stockTable">
+          <thead>
+            <tr><th>Vật phẩm</th><th>Qty/lần</th><th>Số bánh</th><th>Giới hạn</th><th>Đã phát mock</th><th>Claim rate</th><th>Còn lại mock</th><th style="text-align:right">Ảnh</th></tr>
+          </thead>
+          <tbody id="stockTbody"></tbody>
+        </table>
+      </div>
     </div>
 
     <!-- Funnel -->
@@ -1058,11 +1160,15 @@
     <h3>Dashboard / Report (Mock data)</h3>
     <ul>
       <li>KPI tổng participants, conversion, doanh thu ước tính, tổng lượt quay đã dùng.</li>
+      <li>Bảng tổng số người tham gia từng module.</li>
       <li>Chart participants theo ngày.</li>
-      <li>Chart top rewards claimed đang dùng mock data.</li>
-      <li>Widget milestone progress.</li>
-      <li>Bảng trạng thái vật phẩm đổi quà gồm giới hạn phát, đã phát mock và còn lại mock.</li>
-      <li>Conversion funnel mock.</li>
+      <li>Chart Top 10 phần thưởng được nhận nhiều nhất.</li>
+      <li>Bảng Lucky Spin theo từng giải: rate config, claim rate mock, lượt đã dùng, lượt còn lại và trạng thái.</li>
+      <li>Widget Thiệp Mời Đại Tiệc hiển thị tổng lời chúc hiện tại, mốc đã đạt, số lời chúc còn thiếu tới mốc kế tiếp và đủ 7 mốc quà theo config.</li>
+      <li>Widget Tích Lũy Nhận Lượt hiển thị số user reach mock theo từng mốc lượt quay đang config trong admin.</li>
+      <li>Bảng trạng thái vật phẩm đổi quà gồm giới hạn phát, đã phát mock, claim rate mock và còn lại mock.</li>
+      <li>Conversion funnel mock: visit → login → mission done.</li>
+      <li>Doanh thu ước tính mock từ các package đang enabled.</li>
     </ul>
 
     <h2>5. Giới hạn hiện tại</h2>
@@ -1070,11 +1176,11 @@
     <ul>
       <li>Thông tin của sản phẩm.</li>
       <li>Tồn kho thực tế của vật phẩm.</li>
-      <li>Số lượt quay đã dùng/còn lại theo từng giải.</li>
-      <li>Claim rate thực tế so với cấu hình.</li>
-      <li>Top 10 phần thưởng nhận nhiều nhất.</li>
+      <li>Số lượt quay đã dùng/còn lại theo từng giải đang được mô phỏng từ config rate và mock participants.</li>
+      <li>Claim rate thực tế so với cấu hình đang là mock vì chưa có claim API/log.</li>
+      <li>Top 10 phần thưởng nhận nhiều nhất đang được mô phỏng từ spin/shop mock claimed count.</li>
       <li>Conversion thật theo chuỗi visit → login → mission done.</li>
-      <li>Doanh thu thật từ gói nạp.</li>
+      <li>Doanh thu thật từ gói nạp; dashboard hiện estimate từ package config.</li>
     </ul>
 
     <h2>6. Ghi chú nghiệp vụ về Stock / Tồn kho</h2>
@@ -1332,6 +1438,8 @@ const DAILY = [
   { date:'01/06', participants:3500, visits:17200, login:10300, missionDone:2890 },
   { date:'02/06', participants:3700, visits:18500, login:10900, missionDone:3100 },
 ];
+
+const CURRENT_THIEP_MOI_WISHES = 32699;
 
 let chartLine = null, chartBar = null;
 let activeFilter = 'today';
@@ -2360,32 +2468,131 @@ function getFilteredData() {
 
 function refreshDashboard() {
   const data = getFilteredData();
+  const stats = buildDashboardStats(data);
 
-  // KPI aggregates
-  const totPart = data.reduce((a,d) => a + d.participants, 0);
-  const totVisits = data.reduce((a,d) => a + d.visits, 0);
-  const totMission = data.reduce((a,d) => a + d.missionDone, 0);
-  const conv = totVisits > 0 ? ((totMission / totVisits)*100).toFixed(1) : 0;
-
-  // Revenue estimate: assume avg 150k per participant with top-up rate 20%
-  const revenue = Math.round(totPart * 0.2 * 150000);
-  // Spins used: assume 5 spins per participating user avg
-  const spinsUsed = totPart * 5;
-
-  document.getElementById('kpi-participants').textContent = fmt(totPart);
+  document.getElementById('kpi-participants').textContent = fmt(stats.totPart);
   document.getElementById('kpi-participants-d').textContent = data.length > 1 ? `+${fmt(data[data.length-1].participants - data[0].participants)} so với đầu kỳ` : 'Hôm nay';
-  document.getElementById('kpi-conv').textContent = conv + '%';
+  document.getElementById('kpi-conv').textContent = stats.conv.toFixed(1) + '%';
   document.getElementById('kpi-conv-d').textContent = 'Visit → Mission Done';
-  document.getElementById('kpi-revenue').textContent = fmtVnd(revenue);
-  document.getElementById('kpi-revenue-d').textContent = '~20% conversion rate';
-  document.getElementById('kpi-spins').textContent = fmt(spinsUsed);
-  document.getElementById('kpi-spins-d').textContent = '~5 spins/user trung bình';
+  document.getElementById('kpi-revenue').textContent = fmtVnd(stats.revenue);
+  document.getElementById('kpi-revenue-d').textContent = 'Mock từ package enabled';
+  document.getElementById('kpi-spins').textContent = fmt(stats.spinsUsed);
+  document.getElementById('kpi-spins-d').textContent = 'Mock từ participants module spin';
 
   renderLineChart(data);
-  renderBarChart();
-  renderMilestoneProgress();
-  renderStockTable();
+  renderBarChart(stats.topRewards);
+  renderModuleParticipants(stats.moduleStats);
+  renderThiepMoiWishProgress();
+  renderSpinRewardStats(stats.spinStats);
+  renderSpinAccumulationReachStats(stats.moduleStats);
+  renderStockTable(stats.shopStats);
   renderFunnel(data);
+}
+
+function buildDashboardStats(data) {
+  const totPart = data.reduce((a,d) => a + d.participants, 0);
+  const totVisits = data.reduce((a,d) => a + d.visits, 0);
+  const totLogin = data.reduce((a,d) => a + d.login, 0);
+  const totMission = data.reduce((a,d) => a + d.missionDone, 0);
+  const conv = totVisits > 0 ? (totMission / totVisits) * 100 : 0;
+  const moduleStats = buildModuleStats(totPart);
+  const spinModule = moduleStats.find(m => m.key === 'open_gift');
+  const spinsUsed = Math.max(0, Math.round((spinModule ? spinModule.participants : totPart) * 4.8));
+  const spinStats = buildSpinRewardStats(spinsUsed);
+  const shopStats = buildShopStockStats();
+  const topRewards = buildTopRewards(spinStats, shopStats);
+  const revenue = estimatePackageRevenue(totPart);
+  return { totPart, totVisits, totLogin, totMission, conv, revenue, spinsUsed, moduleStats, spinStats, shopStats, topRewards };
+}
+
+function buildModuleStats(totalParticipants) {
+  const modules = [
+    { key: 'thiep_moi', name: 'Thiệp Mời Đại Tiệc', ratio: 0.72, startId: 'tl_thiep_start', endId: 'tl_thiep_end' },
+    { key: 'open_gift', name: 'Mở Quà Sinh Nhật', ratio: 0.61, startId: 'tl_open_gift_start', endId: 'tl_open_gift_end' },
+    { key: 'shop_vip', name: 'Tích Bánh Mở Quà VIP', ratio: 0.38, startId: 'tl_vip_start', endId: 'tl_vip_end' },
+    { key: 'birthday_table', name: 'Bàn Tiệc Sinh Nhật', ratio: 0.44, startId: 'tl_birthday_table_start', endId: 'tl_birthday_table_end' },
+  ];
+  return modules.map((module, index) => {
+    const start = getInputValue(module.startId) || '';
+    const end = getInputValue(module.endId) || '';
+    const progress = getTimelineProgress(start, end);
+    return {
+      ...module,
+      participants: Math.max(0, Math.round(totalParticipants * module.ratio + (index * 37))),
+      progress
+    };
+  });
+}
+
+function getTimelineProgress(startValue, endValue) {
+  const start = startValue ? new Date(startValue) : null;
+  const end = endValue ? new Date(endValue) : null;
+  const now = new Date();
+  if (!start || !end || Number.isNaN(start.getTime()) || Number.isNaN(end.getTime()) || end <= start) {
+    return { pct: 0, status: 'Chưa đủ timeline', badge: 'badge-yellow' };
+  }
+  if (now < start) return { pct: 0, status: 'Sắp diễn ra', badge: 'badge-blue' };
+  if (now > end) return { pct: 100, status: 'Đã kết thúc', badge: 'badge-red' };
+  const pct = Math.max(0, Math.min(100, Math.round(((now - start) / (end - start)) * 100)));
+  return { pct, status: 'Đang chạy', badge: 'badge-green' };
+}
+
+function buildSpinRewardStats(spinsUsed) {
+  const rewards = spinData.filter(item => item.enabled !== false);
+  const totalRate = rewards.reduce((sum, item) => sum + (parseFloat(item.rate) || 0), 0);
+  const rows = rewards.map((reward, index) => {
+    const configuredRate = parseFloat(reward.rate) || 0;
+    const rateBasis = totalRate > 0 ? configuredRate / totalRate : 1 / Math.max(1, rewards.length);
+    const variance = 0.88 + ((index % 5) * 0.06);
+    const stock = parseInt(reward.stock, 10) || 0;
+    const expected = Math.round(spinsUsed * rateBasis * variance);
+    const used = stock > 0 ? Math.min(stock, expected) : expected;
+    const remaining = stock > 0 ? Math.max(0, stock - used) : 0;
+    return { name: reward.name || 'Reward #' + (index + 1), configuredRate, used, remaining, stock };
+  });
+  const totalUsed = rows.reduce((sum, item) => sum + item.used, 0);
+  rows.forEach(item => {
+    item.claimRate = totalUsed > 0 ? (item.used / totalUsed) * 100 : 0;
+    item.status = item.stock > 0 && item.remaining < 10 ? 'Warning' : 'Safe';
+  });
+  return rows;
+}
+
+function buildShopStockStats() {
+  return shopData.map((item, index) => {
+    const stock = parseInt(item.stock, 10) || 0;
+    const lowRemainingMocks = [3, 7, 9];
+    const targetRemainingMock = index % 4 === 0 ? lowRemainingMocks[Math.floor(index / 4) % lowRemainingMocks.length] : 18 + (index * 5);
+    const claimed = item.enabled === false ? 0 : Math.max(0, stock - Math.min(stock, targetRemainingMock));
+    const remaining = Math.max(0, stock - claimed);
+    return {
+      ...item,
+      stock,
+      claimed,
+      remaining,
+      claimRate: stock > 0 ? (claimed / stock) * 100 : 0,
+      status: remaining < 10 ? 'Warning' : 'Safe'
+    };
+  });
+}
+
+function buildTopRewards(spinStats, shopStats) {
+  const spinRewards = spinStats.map(item => ({ name: item.name, claimed: item.used }));
+  const shopRewards = shopStats.map(item => ({ name: item.name, claimed: item.claimed }));
+  return spinRewards.concat(shopRewards)
+    .sort((a, b) => b.claimed - a.claimed)
+    .slice(0, 10);
+}
+
+function estimatePackageRevenue(totalParticipants) {
+  return packageData
+    .filter(pkg => pkg.enabled !== false)
+    .reduce((sum, pkg, index) => {
+      const price = parseInt(pkg.price, 10) || 0;
+      const purchaseRate = Math.max(0.004, 0.035 - (index * 0.006));
+      const mockPurchases = Math.max(1, Math.round(totalParticipants * purchaseRate));
+      return sum + (price * mockPurchases);
+    }, 0);
 }
 
 function renderLineChart(data) {
@@ -2420,11 +2627,12 @@ function renderLineChart(data) {
   });
 }
 
-function renderBarChart() {
+function renderBarChart(topRewards) {
   const ctx = document.getElementById('chartBar').getContext('2d');
-  // Mock rewards claimed data
-  const labels = ['Gold 200k', 'Legend Skin', 'SSR Hero Chest', 'Gói Buff Exp', 'Costume'];
-  const vals = [4820, 1230, 380, 640, 210];
+  const rewards = Array.isArray(topRewards) && topRewards.length ? topRewards : [];
+  const labels = rewards.map(item => item.name);
+  const vals = rewards.map(item => item.claimed);
+  const colors = ['#2563eb','#10b981','#f59e0b','#8b5cf6','#ef4444','#14b8a6','#f97316','#6366f1','#84cc16','#ec4899'];
   if (chartBar) chartBar.destroy();
   chartBar = new Chart(ctx, {
     type: 'bar',
@@ -2433,7 +2641,7 @@ function renderBarChart() {
       datasets: [{
         label: 'Lượt nhận',
         data: vals,
-        backgroundColor: ['#2563eb','#10b981','#f59e0b','#8b5cf6','#ef4444'],
+        backgroundColor: colors,
         borderRadius: 4,
       }]
     },
@@ -2449,50 +2657,200 @@ function renderBarChart() {
   });
 }
 
-function renderMilestoneProgress() {
-  const currentParticipants = 3700;
-  const div = document.getElementById('milestoneProgress');
-  if (!milestoneData.length) { div.innerHTML = '<span class="text-muted">Chưa có milestone</span>'; return; }
-  const sorted = [...milestoneData].sort((a,b) => a.target - b.target);
-  div.innerHTML = sorted.map(m => {
-    const pct = Math.min(100, Math.round((currentParticipants / m.target) * 100));
-    const reached = currentParticipants >= m.target;
-    const cls = reached ? 'green' : (pct > 50 ? '' : '');
-    return `<div class="progress-row">
-      <div class="progress-meta">
-        <span class="progress-name">${esc(m.reward)}</span>
-        <span class="progress-val mono">${fmt(currentParticipants)}/${fmt(m.target)}</span>
-      </div>
-      <div class="progress-track">
-        <div class="progress-fill ${reached?'green':''}" style="width:${pct}%"></div>
-      </div>
-      <div style="display:flex;justify-content:space-between;margin-top:4px">
-        <span style="font-size:11px;color:var(--muted)">${pct}%</span>
-        <span class="badge ${reached?'badge-green':'badge-yellow'}">${reached?'✅ Đạt':'🔒 '+fmt(m.target-currentParticipants)+' còn thiếu'}</span>
-      </div>
-    </div>`;
+function renderModuleParticipants(moduleStats) {
+  const tbody = document.getElementById('moduleParticipantsTbody');
+  if (!tbody) return;
+  const total = moduleStats.reduce((sum, module) => sum + module.participants, 0);
+  const rows = moduleStats.map(module => {
+    const share = total > 0 ? (module.participants / total) * 100 : 0;
+    return `<tr>
+      <td>${esc(module.name)}</td>
+      <td class="mono">${fmt(module.participants)}</td>
+      <td class="mono">${share.toFixed(1)}%</td>
+      <td><span class="badge ${module.progress.badge}">${module.progress.status}</span></td>
+    </tr>`;
+  });
+  rows.push(`<tr>
+    <td><strong>Total</strong></td>
+    <td class="mono"><strong>${fmt(total)}</strong></td>
+    <td class="mono"><strong>${total > 0 ? '100.0%' : '0.0%'}</strong></td>
+    <td><span class="badge badge-blue">Tổng mock</span></td>
+  </tr>`);
+  tbody.innerHTML = rows.join('');
+}
+
+function renderThiepMoiWishProgress() {
+  const div = document.getElementById('moduleProgress');
+  if (!div) return;
+  const milestones = getThiepMoiDashboardMilestones();
+  const current = CURRENT_THIEP_MOI_WISHES;
+  const achievedIndex = milestones.reduce((last, milestone, index) => current >= milestone.moc ? index : last, -1);
+  const achieved = achievedIndex >= 0 ? milestones[achievedIndex] : null;
+  const next = milestones.find(milestone => milestone.moc > current) || null;
+  const previousTarget = achieved ? achieved.moc : 0;
+  const nextTarget = next ? next.moc : (achieved ? achieved.moc : 0);
+  const range = Math.max(1, nextTarget - previousTarget);
+  const pctToNext = next ? Math.max(0, Math.min(100, Math.round(((current - previousTarget) / range) * 100))) : 100;
+  const missing = next ? Math.max(0, next.moc - current) : 0;
+  const nextText = next ? 'Mốc kế tiếp: mức ' + (achievedIndex + 2) + ' (' + fmt(next.moc) + ')' : 'Không còn mốc kế tiếp';
+
+  div.innerHTML = `<div class="progress-row">
+    <div class="progress-meta">
+      <span class="progress-name">Tổng lời chúc hiện tại</span>
+      <span class="progress-val mono">${fmt(current)}</span>
+    </div>
+    <div class="progress-track">
+      <div class="progress-fill green" style="width:${pctToNext}%"></div>
+    </div>
+    <div style="display:flex;justify-content:space-between;margin-top:6px;gap:10px;align-items:center">
+      <span style="font-size:11px;color:var(--muted)">
+        ${achieved ? 'Đã đạt mốc ' + (achievedIndex + 1) + ' (' + fmt(achieved.moc) + ')' : 'Chưa đạt mốc đầu tiên'}
+      </span>
+      <span class="badge ${next ? 'badge-yellow' : 'badge-green'}">
+        ${next ? 'Thiếu ' + fmt(missing) : 'Đã đạt mốc cao nhất'}
+      </span>
+    </div>
+    <div style="font-size:11px;color:var(--muted);margin-top:4px">${nextText}</div>
+  </div>
+  <div class="dashboard-table-wrap compact">
+    <table class="data-table">
+      <thead>
+        <tr><th>Mốc</th><th>Lời chúc cần</th><th>Trạng thái</th></tr>
+      </thead>
+      <tbody>
+        ${milestones.map((milestone, index) => {
+          const reached = current >= milestone.moc;
+          const isNext = next && milestone.moc === next.moc;
+          return `<tr>
+            <td class="mono">Mức ${index + 1}</td>
+            <td class="mono">${fmt(milestone.moc)}</td>
+            <td><span class="badge ${reached ? 'badge-green' : (isNext ? 'badge-yellow' : 'badge-blue')}">${reached ? 'Đã đạt' : (isNext ? 'Mốc kế tiếp' : 'Chưa đạt')}</span></td>
+          </tr>`;
+        }).join('')}
+      </tbody>
+    </table>
+  </div>`;
+}
+
+function renderSpinRewardStats(spinStats) {
+  const tbody = document.getElementById('spinRewardStatsTbody');
+  if (!tbody) return;
+  if (!spinStats.length) {
+    tbody.innerHTML = '<tr><td colspan="7" class="text-muted">Chưa có giải thưởng vòng quay enabled.</td></tr>';
+    return;
+  }
+  tbody.innerHTML = spinStats.map(item => {
+    const remainingBadge = item.status === 'Warning' ? 'badge-yellow' : 'badge-green';
+    const delta = item.claimRate - item.configuredRate;
+    return `<tr>
+      <td>${esc(item.name)}</td>
+      <td class="mono">${item.configuredRate.toFixed(2)}%</td>
+      <td class="mono">${item.claimRate.toFixed(2)}% <span class="${Math.abs(delta) > 3 ? 'text-yellow' : 'text-muted'}">(${delta >= 0 ? '+' : ''}${delta.toFixed(2)}%)</span></td>
+      <td class="mono">${fmt(item.used)}</td>
+      <td><span class="badge ${remainingBadge}">${fmt(item.remaining)}</span></td>
+      <td class="mono">${fmt(item.stock)}</td>
+      <td><span class="badge ${remainingBadge}">${item.status}</span></td>
+    </tr>`;
   }).join('');
 }
 
-function renderStockTable() {
+function renderSpinAccumulationReachStats(moduleStats) {
+  const div = document.getElementById('spinAccumulationReach');
+  if (!div) return;
+  const milestones = getSpinAccumulationDashboardMilestones();
+  if (!milestones.length) {
+    div.innerHTML = '<span class="text-muted">Chưa có mốc Tích Lũy Nhận Lượt.</span>';
+    return;
+  }
+  const spinModule = (moduleStats || []).find(module => module.key === 'open_gift');
+  const baseUsers = Math.max(1000, Math.round((spinModule ? spinModule.participants : 10000) * 4.36));
+  const rows = milestones.map((milestone, index) => {
+    const decay = Math.pow(0.82, index);
+    const thresholdPenalty = Math.max(0, (milestone.target - 1) * 13);
+    const reachedUsers = Math.max(0, Math.round(baseUsers * decay - thresholdPenalty));
+    const previousUsers = index === 0 ? baseUsers : null;
+    const reachRate = baseUsers > 0 ? (reachedUsers / baseUsers) * 100 : 0;
+    const giftsText = formatGiftsSummary(milestone.gifts);
+    return {
+      ...milestone,
+      reachedUsers,
+      reachRate,
+      giftsText,
+      previousUsers
+    };
+  });
+
+  div.innerHTML = `<p class="text-muted mb-12" style="font-size:12px">
+    Số user đạt từng mốc được mock theo các mốc lượt quay đang config trong admin.
+  </p>
+  <div class="reach-list">
+    ${rows.map(row => `<div class="reach-item">
+      <div class="reach-item-head">
+        <div>
+          <div class="reach-milestone">Mốc ${fmt(row.target)} lượt quay</div>
+          <div class="text-muted" style="font-size:11px">User đã tích lũy đủ mốc này</div>
+        </div>
+        <div class="reach-users">${fmt(row.reachedUsers)}</div>
+      </div>
+      <div class="progress-track">
+        <div class="progress-fill green" style="width:${Math.min(100, row.reachRate)}%"></div>
+      </div>
+      <div class="reach-meta">
+        <span>% user đạt mốc</span>
+        <span class="mono">${row.reachRate.toFixed(1)}%</span>
+      </div>
+      <div class="reach-gifts">${esc(row.giftsText || 'Chưa có quà')}</div>
+    </div>`).join('')}
+  </div>`;
+}
+
+function getSpinAccumulationDashboardMilestones() {
+  const source = Array.isArray(spinAccumulationData) ? spinAccumulationData : [];
+  return source.map((milestone, index) => ({
+    target: parseInt(milestone.target ?? milestone.turns ?? milestone.moc ?? index + 1, 10) || index + 1,
+    gifts: Array.isArray(milestone.gifts) ? milestone.gifts : []
+  })).filter(milestone => milestone.target > 0).sort((a, b) => a.target - b.target);
+}
+
+function getThiepMoiDashboardMilestones() {
+  const source = (Array.isArray(thiepMoiData) && thiepMoiData.length ? thiepMoiData : DEFAULT_THIEP_MOI);
+  const normalized = source.map((m, index) => {
+    const fallback = DEFAULT_THIEP_MOI[index] || DEFAULT_THIEP_MOI[DEFAULT_THIEP_MOI.length - 1] || {};
+    return {
+      moc: parseInt(m.moc ?? m.target ?? fallback.moc, 10) || fallback.moc || 0,
+      gifts: Array.isArray(m.gifts) && m.gifts.length ? m.gifts : (fallback.gifts || []),
+      enabled: m.enabled !== false
+    };
+  });
+  if (normalized.length < DEFAULT_THIEP_MOI.length) {
+    normalized.push(...DEFAULT_THIEP_MOI.slice(normalized.length).map(m => ({ ...m, enabled: true })));
+  }
+  return normalized.slice(0, DEFAULT_THIEP_MOI.length).sort((a,b) => a.moc - b.moc);
+}
+
+function formatGiftsSummary(gifts) {
+  return (gifts || []).map(gift => {
+    const name = gift && (gift.name || gift.label || gift.reward || gift.title);
+    if (!name) return '';
+    const qty = parseInt(gift.qty || gift.quantity || gift.amount, 10) || 1;
+    return name + ' x' + qty;
+  }).filter(Boolean).join(' + ');
+}
+
+function renderStockTable(shopStats) {
   const tbody = document.getElementById('stockTbody');
   tbody.innerHTML = '';
-  shopData.forEach((item, index) => {
-    const stock = parseInt(item.stock, 10) || 0;
-    const lowRemainingMocks = [3, 7, 9];
-    const targetRemainingMock = index % 4 === 0 ? lowRemainingMocks[Math.floor(index / 4) % lowRemainingMocks.length] : 18 + (index * 5);
-    const claimedMock = item.enabled === false ? 0 : Math.max(0, stock - Math.min(stock, targetRemainingMock));
-    const remaining = Math.max(0, stock - claimedMock);
-    const remainingStatus = remaining < 10 ? 'Warning' : 'Safe';
-    const remainingBadge = remaining < 10 ? 'badge-yellow' : 'badge-green';
+  (shopStats || buildShopStockStats()).forEach((item) => {
+    const remainingBadge = item.status === 'Warning' ? 'badge-yellow' : 'badge-green';
     const tr = document.createElement('tr');
     tr.innerHTML = `
       <td>${esc(item.name)}</td>
       <td class="mono">${fmt(parseInt(item.qty, 10) || 1)}</td>
       <td class="mono">${fmt(parseInt(item.cakes, 10) || 0)}</td>
-      <td class="mono">${fmt(stock)}</td>
-      <td class="mono">${fmt(claimedMock)}</td>
-      <td><span class="badge ${remainingBadge}">${fmt(remaining)} · ${remainingStatus}</span></td>
+      <td class="mono">${fmt(item.stock)}</td>
+      <td class="mono">${fmt(item.claimed)}</td>
+      <td class="mono">${item.claimRate.toFixed(1)}%</td>
+      <td><span class="badge ${remainingBadge}">${fmt(item.remaining)} · ${item.status}</span></td>
       <td style="text-align:right"><a href="${esc(item.tooltipImg || '')}" target="_blank" rel="noopener" class="mono">Xem ảnh</a></td>`;
     tbody.appendChild(tr);
   });

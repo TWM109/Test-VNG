@@ -119,22 +119,26 @@ Nguoi review tinh dung cua campaign:
 ### Dashboard / Report
 
 - KPI tong participants, conversion, doanh thu uoc tinh, tong luot quay da dung.
+- Bang tong so nguoi tham gia tung module.
 - Chart participants theo ngay.
-- Chart top rewards claimed dang dung mock data.
-- Widget milestone progress.
-- Bang trang thai vat pham doi qua gom gioi han phat, da phat mock va con lai mock.
-- Conversion funnel mock.
+- Chart Top 10 phan thuong duoc nhan nhieu nhat.
+- Bang Lucky Spin theo tung giai: rate config, claim rate mock, luot da dung, luot con lai va trang thai.
+- Widget Thiep Moi Dai Tiec hien thi tong loi chuc hien tai, moc da dat, so loi chuc con thieu toi moc ke tiep va du 7 moc qua theo config.
+- Widget Tich Luy Nhan Luot hien thi so user reach mock theo tung moc luot quay dang config trong admin.
+- Bang trang thai vat pham doi qua gom gioi han phat, da phat mock, claim rate mock va con lai mock.
+- Conversion funnel mock: visit -> login -> mission done.
+- Doanh thu uoc tinh mock tu cac package dang enabled.
 
 ## 5. Gioi han hien tai
 
 Do bai tap khong ket noi API, cac muc sau chi la mock/estimate:
 
 - Ton kho thuc te cua vat pham.
-- So luot quay da dung/con lai theo tung giai.
-- Claim rate thuc te so voi cau hinh.
-- Top 10 phan thuong nhan nhieu nhat.
+- So luot quay da dung/con lai theo tung giai dang duoc mo phong tu config rate va mock participants.
+- Claim rate thuc te so voi cau hinh dang la mock vi chua co claim API/log.
+- Top 10 phan thuong nhan nhieu nhat dang duoc mo phong tu spin/shop mock claimed count.
 - Conversion that theo chuoi visit -> login -> mission done.
-- Doanh thu that tu goi nap.
+- Doanh thu that tu goi nap; dashboard hien estimate tu package config.
 
 ## 6. Ghi chu nghiep vu ve Stock / Ton kho
 
