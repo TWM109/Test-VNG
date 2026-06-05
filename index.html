@@ -943,9 +943,9 @@
             <th>Giải thưởng</th>
             <th>Rate config</th>
             <th>Claim rate mock</th>
+            <th>Giới hạn phát</th>
             <th>Đã dùng mock</th>
             <th>Còn lại mock</th>
-            <th>Giới hạn phát</th>
             <th>Trạng thái</th>
           </tr>
         </thead>
@@ -2746,9 +2746,9 @@ function renderSpinRewardStats(spinStats) {
       <td>${esc(item.name)}</td>
       <td class="mono">${item.configuredRate.toFixed(2)}%</td>
       <td class="mono">${item.claimRate.toFixed(2)}% <span class="${Math.abs(delta) > 3 ? 'text-yellow' : 'text-muted'}">(${delta >= 0 ? '+' : ''}${delta.toFixed(2)}%)</span></td>
+      <td class="mono">${fmt(item.stock)}</td>
       <td class="mono">${fmt(item.used)}</td>
       <td><span class="badge ${remainingBadge}">${fmt(item.remaining)}</span></td>
-      <td class="mono">${fmt(item.stock)}</td>
       <td><span class="badge ${remainingBadge}">${item.status}</span></td>
     </tr>`;
   }).join('');
