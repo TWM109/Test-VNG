@@ -537,7 +537,7 @@
     pointer-events: none;
   }
   #dt3q-ld-sinhnhat-doiqua .admin-shop-cakes {
-    display: block;
+    display: none !important;
     position: absolute;
     left: 50%;
     bottom: -18px;
@@ -933,12 +933,7 @@
       }
 
       var label = el.querySelector('.admin-shop-cakes');
-      if (!label) {
-        label = document.createElement('span');
-        label.className = 'admin-shop-cakes';
-        el.appendChild(label);
-      }
-      label.textContent = cakes ? cakes + ' Bánh' : '';
+      if (label) label.remove();
     });
 
     items.forEach(function(el, i) {
