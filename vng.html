@@ -378,6 +378,19 @@
 
       if (i < milestones.length) {
         var m = milestones[i] || {};
+        if (m.enabled === false) {
+          unbindAdminMilestoneHover(el);
+          if (window.originalMilestonesHTML[i] !== undefined) {
+            el.innerHTML = window.originalMilestonesHTML[i];
+          }
+          var disabledOriginalTarget = getVisibleMilestoneTarget(el);
+          el.setAttribute('data-number', String(disabledOriginalTarget));
+          el.setAttribute('data-target', String(disabledOriginalTarget));
+          hideTooltip();
+          applyMilestoneState(el, loiChuc, disabledOriginalTarget);
+          return;
+        }
+
         var target = getMilestoneTarget(m);
 
         applyConfiguredMilestoneHTML(el, m, target, window.originalMilestonesHTML[i]);
