@@ -13,7 +13,7 @@ Promotion hien duoc hieu la 4 module chinh:
 | Module | Mapping trong bai | Noi dung cau hinh |
 |---|---|---|
 | Thiep Moi Dai Tiec | Community Milestone | Start/end date, cac moc tich luy, anh tooltip, danh sach qua theo tung moc, the le HTML |
-| Mo Qua Sinh Nhat | Vong quay + Nhiem vu + Tich luy nhan luot | Start/end date, danh sach phan thuong, rate (%), gioi han phat moi giai, enabled, nhiem vu nhan luot, direct URL, moc tich luy nhan luot, the le HTML |
+| Mo Qua Sinh Nhat | Vong quay Lucky Spin + Nhiem vu + Tich luy nhan luot | Start/end date, danh sach phan thuong mock data, link anh co the preview ngoai FE, rate (%), gioi han phat moi giai, enabled/xoa, nhiem vu nhan luot, direct URL, moc tich luy nhan luot, the le HTML |
 | Tich Banh Mo Qua VIP | Doi qua | Start/end date, vat pham doi, so luong item nhan moi lan, so banh dieu kien doi, gioi han phat, enabled, anh tooltip, the le HTML |
 | Ban Tiec Sinh Nhat | Loi chuc / binh chon / mission phu | Start/end date, the le HTML, danh sach nhiem vu nhan luot, direct URL |
 
@@ -47,11 +47,48 @@ Nguoi review tinh dung cua campaign:
 
 - Cau hinh start/end date theo module.
 - Cau hinh Thiep Moi Dai Tiec nhu Community Milestone.
-- Cau hinh Mo Qua Sinh Nhat: phan thuong, rate, gioi han phat, enabled, nhiem vu, direct URL, tich luy nhan luot.
+- Cau hinh Mo Qua Sinh Nhat: Vong quay Lucky Spin gom phan thuong mock data, link anh preview ngoai FE, rate, gioi han phat, enabled/xoa, nhiem vu, direct URL, tich luy nhan luot.
 - Cau hinh Tich Banh Mo Qua VIP nhu Doi Qua.
 - Cau hinh Ban Tiec Sinh Nhat: the le va nhiem vu.
 - Cau hinh the le HTML cho cac module chinh.
 - FE preview doc config tu `localStorage` va reflect len `vng.html`.
+
+### Guide config Moc Tich Luy Thiep Moi Dai Tiec
+
+1. Vao tab `Config`, mo module `Cau Hinh Moc Tich Luy Thiep Moi Dai Tiec`.
+2. Chon `Start Date` va `End Date` cho thoi gian hieu luc cua module.
+3. `So moc tich luy` la tong so block moc dang hien thi; dung `+ Them moc` de them moc hoac `Xoa moc` de bo moc.
+4. Nhap `So moc tich luy`, `Link anh qua` va `Link anh Tooltip` cho tung moc; dung `Mo anh` de kiem tra truc tiep tung link anh.
+5. Chon danh sach `Qua tang` tu mock data va nhap quantity cho tung qua trong moc.
+6. Dung `Enabled` de bat/tat moc. Neu admin khong cau hinh, FE dung fallback default cua trang event VNG hien tai.
+
+### Guide config Vong quay Lucky Spin
+
+1. Vao tab `Config`, mo module `Config Mo qua sinh nhat`, phan `Vong quay Lucky Spin`.
+2. Moi dong chon `Qua tang` tu danh sach mock data.
+3. Dan `Link anh tooltip`; cot `Xem anh` mo anh trong tab moi de kiem tra nhanh, va khi Save & Preview anh se reflect ra `vng.html`.
+4. Nhap `Rate (%)`; tong rate cua cac qua dang enabled phai bang `100%`.
+5. Nhap `Gioi han phat` de mock limit/ton kho phat thuong cho tung giai.
+6. Dung `Enabled` de bat/tat qua hoac nut `Xoa` de loai qua khoi config.
+7. Neu admin khong luu config hoac du lieu spin khong du hop le, FE dung fallback default cua trang event VNG hien tai.
+
+### Guide config Nhiem Vu Nhan Luot
+
+1. Vao module `Config Mo qua sinh nhat`, phan `Nhiem Vu Nhan Luot`.
+2. Chon `Loai` nhiem vu: `Hang ngay` hoac `Co dinh`.
+3. Nhap `Noi dung HTML` mo ta nhiem vu va phan thuong luot quay.
+4. Nhap `Luot quay` se cong cho user sau khi hoan thanh nhiem vu.
+5. Chon text nut `Thuc Hien` hoac `Nhan Luot`, roi nhap `Direct Url` neu can dieu huong.
+6. Dung `Enabled` de bat/tat nhiem vu, `Xoa` de bo nhiem vu, hoac `+ Them nhiem vu` de them dong moi.
+
+### Guide config Tich Luy Nhan Luot
+
+1. Vao module `Config Mo qua sinh nhat`, phan `Tich Luy Nhan Luot`.
+2. `So moc nhan luot` la tong so block moc dang hien thi; dung `+ Them moc tich luy` de tang so moc hoac `Xoa moc` de giam so moc.
+3. Nhap `So luot tich luy` cho tung moc de FE biet nguoi choi can dat bao nhieu luot quay.
+4. Dan `Link anh Tooltip` va dung `Mo anh` de kiem tra truc tiep anh tooltip cua moc.
+5. Chon danh sach `Qua tang` tu mock data va nhap quantity cho tung qua trong moc.
+6. Neu admin khong cau hinh, FE tiep tuc dung fallback default cua trang event VNG hien tai.
 
 ### Validation
 

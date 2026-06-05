@@ -325,6 +325,37 @@
 
   .header-timestamp { font-family: var(--mono); font-size: 11px; color: var(--muted); }
 
+  .config-guide {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text);
+    font-size: 12px;
+    line-height: 1.6;
+    margin-bottom: 12px;
+    padding: 12px 14px;
+  }
+  .config-guide strong { color: var(--text); }
+  .config-guide ol { margin: 8px 0 0; padding-left: 18px; }
+  .config-guide li { margin: 4px 0; }
+  .img-preview-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--blue);
+    font-size: 12px;
+    text-decoration: none;
+    white-space: nowrap;
+  }
+  .img-preview-thumb {
+    width: 34px;
+    height: 34px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: #fff;
+    object-fit: contain;
+  }
+
   /* ── Cấu hình Thiệp Mời Đại Tiệc ── */
   .thiep-moc-block {
     background: var(--bg);
@@ -340,8 +371,12 @@
     align-items: end;
     margin-bottom: 12px;
   }
+  .thiep-moc-header--media {
+    grid-template-columns: 120px minmax(180px, 1fr) 110px minmax(180px, 1fr) 110px 90px auto;
+  }
   @media(max-width:900px) {
-    .thiep-moc-header { grid-template-columns: 1fr; }
+    .thiep-moc-header,
+    .thiep-moc-header--media { grid-template-columns: 1fr; }
   }
   .thiep-moc-label {
     font-size: 11px;
@@ -492,9 +527,18 @@
       <button class="collapse-toggle" type="button" aria-label="Mở rộng module" aria-expanded="false">⌄</button>
     </div>
     <div class="collapsible-body">
-      <p class="text-muted mb-12" style="font-size:12px">
-        Cấu hình số mốc, ảnh quà, ảnh tooltip và danh sách quà tặng cho từng mốc. Dữ liệu đồng bộ sang Client qua localStorage key <code class="mono">dt3q_thiep_moi_cfg</code>.
-      </p>
+      <div class="config-guide">
+        <strong>Guide config Mốc Tích Lũy Thiệp Mời Đại Tiệc:</strong>
+        <ol>
+          <li>Chọn <strong>Start Date</strong> và <strong>End Date</strong> cho thời gian hiệu lực của module Thiệp Mời.</li>
+          <li><strong>Số mốc tích lũy</strong> là số block mốc đang hiển thị; dùng <strong>+ Thêm mốc</strong> để thêm mốc mới hoặc <strong>Xóa mốc</strong> để bỏ mốc.</li>
+          <li>Nhập <strong>Số mốc tích lũy</strong> cho từng mốc, ví dụ 1000, 5000, 10000 lượt.</li>
+          <li>Dán <strong>Link ảnh quà</strong> và <strong>Link ảnh Tooltip</strong>; dùng nút <strong>Mở ảnh</strong> để kiểm tra trực tiếp, các ảnh này sẽ reflect ra FE Preview khi lưu cấu hình.</li>
+          <li>Trong mỗi mốc, chọn danh sách <strong>Quà tặng</strong> từ mock data và nhập quantity cho từng quà.</li>
+          <li>Dùng <strong>Enabled</strong> để bật/tắt mốc. Nếu admin không config, FE dùng fallback default của trang event VNG hiện tại.</li>
+          <li>Dữ liệu Thiệp Mời đồng bộ qua localStorage key <code class="mono">dt3q_thiep_moi_cfg</code>.</li>
+        </ol>
+      </div>
       <div class="form-row grid-2">
         <div class="form-group">
           <label>Start Date</label>
@@ -524,6 +568,18 @@
       <button class="collapse-toggle" type="button" aria-label="Mở rộng module" aria-expanded="false">⌄</button>
     </div>
     <div class="collapsible-body">
+      <div class="card-title" style="font-size:16px;margin-bottom:8px"><span class="card-title-icon">🎯</span>Vòng quay Lucky Spin</div>
+      <div class="config-guide">
+        <strong>Guide config Lucky Spin:</strong>
+        <ol>
+          <li>Chọn quà tặng từ danh sách mock data ở cột <strong>Quà tặng</strong>.</li>
+          <li>Dán <strong>link ảnh</strong> vào cột ảnh tooltip; ảnh này sẽ hiển thị ngoài FE Preview và có thể mở trực tiếp bằng cột <strong>Xem ảnh</strong>.</li>
+          <li>Nhập <strong>Rate (%)</strong> cho từng quà. Tổng rate của các quà đang enabled phải bằng 100% trước khi lưu/preview.</li>
+          <li>Nhập <strong>Giới hạn phát</strong> để mock tồn kho/tổng số lần phát tối đa cho giải đó.</li>
+          <li>Dùng toggle <strong>Enabled</strong> để bật/tắt quà, hoặc nút <strong>Xóa</strong> để bỏ khỏi cấu hình.</li>
+          <li>Nếu admin không lưu config hoặc config thiếu dữ liệu hợp lệ, FE dùng logic fallback và giữ default hiện tại của trang event VNG.</li>
+        </ol>
+      </div>
       <div class="form-row grid-2">
         <div class="form-group">
           <label>Start Date</label>
@@ -541,6 +597,7 @@
               <th style="width:40px">#</th>
               <th>Quà tặng</th>
               <th>Link ảnh tooltip</th>
+              <th style="width:110px">Xem ảnh</th>
               <th style="width:110px">Rate (%)</th>
               <th style="width:130px">Giới hạn phát</th>
               <th style="width:90px">Enabled</th>
@@ -556,9 +613,18 @@
       </div>
       <div style="height:16px"></div>
       <div class="card-title" style="font-size:15px;margin-bottom:8px"><span class="card-title-icon">📋</span>Nhiệm Vụ Nhận Lượt</div>
-      <p class="text-muted mb-12" style="font-size:12px">
-        Cấu hình danh sách nhiệm vụ trong popup khi click nút Nhận Lượt. Nội dung cho phép HTML, ví dụ <code class="mono">&lt;b&gt;Nạp gói promotion 109.000đ&lt;/b&gt;&lt;br&gt;(+ 6 lượt/ngày)</code>.
-      </p>
+      <div class="config-guide">
+        <strong>Guide config Nhiệm Vụ Nhận Lượt:</strong>
+        <ol>
+          <li>Phần này nằm trong module <strong>Config Mở quà sinh nhật</strong> và dùng để cấu hình popup nhiệm vụ nhận lượt quay.</li>
+          <li>Chọn <strong>Loại</strong> nhiệm vụ: <strong>Hàng ngày</strong> cho nhiệm vụ lặp theo ngày hoặc <strong>Cố định</strong> cho nhiệm vụ nhận một lần theo campaign.</li>
+          <li>Nhập <strong>Nội dung HTML</strong> cho nhiệm vụ, ví dụ <code class="mono">&lt;b&gt;Nạp gói promotion 109.000đ&lt;/b&gt;&lt;br&gt;(+ 6 lượt/ngày)</code>.</li>
+          <li>Nhập <strong>Lượt quay</strong> người chơi nhận được sau khi hoàn thành nhiệm vụ.</li>
+          <li>Chọn text nút <strong>Thực Hiện</strong> hoặc <strong>Nhận Lượt</strong>, rồi nhập <strong>Direct Url</strong> nếu cần điều hướng user sang trang nhiệm vụ.</li>
+          <li>Dùng <strong>Enabled</strong> để bật/tắt nhiệm vụ, <strong>Xóa</strong> để bỏ nhiệm vụ, hoặc <strong>+ Thêm nhiệm vụ</strong> để thêm dòng mới.</li>
+          <li>Nếu admin không config, FE dùng danh sách nhiệm vụ mock/default hiện tại.</li>
+        </ol>
+      </div>
       <div class="table-overflow">
         <table class="data-table" id="missionTable">
           <thead>
@@ -581,12 +647,20 @@
       </div>
       <div style="height:16px"></div>
       <div class="card-title" style="font-size:15px;margin-bottom:8px"><span class="card-title-icon">🎁</span>Tích Lũy Nhận Lượt</div>
-      <p class="text-muted mb-12" style="font-size:12px">
-        Cấu hình các mốc số lượt tích lũy, danh sách quà tặng và ảnh tooltip hiển thị khi hover từng mốc.
-      </p>
+      <div class="config-guide">
+        <strong>Guide config Tích Lũy Nhận Lượt:</strong>
+        <ol>
+          <li><strong>Số mốc nhận lượt</strong> chính là số block mốc đang hiển thị bên dưới; dùng nút <strong>+ Thêm mốc tích lũy</strong> để tăng số mốc, hoặc <strong>Xóa mốc</strong> để bỏ mốc.</li>
+          <li>Nhập <strong>Số lượt tích lũy</strong> cho từng mốc, ví dụ 1, 5, 10, 20 lượt.</li>
+          <li>Dán <strong>Link ảnh Tooltip</strong>; ảnh này sẽ hiển thị ngoài FE khi hover mốc và có thể kiểm tra nhanh bằng nút <strong>Mở ảnh</strong>.</li>
+          <li>Trong mỗi mốc, chọn danh sách <strong>Quà tặng</strong> từ mock data và nhập số lượng nhận được.</li>
+          <li>Nếu admin không config, FE giữ fallback default của trang event VNG hiện tại.</li>
+        </ol>
+      </div>
       <div id="spinAccumulationContainer"></div>
       <div class="table-actions">
         <button class="btn btn-ghost btn-sm" type="button" onclick="addSpinAccumulationMilestone()">+ Thêm mốc tích lũy</button>
+        <span id="spinAccumulationCount" class="mono" style="margin-left:auto;font-size:13px;color:var(--muted)">Số mốc: 0</span>
       </div>
       <div class="form-row mt-12">
         <label>Thể lệ (HTML)</label>
@@ -836,7 +910,7 @@
           <td>
             Start/end date cho toàn module
             <br><br>
-            [Vòng quay]danh sách phần thưởng vòng quay, rate (%) từng món, giới hạn phát mỗi giải [Mock data], enabled.
+            [Vòng quay Lucky Spin] danh sách phần thưởng mock data, link ảnh tooltip có thể preview ngoài FE, rate (%) từng món, giới hạn phát mỗi giải [Mock data], enabled/xóa.
             <br><br>
             [Nhiệm vụ]Loại nhiệm vụ (Cố định/hàng ngày), thông tin nhiệm vụ (html), lượt quay, nút (thực hiện/nhận lượt), direct URL(để direct tới trang nhiệm vụ), enable, xóa [FE preview]
             <br><br>
@@ -862,7 +936,7 @@
     <p>Công việc hằng ngày:</p>
     <ul>
       <li>Cập nhật thời gian bắt đầu/kết thúc từng module.</li>
-      <li>Điều chỉnh danh sách quà, rate, giới hạn phát và điều kiện đổi.</li>
+      <li>Điều chỉnh danh sách quà, hình ảnh quà/tool tip quà, rate, giới hạn phát và điều kiện đổi.</li>
       <li>Bật/tắt nhiệm vụ, sửa số lượt thưởng và link điều hướng.</li>
       <li>Sửa nội dung thể lệ HTML theo yêu cầu campaign.</li>
       <li>Chạy validation trước khi save.</li>
@@ -889,6 +963,47 @@
       <li>Cấu hình thể lệ HTML cho các module .</li>
       <li>FE preview đọc config từ <code>localStorage</code> và reflect lên <code>vng.html</code>.</li>
     </ul>
+
+    <h3>Guide config Mốc Tích Lũy Thiệp Mời Đại Tiệc</h3>
+    <ol>
+      <li>Vào tab <strong>Config</strong>, mở module <strong>Cấu Hình Mốc Tích Lũy Thiệp Mời Đại Tiệc</strong>.</li>
+      <li>Chọn <strong>Start Date</strong> và <strong>End Date</strong> cho thời gian hiệu lực của module.</li>
+      <li><strong>Số mốc tích lũy</strong> là tổng số block mốc đang hiển thị; dùng <strong>+ Thêm mốc</strong> để thêm mốc hoặc <strong>Xóa mốc</strong> để bỏ mốc.</li>
+      <li>Nhập <strong>Số mốc tích lũy</strong>, <strong>Link ảnh quà</strong> và <strong>Link ảnh Tooltip</strong> cho từng mốc; dùng <strong>Mở ảnh</strong> để kiểm tra trực tiếp từng link ảnh.</li>
+      <li>Chọn danh sách <strong>Quà tặng</strong> từ mock data và nhập quantity cho từng quà trong mốc.</li>
+      <li>Dùng <strong>Enabled</strong> để bật/tắt mốc. Nếu admin không cấu hình, FE dùng fallback default của trang event VNG hiện tại.</li>
+    </ol>
+
+    <h3>Guide config Vòng quay Lucky Spin</h3>
+    <ol>
+      <li>Vào tab <strong>Config</strong>, mở module <strong>Config Mở quà sinh nhật</strong>, phần <strong>Vòng quay Lucky Spin</strong>.</li>
+      <li>Ở mỗi dòng, chọn <strong>Quà tặng</strong> từ danh sách mock data.</li>
+      <li>Dán <strong>Link ảnh tooltip</strong>. Cột <strong>Xem ảnh</strong> cho phép mở ảnh trong tab mới để kiểm tra nhanh, và khi Save & Preview ảnh sẽ được reflect ra <code>vng.html</code>.</li>
+      <li>Nhập <strong>Rate (%)</strong>. Tổng rate của các quà đang enabled phải bằng <strong>100%</strong>.</li>
+      <li>Nhập <strong>Giới hạn phát</strong> để mock limit/tồn kho phát thưởng cho từng giải.</li>
+      <li>Dùng <strong>Enabled</strong> để bật/tắt quà hoặc nút <strong>Xóa</strong> để loại quà khỏi config.</li>
+      <li>Nếu admin không lưu config hoặc dữ liệu spin không đủ hợp lệ, FE vẫn dùng fallback default của trang event VNG hiện tại.</li>
+    </ol>
+
+    <h3>Guide config Nhiệm Vụ Nhận Lượt</h3>
+    <ol>
+      <li>Vào module <strong>Config Mở quà sinh nhật</strong>, phần <strong>Nhiệm Vụ Nhận Lượt</strong>.</li>
+      <li>Chọn <strong>Loại</strong> nhiệm vụ: <strong>Hàng ngày</strong> hoặc <strong>Cố định</strong>.</li>
+      <li>Nhập <strong>Nội dung HTML</strong> mô tả nhiệm vụ và phần thưởng lượt quay.</li>
+      <li>Nhập <strong>Lượt quay</strong> sẽ cộng cho user sau khi hoàn thành nhiệm vụ.</li>
+      <li>Chọn text nút <strong>Thực Hiện</strong> hoặc <strong>Nhận Lượt</strong>, rồi nhập <strong>Direct Url</strong> nếu cần điều hướng.</li>
+      <li>Dùng <strong>Enabled</strong> để bật/tắt nhiệm vụ, <strong>Xóa</strong> để bỏ nhiệm vụ, hoặc <strong>+ Thêm nhiệm vụ</strong> để thêm dòng mới.</li>
+    </ol>
+
+    <h3>Guide config Tích Lũy Nhận Lượt</h3>
+    <ol>
+      <li>Vào module <strong>Config Mở quà sinh nhật</strong>, phần <strong>Tích Lũy Nhận Lượt</strong>.</li>
+      <li><strong>Số mốc nhận lượt</strong> là tổng số block mốc đang hiển thị; dùng <strong>+ Thêm mốc tích lũy</strong> để tăng số mốc hoặc <strong>Xóa mốc</strong> để giảm số mốc.</li>
+      <li>Nhập <strong>Số lượt tích lũy</strong> cho từng mốc để FE biết người chơi cần đạt bao nhiêu lượt quay.</li>
+      <li>Dán <strong>Link ảnh Tooltip</strong> và dùng <strong>Mở ảnh</strong> để kiểm tra trực tiếp ảnh tooltip của mốc.</li>
+      <li>Chọn danh sách <strong>Quà tặng</strong> từ mock data và nhập quantity cho từng quà trong mốc.</li>
+      <li>Nếu admin không cấu hình, FE tiếp tục dùng fallback default của trang event VNG hiện tại.</li>
+    </ol>
 
     <h3>Validation</h3>
     <ul>
@@ -1303,7 +1418,8 @@ function renderSpinTable() {
           ${buildGiftSelectOptions(row.name)}
         </select>
       </td>
-      <td><input type="text" value="${esc(row.tooltipImg)}" placeholder="https://..." onchange="spinData[${i}].tooltipImg=this.value"></td>
+      <td><input type="text" value="${esc(row.tooltipImg)}" placeholder="https://..." onchange="spinData[${i}].tooltipImg=this.value.trim(); renderSpinTable();"></td>
+      <td>${buildImagePreviewLink(row.tooltipImg, row.name)}</td>
       <td><input type="number" min="0" max="100" step="0.01" value="${row.rate}" onchange="setSpinRate(${i}, this)"></td>
       <td><input type="text" inputmode="numeric" pattern="[1-9][0-9]*" value="${esc(row.stock)}" oninput="sanitizePositiveIntegerInput(this, spinData[${i}], 'stock')" onchange="sanitizePositiveIntegerInput(this, spinData[${i}], 'stock')"></td>
       <td>
@@ -1314,6 +1430,14 @@ function renderSpinTable() {
     tbody.appendChild(tr);
   });
   updateSpinSum();
+}
+function buildImagePreviewLink(url, alt) {
+  url = String(url || '').trim();
+  if (!url) return '<span class="text-muted" style="font-size:12px">Chưa có ảnh</span>';
+  return '<a class="img-preview-link" href="' + esc(url) + '" target="_blank" rel="noopener noreferrer" title="Mở ảnh trong tab mới">' +
+    '<img class="img-preview-thumb" src="' + esc(url) + '" alt="' + esc(alt || 'Ảnh quà') + '" loading="lazy" onerror="this.style.display=\'none\'">' +
+    '<span>Mở ảnh</span>' +
+  '</a>';
 }
 function addSpinRow() {
   spinData.push({ name: MOCK.spin[0].name, tooltipImg: MOCK.spin[0].tooltipImg, rate: 0, stock: 100, enabled: true });
@@ -1525,6 +1649,8 @@ function renderSpinAccumulationUI() {
   const container = document.getElementById('spinAccumulationContainer');
   if (!container) return;
   container.innerHTML = '';
+  const countEl = document.getElementById('spinAccumulationCount');
+  if (countEl) countEl.textContent = 'Số mốc: ' + spinAccumulationData.length;
 
   spinAccumulationData.forEach((milestone, mi) => {
     if (!milestone.gifts) milestone.gifts = [];
@@ -1553,7 +1679,11 @@ function renderSpinAccumulationUI() {
         '<div class="form-group">' +
           '<label>Link ảnh Tooltip</label>' +
           '<input type="text" value="' + esc(milestone.tooltipImg || '') + '" ' +
-          'placeholder="https://..." onchange="spinAccumulationData[' + mi + '].tooltipImg=this.value">' +
+          'placeholder="https://..." onchange="spinAccumulationData[' + mi + '].tooltipImg=this.value.trim(); renderSpinAccumulationUI();">' +
+        '</div>' +
+        '<div class="form-group">' +
+          '<label>Xem ảnh</label>' +
+          buildImagePreviewLink(milestone.tooltipImg, 'Tooltip mốc tích lũy #' + (mi + 1)) +
         '</div>' +
         '<button class="btn btn-danger btn-sm" type="button" onclick="removeSpinAccumulationMilestone(' + mi + ')">🗑 Xóa mốc</button>' +
       '</div>' +
@@ -1656,7 +1786,7 @@ function renderThiepMoiUI() {
 
     block.innerHTML =
       '<div class="thiep-moc-label">Mốc #' + (mi + 1) + '</div>' +
-      '<div class="thiep-moc-header">' +
+      '<div class="thiep-moc-header thiep-moc-header--media">' +
         '<div class="form-group">' +
           '<label>Số mốc tích lũy</label>' +
           '<input type="text" inputmode="numeric" pattern="[1-9][0-9]*" value="' + esc(milestone.moc || 0) + '" ' +
@@ -1665,12 +1795,20 @@ function renderThiepMoiUI() {
         '<div class="form-group">' +
           '<label>Link ảnh quà</label>' +
           '<input type="text" value="' + esc(milestone.giftImg || '') + '" ' +
-          'placeholder="https://..." onchange="thiepMoiData[' + mi + '].giftImg=this.value">' +
+          'placeholder="https://..." onchange="thiepMoiData[' + mi + '].giftImg=this.value.trim(); renderThiepMoiUI();">' +
+        '</div>' +
+        '<div class="form-group">' +
+          '<label>Xem ảnh quà</label>' +
+          buildImagePreviewLink(milestone.giftImg, 'Ảnh quà mốc Thiệp Mời #' + (mi + 1)) +
         '</div>' +
         '<div class="form-group">' +
           '<label>Link ảnh tool tips</label>' +
           '<input type="text" value="' + esc(milestone.tooltipImg || '') + '" ' +
-          'placeholder="https://..." onchange="thiepMoiData[' + mi + '].tooltipImg=this.value">' +
+          'placeholder="https://..." onchange="thiepMoiData[' + mi + '].tooltipImg=this.value.trim(); renderThiepMoiUI();">' +
+        '</div>' +
+        '<div class="form-group">' +
+          '<label>Xem tooltip</label>' +
+          buildImagePreviewLink(milestone.tooltipImg, 'Ảnh tooltip mốc Thiệp Mời #' + (mi + 1)) +
         '</div>' +
         '<div class="form-group">' +
           '<label>Enabled</label>' +
