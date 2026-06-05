@@ -90,6 +90,24 @@ Nguoi review tinh dung cua campaign:
 5. Chon danh sach `Qua tang` tu mock data va nhap quantity cho tung qua trong moc.
 6. Neu admin khong cau hinh, FE tiep tuc dung fallback default cua trang event VNG hien tai.
 
+### Guide config Tich Banh Mo Qua VIP
+
+1. Vao tab `Config`, mo module `Tich banh mo qua Vip`.
+2. Chon `Start Date` va `End Date` cho thoi gian hieu luc cua module doi qua VIP.
+3. Chon `Vat Pham`, nhap `So luong`, `So Banh Tich Luy` va `Gioi han phat`.
+4. Dan `Hinh Anh (Link anh tooltip)` va dung `Mo anh` de kiem tra truc tiep anh tooltip se reflect ra FE.
+5. Dung `Enabled` de bat/tat vat pham, `Xoa` de bo vat pham, hoac `+ Them vat pham` de them dong moi.
+6. Neu admin khong cau hinh, FE tiep tuc dung fallback default cua trang event VNG hien tai.
+
+### Guide config Ban Tiec Sinh Nhat
+
+1. Vao tab `Config`, mo module `Ban tiec sinh nhat`.
+2. Chon `Start Date` va `End Date` cho thoi gian hieu luc cua module.
+3. Nhap `The le (HTML)` cho popup the le cua Ban tiec sinh nhat.
+4. Trong phan `Nhiem Vu Nhan Luot`, cau hinh `Loai`, `Noi dung HTML`, `Luot quay`, text nut va `Direct Url`.
+5. Dung `Enabled` de bat/tat nhiem vu, `Xoa` de bo nhiem vu, hoac `+ Them nhiem vu` de them dong moi.
+6. Neu admin khong cau hinh, FE tiep tuc dung fallback default/mock hien tai.
+
 ### Validation
 
 - Tong rate vong quay phai bang 100%.

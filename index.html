@@ -676,6 +676,18 @@
       <button class="collapse-toggle" type="button" aria-label="Mở rộng module" aria-expanded="false">⌄</button>
     </div>
     <div class="collapsible-body">
+      <div class="config-guide">
+        <strong>Guide config Tích Bánh Mở Quà VIP:</strong>
+        <ol>
+          <li>Chọn <strong>Start Date</strong> và <strong>End Date</strong> cho thời gian hiệu lực của module đổi quà VIP.</li>
+          <li>Chọn <strong>Vật Phẩm</strong> từ mock data và nhập <strong>Số lượng</strong> item user nhận được mỗi lần đổi.</li>
+          <li>Nhập <strong>Số Bánh Tích Lũy</strong> là số bánh cần có để mở/đổi vật phẩm đó.</li>
+          <li>Nhập <strong>Giới hạn phát</strong> để mock limit/tồn kho phát thưởng cho từng vật phẩm.</li>
+          <li>Dán <strong>Hình Ảnh (Link ảnh tooltip)</strong> và dùng <strong>Mở ảnh</strong> để kiểm tra trực tiếp ảnh sẽ reflect ra FE.</li>
+          <li>Dùng <strong>Enabled</strong> để bật/tắt vật phẩm, <strong>Xóa</strong> để bỏ vật phẩm, hoặc <strong>+ Thêm vật phẩm</strong> để thêm dòng mới.</li>
+          <li>Nếu admin không config, FE dùng fallback default của trang event VNG hiện tại.</li>
+        </ol>
+      </div>
       <div class="form-row grid-2">
         <div class="form-group">
           <label>Start Date</label>
@@ -696,6 +708,7 @@
               <th style="width:160px">Số Bánh Tích Lũy(Để mở)</th>
               <th style="width:130px">Giới hạn phát</th>
               <th>Hình Ảnh (Link ảnh tooltip)</th>
+              <th style="width:110px">Xem ảnh</th>
               <th style="width:90px">Enabled</th>
               <th style="width:60px">Xoá</th>
             </tr>
@@ -720,6 +733,17 @@
       <button class="collapse-toggle" type="button" aria-label="Mở rộng module" aria-expanded="false">⌄</button>
     </div>
     <div class="collapsible-body">
+      <div class="config-guide">
+        <strong>Guide config Bàn Tiệc Sinh Nhật:</strong>
+        <ol>
+          <li>Chọn <strong>Start Date</strong> và <strong>End Date</strong> cho thời gian hiệu lực của module Bàn tiệc.</li>
+          <li>Nhập <strong>Thể lệ (HTML)</strong> để cấu hình nội dung popup thể lệ của Bàn tiệc sinh nhật.</li>
+          <li>Trong phần <strong>Nhiệm Vụ Nhận Lượt</strong>, chọn <strong>Loại</strong> nhiệm vụ: <strong>Hàng ngày</strong> hoặc <strong>Cố định</strong>.</li>
+          <li>Nhập <strong>Nội dung HTML</strong>, <strong>Lượt quay</strong>, text nút <strong>Thực Hiện/Nhận Lượt</strong> và <strong>Direct Url</strong> nếu cần điều hướng.</li>
+          <li>Dùng <strong>Enabled</strong> để bật/tắt nhiệm vụ, <strong>Xóa</strong> để bỏ nhiệm vụ, hoặc <strong>+ Thêm nhiệm vụ</strong> để thêm dòng mới.</li>
+          <li>Nếu admin không config, FE dùng fallback default/mock hiện tại của module Bàn tiệc.</li>
+        </ol>
+      </div>
       <div class="form-row grid-2">
         <div class="form-group">
           <label>Start Date</label>
@@ -736,9 +760,6 @@
       </div>
       <div style="height:16px"></div>
       <div class="card-title" style="font-size:15px;margin-bottom:8px"><span class="card-title-icon">📋</span>Nhiệm Vụ Nhận Lượt</div>
-      <p class="text-muted mb-12" style="font-size:12px">
-        Cấu hình danh sách nhiệm vụ trong popup khi người dùng click nút Nhiệm Vụ ở Bàn tiệc sinh nhật.
-      </p>
       <div class="table-overflow">
         <table class="data-table" id="birthdayTableMissionTable">
           <thead>
@@ -1003,6 +1024,26 @@
       <li>Dán <strong>Link ảnh Tooltip</strong> và dùng <strong>Mở ảnh</strong> để kiểm tra trực tiếp ảnh tooltip của mốc.</li>
       <li>Chọn danh sách <strong>Quà tặng</strong> từ mock data và nhập quantity cho từng quà trong mốc.</li>
       <li>Nếu admin không cấu hình, FE tiếp tục dùng fallback default của trang event VNG hiện tại.</li>
+    </ol>
+
+    <h3>Guide config Tích Bánh Mở Quà VIP</h3>
+    <ol>
+      <li>Vào tab <strong>Config</strong>, mở module <strong>Tích bánh mở quà Vip</strong>.</li>
+      <li>Chọn <strong>Start Date</strong> và <strong>End Date</strong> cho thời gian hiệu lực của module đổi quà VIP.</li>
+      <li>Chọn <strong>Vật Phẩm</strong>, nhập <strong>Số lượng</strong>, <strong>Số Bánh Tích Lũy</strong> và <strong>Giới hạn phát</strong>.</li>
+      <li>Dán <strong>Hình Ảnh (Link ảnh tooltip)</strong> và dùng <strong>Mở ảnh</strong> để kiểm tra trực tiếp ảnh tooltip sẽ reflect ra FE.</li>
+      <li>Dùng <strong>Enabled</strong> để bật/tắt vật phẩm, <strong>Xóa</strong> để bỏ vật phẩm, hoặc <strong>+ Thêm vật phẩm</strong> để thêm dòng mới.</li>
+      <li>Nếu admin không cấu hình, FE tiếp tục dùng fallback default của trang event VNG hiện tại.</li>
+    </ol>
+
+    <h3>Guide config Bàn Tiệc Sinh Nhật</h3>
+    <ol>
+      <li>Vào tab <strong>Config</strong>, mở module <strong>Bàn tiệc sinh nhật</strong>.</li>
+      <li>Chọn <strong>Start Date</strong> và <strong>End Date</strong> cho thời gian hiệu lực của module.</li>
+      <li>Nhập <strong>Thể lệ (HTML)</strong> cho popup thể lệ của Bàn tiệc sinh nhật.</li>
+      <li>Trong phần <strong>Nhiệm Vụ Nhận Lượt</strong>, cấu hình <strong>Loại</strong>, <strong>Nội dung HTML</strong>, <strong>Lượt quay</strong>, text nút và <strong>Direct Url</strong>.</li>
+      <li>Dùng <strong>Enabled</strong> để bật/tắt nhiệm vụ, <strong>Xóa</strong> để bỏ nhiệm vụ, hoặc <strong>+ Thêm nhiệm vụ</strong> để thêm dòng mới.</li>
+      <li>Nếu admin không cấu hình, FE tiếp tục dùng fallback default/mock hiện tại.</li>
     </ol>
 
     <h3>Validation</h3>
@@ -1488,7 +1529,8 @@ function renderShopTable() {
       <td><input type="text" inputmode="numeric" pattern="[1-9][0-9]*" value="${esc(row.qty)}" oninput="sanitizePositiveIntegerInput(this, shopData[${i}], 'qty')" onchange="sanitizePositiveIntegerInput(this, shopData[${i}], 'qty')"></td>
       <td><input type="text" inputmode="numeric" pattern="[1-9][0-9]*" value="${esc(row.cakes)}" oninput="sanitizePositiveIntegerInput(this, shopData[${i}], 'cakes')" onchange="sanitizePositiveIntegerInput(this, shopData[${i}], 'cakes')"></td>
       <td><input type="text" inputmode="numeric" pattern="[1-9][0-9]*" value="${esc(row.stock)}" oninput="sanitizePositiveIntegerInput(this, shopData[${i}], 'stock')" onchange="sanitizePositiveIntegerInput(this, shopData[${i}], 'stock')"></td>
-      <td><input type="text" value="${esc(row.tooltipImg)}" placeholder="https://..." onchange="shopData[${i}].tooltipImg=this.value"></td>
+      <td><input type="text" value="${esc(row.tooltipImg)}" placeholder="https://..." onchange="shopData[${i}].tooltipImg=this.value.trim(); renderShopTable();"></td>
+      <td>${buildImagePreviewLink(row.tooltipImg, row.name)}</td>
       <td>
         <label class="toggle"><input type="checkbox" ${row.enabled?'checked':''} onchange="shopData[${i}].enabled=this.checked">
         <span class="toggle-slider"></span></label>
