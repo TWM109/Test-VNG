@@ -595,7 +595,7 @@
           <li>Dán <strong>Link ảnh quà</strong> và <strong>Link ảnh Tooltip</strong>; dùng nút <strong>Mở ảnh</strong> để kiểm tra trực tiếp, các ảnh này sẽ reflect ra FE Preview khi lưu cấu hình.</li>
           <li>Trong mỗi mốc, chọn danh sách <strong>Quà tặng</strong> từ mock data và nhập quantity cho từng quà.</li>
           <li>Dùng <strong>Enabled</strong> để bật/tắt mốc. Nếu admin không config, FE dùng fallback default của trang event VNG hiện tại.</li>
-          <li>Dữ liệu Thiệp Mời đồng bộ qua localStorage key <code class="mono">dt3q_thiep_moi_cfg</code>.</li>
+          <li>Nhập nội dung HTML để config cho phần thể lệ chương trình.</li>
         </ol>
       </div>
       <div class="form-row grid-2">
@@ -631,12 +631,13 @@
       <div class="config-guide">
         <strong>Guide config Lucky Spin:</strong>
         <ol>
+          <li>Chọn Start Date và End Date cho thời gian hiệu lực cho cả 3 module (vòng quay,nhiệm vụ nhận lượt và tích lũy nhận lượt). Ngoài khung giờ đã cài đặt, hệ thống sẽ áp dụng mặc định của VNG </li>
           <li>Chọn quà tặng từ danh sách mock data ở cột <strong>Quà tặng</strong>.</li>
           <li>Dán <strong>link ảnh</strong> vào cột ảnh tooltip; ảnh này sẽ hiển thị ngoài FE Preview và có thể mở trực tiếp bằng cột <strong>Xem ảnh</strong>.</li>
           <li>Nhập <strong>Rate (%)</strong> cho từng quà. Tổng rate của các quà đang enabled phải bằng 100% trước khi lưu/preview.</li>
           <li>Nhập <strong>Giới hạn phát</strong> để mock tồn kho/tổng số lần phát tối đa cho giải đó.</li>
           <li>Dùng toggle <strong>Enabled</strong> để bật/tắt quà, hoặc nút <strong>Xóa</strong> để bỏ khỏi cấu hình.</li>
-          <li>Nếu admin không lưu config hoặc config thiếu dữ liệu hợp lệ, FE dùng logic fallback và giữ default hiện tại của trang event VNG.</li>
+          <li>Nếu admin không lưu config hoặc config bị disable, FE dùng logic fallback và giữ default hiện tại của trang event VNG.</li>
         </ol>
       </div>
       <div class="form-row grid-2">
@@ -681,7 +682,8 @@
           <li>Nhập <strong>Lượt quay</strong> người chơi nhận được sau khi hoàn thành nhiệm vụ.</li>
           <li>Chọn text nút <strong>Thực Hiện</strong> hoặc <strong>Nhận Lượt</strong>, rồi nhập <strong>Direct Url</strong> nếu cần điều hướng user sang trang nhiệm vụ.</li>
           <li>Dùng <strong>Enabled</strong> để bật/tắt nhiệm vụ, <strong>Xóa</strong> để bỏ nhiệm vụ, hoặc <strong>+ Thêm nhiệm vụ</strong> để thêm dòng mới.</li>
-          <li>Nếu admin không config, FE dùng danh sách nhiệm vụ mock/default hiện tại.</li>
+          <li>Nếu admin không config hoặc nhiệm vụ bị disbale, FE dùng danh sách nhiệm vụ mock/default hiện tại.</li>
+          <li>Nhập nội dung HTML để config cho phần thể lệ chương trình </li>
         </ol>
       </div>
       <div class="table-overflow">
