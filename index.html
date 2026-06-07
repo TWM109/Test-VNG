@@ -397,6 +397,18 @@
   .config-guide strong { color: var(--text); }
   .config-guide ol { margin: 8px 0 0; padding-left: 18px; }
   .config-guide li { margin: 4px 0; }
+  .timeline-notice {
+    display: none;
+    margin: -2px 0 12px;
+    padding: 9px 12px;
+    border-radius: 6px;
+    border: 1px solid rgba(245,158,11,.35);
+    background: rgba(245,158,11,.1);
+    color: #fcd34d;
+    font-size: 12px;
+    line-height: 1.45;
+  }
+  .timeline-notice.show { display: block; }
   .img-preview-link {
     display: inline-flex;
     align-items: center;
@@ -608,6 +620,7 @@
           <input type="datetime-local" id="tl_thiep_end">
         </div>
       </div>
+      <div class="timeline-notice" id="notice_thiep_moi"></div>
       <div id="thiepMoiContainer"></div>
       <div class="form-row mt-12">
         <label>Thể lệ (HTML)</label>
@@ -650,6 +663,7 @@
           <input type="datetime-local" id="tl_open_gift_end">
         </div>
       </div>
+      <div class="timeline-notice" id="notice_open_gift"></div>
       <div class="table-overflow">
         <table class="data-table" id="spinTable">
           <thead>
@@ -759,6 +773,7 @@
           <input type="datetime-local" id="tl_vip_end">
         </div>
       </div>
+      <div class="timeline-notice" id="notice_shop_vip"></div>
       <div class="table-overflow">
         <table class="data-table" id="shopTable">
           <thead>
@@ -815,6 +830,7 @@
           <input type="datetime-local" id="tl_birthday_table_end">
         </div>
       </div>
+      <div class="timeline-notice" id="notice_birthday_table"></div>
       <div class="form-row mt-12">
         <label>Thể lệ (HTML)</label>
         <textarea class="rule-editor" id="rule_birthday_table" placeholder="<h2>...</h2>"></textarea>
@@ -1489,11 +1505,62 @@ function getInputValue(id) {
 
 function getTimelinePairs() {
   return [
-    ['Thiệp Mời Đại Tiệc', 'tl_thiep_start', 'tl_thiep_end'],
-    ['Mở quà sinh nhật', 'tl_open_gift_start', 'tl_open_gift_end'],
-    ['Tích bánh mở quà Vip', 'tl_vip_start', 'tl_vip_end'],
-    ['Bàn tiệc sinh nhật', 'tl_birthday_table_start', 'tl_birthday_table_end'],
+    ['Thiệp Mời Đại Tiệc', 'tl_thiep_start', 'tl_thiep_end', 'notice_thiep_moi', 'thiep_moi'],
+    ['Mở quà sinh nhật', 'tl_open_gift_start', 'tl_open_gift_end', 'notice_open_gift', 'open_gift'],
+    ['Tích bánh mở quà Vip', 'tl_vip_start', 'tl_vip_end', 'notice_shop_vip', 'shop_vip'],
+    ['Bàn tiệc sinh nhật', 'tl_birthday_table_start', 'tl_birthday_table_end', 'notice_birthday_table', 'birthday_table'],
   ];
+}
+
+function parseTimelineDate(value) {
+  const date = value ? new Date(value) : null;
+  return date && !Number.isNaN(date.getTime()) ? date : null;
+}
+
+function formatTimelineDate(value) {
+  const date = parseTimelineDate(value);
+  if (!date) return '';
+  return date.toLocaleString('vi-VN', {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false
+  });
+}
+
+function getTimelineWindowStatus(startValue, endValue) {
+  const start = parseTimelineDate(startValue);
+  const end = parseTimelineDate(endValue);
+  const now = new Date();
+  if (!start || !end || end <= start) return { state: 'invalid', inWindow: false };
+  if (now < start) return { state: 'future', inWindow: false };
+  if (now > end) return { state: 'past', inWindow: false };
+  return { state: 'active', inWindow: true };
+}
+
+function buildTimelineNotice(label, startValue, endValue) {
+  const status = getTimelineWindowStatus(startValue, endValue);
+  const startText = formatTimelineDate(startValue);
+  const endText = formatTimelineDate(endValue);
+  if (status.state === 'past') {
+    return `${label}: thời gian cấu hình (${startText} - ${endText}) đang trong quá khứ. FE sẽ lấy default của VNG.`;
+  }
+  if (status.state === 'future') {
+    return `${label}: thời gian cấu hình (${startText} - ${endText}) chưa bắt đầu. FE sẽ lấy default của VNG cho đến Start Date.`;
+  }
+  return '';
+}
+
+function updateTimelineNotice(label, startId, endId, noticeId) {
+  const noticeEl = document.getElementById(noticeId);
+  if (!noticeEl) return;
+  const startValue = getInputValue(startId);
+  const endValue = getInputValue(endId);
+  const message = buildTimelineNotice(label, startValue, endValue);
+  noticeEl.textContent = message;
+  noticeEl.classList.toggle('show', Boolean(message));
 }
 
 function validateTimelinePair(label, startId, endId, showMessage = false) {
@@ -1521,8 +1588,9 @@ function validateTimelinePair(label, startId, endId, showMessage = false) {
 
 function validateTimelineRealtime(showMessage = false) {
   let isValid = true;
-  getTimelinePairs().forEach(([label, startId, endId]) => {
+  getTimelinePairs().forEach(([label, startId, endId, noticeId]) => {
     if (!validateTimelinePair(label, startId, endId, showMessage)) isValid = false;
+    updateTimelineNotice(label, startId, endId, noticeId);
   });
   return isValid;
 }
@@ -2062,7 +2130,7 @@ function loadThiepMoiConfig() {
  * Key: dt3q_thiep_moi_cfg
  */
 function saveThiepMoiConfig(silent) {
-  var payload = thiepMoiData.map(function(m) {
+  var milestones = thiepMoiData.map(function(m) {
     return {
       moc: parseInt(m.moc, 10) || 0,
       giftImg: m.giftImg || '',
@@ -2073,6 +2141,13 @@ function saveThiepMoiConfig(silent) {
       })
     };
   });
+  var payload = {
+    timeline: {
+      thiep_start: getInputValue('tl_thiep_start'),
+      thiep_end: getInputValue('tl_thiep_end')
+    },
+    milestones: milestones
+  };
   localStorage.setItem(THIEP_MOI_LS_KEY, JSON.stringify(payload));
   window.dispatchEvent(new CustomEvent('dt3q-thiep-moi-updated', { detail: payload }));
   if (!silent) showToast('✅ Đã lưu cấu hình mốc Thiệp Mời', 'success');
@@ -2224,6 +2299,11 @@ function runValidation() {
     if (!validateTimelinePair(label, s, e, false)) {
       issues.push({ type:'error', msg: `${label}: End date phải lớn hơn Start date` });
       tlOk = false;
+      return;
+    }
+    const notice = buildTimelineNotice(label, getInputValue(s), getInputValue(e));
+    if (notice) {
+      issues.push({ type:'warning', msg: notice });
     }
   });
   if (tlOk) issues.push({ type:'ok', msg: 'Tất cả timeline: End date hợp lệ ✓' });
@@ -2387,10 +2467,15 @@ function resetMock() {
   missionData = m.mission.map(r => ({...r}));
   birthdayTableMissionData = m.birthdayTableMission.map(r => ({...r}));
   spinAccumulationData = m.spinAccumulation.map(r => ({...r, gifts: (r.gifts || []).map(g => ({...g}))}));
+  thiepMoiData = JSON.parse(JSON.stringify(DEFAULT_THIEP_MOI));
   packageData = m.packages.map(r => ({...r}));
   rulesData = normalizeRulesConfig(DEFAULT_RULES);
   renderAll();
   validateTimelineRealtime(false);
+  const cfg = gatherConfig();
+  localStorage.setItem(LS_KEY, JSON.stringify(cfg));
+  saveThiepMoiConfig(true);
+  window.dispatchEvent(new CustomEvent('dt3q-config-updated', { detail: cfg }));
   showToast('↺ Đã reset về mock data', 'warning');
 }
 

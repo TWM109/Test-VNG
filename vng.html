@@ -161,6 +161,20 @@
     return rows;
   }
 
+  function parseTimelineDate(value) {
+    var date = value ? new Date(value) : null;
+    return date && !isNaN(date.getTime()) ? date : null;
+  }
+
+  function isTimelineActive(timeline, startKey, endKey) {
+    timeline = timeline || {};
+    var start = parseTimelineDate(timeline[startKey]);
+    var end = parseTimelineDate(timeline[endKey]);
+    var now = new Date();
+    if (!start || !end || end <= start) return true;
+    return now >= start && now <= end;
+  }
+
   /** Định dạng số mốc hiển thị */
   function fmtMoc(n) {
     return String(parseNumber(n));
@@ -369,6 +383,15 @@
     if (!items.length) return;
 
     window.originalMilestonesHTML = window.originalMilestonesHTML || Array.from(items).map(function(el) { return el.innerHTML; });
+
+    if (!isTimelineActive(cfg && cfg.timeline, 'thiep_start', 'thiep_end')) {
+      Array.from(items).forEach(function(el, i) {
+        unbindAdminMilestoneHover(el);
+        if (window.originalMilestonesHTML[i] !== undefined) el.innerHTML = window.originalMilestonesHTML[i];
+      });
+      hideTooltip();
+      return;
+    }
 
     var milestones = Array.isArray(cfg) ? cfg : ((cfg && cfg.milestones) || []);
     var loiChuc = getLoiChucTotal(cfg);
@@ -621,14 +644,37 @@
       var cfg = raw ? JSON.parse(raw) : {};
       var rules = cfg && cfg.rules ? cfg.rules : {};
       return {
-        thiep_moi: normalizeRule(rules.thiep_moi, DEFAULT_RULES.thiep_moi),
-        open_gift: normalizeRule(rules.open_gift, DEFAULT_RULES.open_gift),
-        shop_vip: normalizeRule(rules.shop_vip, DEFAULT_RULES.shop_vip),
-        birthday_table: normalizeRule(rules.birthday_table, DEFAULT_RULES.birthday_table)
+        thiep_moi: isModuleTimelineActive(cfg, 'thiep_moi') ? normalizeRule(rules.thiep_moi, DEFAULT_RULES.thiep_moi) : DEFAULT_RULES.thiep_moi,
+        open_gift: isModuleTimelineActive(cfg, 'open_gift') ? normalizeRule(rules.open_gift, DEFAULT_RULES.open_gift) : DEFAULT_RULES.open_gift,
+        shop_vip: isModuleTimelineActive(cfg, 'shop_vip') ? normalizeRule(rules.shop_vip, DEFAULT_RULES.shop_vip) : DEFAULT_RULES.shop_vip,
+        birthday_table: isModuleTimelineActive(cfg, 'birthday_table') ? normalizeRule(rules.birthday_table, DEFAULT_RULES.birthday_table) : DEFAULT_RULES.birthday_table
       };
     } catch (e) {
       return DEFAULT_RULES;
     }
+  }
+
+  function parseTimelineDate(value) {
+    var date = value ? new Date(value) : null;
+    return date && !isNaN(date.getTime()) ? date : null;
+  }
+
+  function isTimelineActive(timeline, startKey, endKey) {
+    timeline = timeline || {};
+    var start = parseTimelineDate(timeline[startKey]);
+    var end = parseTimelineDate(timeline[endKey]);
+    var now = new Date();
+    if (!start || !end || end <= start) return true;
+    return now >= start && now <= end;
+  }
+
+  function isModuleTimelineActive(cfg, key) {
+    var timeline = cfg && cfg.timeline ? cfg.timeline : {};
+    if (key === 'thiep_moi') return isTimelineActive(timeline, 'thiep_start', 'thiep_end');
+    if (key === 'open_gift') return isTimelineActive(timeline, 'open_gift_start', 'open_gift_end');
+    if (key === 'shop_vip') return isTimelineActive(timeline, 'vip_start', 'vip_end');
+    if (key === 'birthday_table') return isTimelineActive(timeline, 'birthday_table_start', 'birthday_table_end');
+    return true;
   }
 
   function normalizeRule(rule, fallback) {
@@ -708,6 +754,28 @@
     } catch (e) {
       return null;
     }
+  }
+
+  function parseTimelineDate(value) {
+    var date = value ? new Date(value) : null;
+    return date && !isNaN(date.getTime()) ? date : null;
+  }
+
+  function isTimelineActive(timeline, startKey, endKey) {
+    timeline = timeline || {};
+    var start = parseTimelineDate(timeline[startKey]);
+    var end = parseTimelineDate(timeline[endKey]);
+    var now = new Date();
+    if (!start || !end || end <= start) return true;
+    return now >= start && now <= end;
+  }
+
+  function isModuleTimelineActive(cfg, key) {
+    var timeline = cfg && cfg.timeline ? cfg.timeline : {};
+    if (key === 'open_gift') return isTimelineActive(timeline, 'open_gift_start', 'open_gift_end');
+    if (key === 'shop_vip') return isTimelineActive(timeline, 'vip_start', 'vip_end');
+    if (key === 'birthday_table') return isTimelineActive(timeline, 'birthday_table_start', 'birthday_table_end');
+    return true;
   }
 
   function escAttr(s) {
@@ -1001,11 +1069,15 @@
 
   function loadAndApplyMissionConfig() {
     var cfg = readMainCfg();
-    if (activeMissionPopup === 'birthday_table') applyBirthdayTableMissionConfig(cfg);
-    else applyMissionConfig(cfg);
-    applySpinPrizeConfig(cfg);
-    applySpinAccumulationConfig(cfg);
-    applyShopConfig(cfg);
+    var openGiftActive = isModuleTimelineActive(cfg, 'open_gift');
+    var shopVipActive = isModuleTimelineActive(cfg, 'shop_vip');
+    var birthdayTableActive = isModuleTimelineActive(cfg, 'birthday_table');
+
+    if (activeMissionPopup === 'birthday_table') applyBirthdayTableMissionConfig(birthdayTableActive ? cfg : null);
+    else applyMissionConfig(openGiftActive ? cfg : null);
+    applySpinPrizeConfig(openGiftActive ? cfg : null);
+    applySpinAccumulationConfig(openGiftActive ? cfg : null);
+    applyShopConfig(shopVipActive ? cfg : null);
     applyBirthdayTableTimeline(cfg);
   }
 
