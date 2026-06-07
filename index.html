@@ -650,7 +650,6 @@
           <li>Nhập <strong>Rate (%)</strong> cho từng quà. Tổng rate của các quà đang enabled phải bằng 100% trước khi lưu/preview.</li>
           <li>Nhập <strong>Giới hạn phát</strong> để mock tồn kho/tổng số lần phát tối đa cho giải đó.</li>
           <li>Dùng toggle <strong>Enabled</strong> để bật/tắt quà, hoặc nút <strong>Xóa</strong> để bỏ khỏi cấu hình.</li>
-          <li>Nếu admin không lưu config hoặc config bị disable, FE dùng logic fallback và giữ default hiện tại của trang event VNG.</li>
         </ol>
       </div>
       <div class="form-row grid-2">
@@ -729,6 +728,7 @@
           <li>Nhập <strong>Số lượt tích lũy</strong> cho từng mốc, ví dụ 1, 5, 10, 20 lượt.</li>
           <li>Dán <strong>Link ảnh quà</strong> và <strong>Link ảnh Tooltip</strong>; các ảnh này sẽ hiển thị ngoài FE và có thể kiểm tra nhanh bằng nút <strong>Mở ảnh</strong>.</li>
           <li>Trong mỗi mốc, chọn danh sách <strong>Quà tặng</strong> từ mock data và nhập số lượng nhận được.</li>
+          <li>Dùng <strong>Enabled</strong> để bật/tắt từng mốc tích lũy.</li>
           <li>Nếu admin không config, FE giữ fallback default của trang event VNG hiện tại.</li>
         </ol>
       </div>
@@ -759,8 +759,8 @@
           <li>Nhập <strong>Số Bánh Tích Lũy</strong> là số bánh cần có để mở/đổi vật phẩm đó.</li>
           <li>Nhập <strong>Giới hạn phát</strong> để mock limit/tồn kho phát thưởng cho từng vật phẩm.</li>
           <li>Dán <strong>Hình Ảnh (Link ảnh tooltip)</strong> và dùng <strong>Mở ảnh</strong> để kiểm tra trực tiếp ảnh sẽ reflect ra FE.</li>
+          <li>1 số link test hình ảnh để team có thể test (https://freepngimg.com/thumb/goku/20182-6-goku-thumb.png), (https://freepngimg.com/thumb/the_legend_of_zelda/20983-8-zelda-link-photo-thumb.png)</li>
           <li>Dùng <strong>Enabled</strong> để bật/tắt vật phẩm, <strong>Xóa</strong> để bỏ vật phẩm, hoặc <strong>+ Thêm vật phẩm</strong> để thêm dòng mới.</li>
-          <li>Nếu admin không config, FE dùng fallback default của trang event VNG hiện tại.</li>
         </ol>
       </div>
       <div class="form-row grid-2">
@@ -1143,6 +1143,7 @@
       <li>Nhập <strong>Số lượt tích lũy</strong> cho từng mốc để FE biết người chơi cần đạt bao nhiêu lượt quay.</li>
       <li>Dán <strong>Link ảnh Tooltip</strong> và dùng <strong>Mở ảnh</strong> để kiểm tra trực tiếp ảnh tooltip của mốc.</li>
       <li>Chọn danh sách <strong>Quà tặng</strong> từ mock data và nhập quantity cho từng quà trong mốc.</li>
+      <li>Dùng <strong>Enabled</strong> để bật/tắt từng mốc tích lũy.</li>
       <li>Nếu admin không cấu hình, FE tiếp tục dùng fallback default của trang event VNG hiện tại.</li>
     </ol>
 
@@ -1863,6 +1864,7 @@ function renderSpinAccumulationUI() {
 
   spinAccumulationData.forEach((milestone, mi) => {
     if (!milestone.gifts) milestone.gifts = [];
+    milestone.enabled = milestone.enabled !== false;
     const block = document.createElement('div');
     block.className = 'thiep-moc-block';
     block.dataset.index = mi;
@@ -1903,6 +1905,14 @@ function renderSpinAccumulationUI() {
           '<label>Xem tooltip</label>' +
           buildImagePreviewLink(milestone.tooltipImg, 'Tooltip mốc tích lũy #' + (mi + 1)) +
         '</div>' +
+        '<div class="form-group">' +
+          '<label>Enabled</label>' +
+          '<div class="toggle-wrap">' +
+            '<label class="toggle"><input type="checkbox" ' + (milestone.enabled !== false ? 'checked' : '') + ' onchange="spinAccumulationData[' + mi + '].enabled=this.checked; renderSpinAccumulationUI()">' +
+            '<span class="toggle-slider"></span></label>' +
+            '<span class="status-label">' + (milestone.enabled !== false ? 'On' : 'Off') + '</span>' +
+          '</div>' +
+        '</div>' +
         '<button class="btn btn-danger btn-sm" type="button" onclick="removeSpinAccumulationMilestone(' + mi + ')">🗑 Xóa mốc</button>' +
       '</div>' +
       '<div class="thiep-gifts-section">' +
@@ -1934,6 +1944,7 @@ function addSpinAccumulationMilestone() {
     target: 1,
     giftImg: 'https://cdn-mainsite-aka.vnggames.com/products/dt3q/landing/2026-sinh-nhat-7-ai/dist/optimized/dt3q-ld-sinhnhat-vongquay/images/moc-' + fallbackIndex + '.webp',
     tooltipImg: '',
+    enabled: true,
     gifts: [{ name: GIFT_ITEM_OPTIONS[0], qty: 1 }]
   });
   renderSpinAccumulationUI();
@@ -2266,6 +2277,7 @@ function runValidation() {
 
   // 5. Tích Lũy Nhận Lượt validation
   spinAccumulationData.forEach((m, i) => {
+    if (m.enabled === false) return;
     if (!isPositiveIntegerValue(m.target)) {
       issues.push({ type:'error', msg: `Tích Lũy Nhận Lượt mốc #${i + 1}: Số lượt tích lũy phải là số tự nhiên lớn hơn 0 và không được là số thập phân` });
     }
@@ -2333,7 +2345,7 @@ function runValidation() {
     spinData.some(r => !(r.tooltipImg || '').trim()) ||
     shopData.some(r => !(r.tooltipImg || '').trim()) ||
     thiepMoiData.some(r => r.enabled !== false && (!(r.gifts || []).length || !(r.giftImg || '').trim() || !(r.tooltipImg || '').trim())) ||
-    spinAccumulationData.some(r => !(r.gifts || []).length || !(r.giftImg || '').trim() || !(r.tooltipImg || '').trim());
+    spinAccumulationData.some(r => r.enabled !== false && (!(r.gifts || []).length || !(r.giftImg || '').trim() || !(r.tooltipImg || '').trim()));
   if (emptyName) issues.push({ type:'warning', msg: 'Có dòng thiếu tên/nội dung/quà hoặc tooltip' });
 
   // Render
@@ -2546,6 +2558,7 @@ function normalizeSpinAccumulationConfig(rows) {
       target: parseInt(row.target ?? row.moc ?? row.number ?? fallback.target, 10) || 1,
       giftImg: row.giftImg || row.giftImage || row.rewardImg || fallback.giftImg || '',
       tooltipImg: row.tooltipImg || row.img || row.image || fallback.tooltipImg || '',
+      enabled: row.enabled !== false,
       gifts: (Array.isArray(row.gifts) && row.gifts.length ? row.gifts : (fallback.gifts || [])).map(g => ({
         name: g.name || GIFT_ITEM_OPTIONS[0],
         qty: parseInt(g.qty ?? g.quantity ?? g.amount, 10) || 1
@@ -2922,8 +2935,9 @@ function getSpinAccumulationDashboardMilestones() {
   const source = Array.isArray(spinAccumulationData) ? spinAccumulationData : [];
   return source.map((milestone, index) => ({
     target: parseInt(milestone.target ?? milestone.turns ?? milestone.moc ?? index + 1, 10) || index + 1,
-    gifts: Array.isArray(milestone.gifts) ? milestone.gifts : []
-  })).filter(milestone => milestone.target > 0).sort((a, b) => a.target - b.target);
+    gifts: Array.isArray(milestone.gifts) ? milestone.gifts : [],
+    enabled: milestone.enabled !== false
+  })).filter(milestone => milestone.enabled && milestone.target > 0).sort((a, b) => a.target - b.target);
 }
 
 function getThiepMoiDashboardMilestones() {

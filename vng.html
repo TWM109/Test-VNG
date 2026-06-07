@@ -910,7 +910,7 @@
     Array.from(items).forEach(function(el, i) {
       if (window.originalSpinAccumulationHTML[i] !== undefined) el.innerHTML = window.originalSpinAccumulationHTML[i];
       var m = milestones[i];
-      if (!m) return;
+      if (!m || m.enabled === false) return;
 
       var target = parseInt(m.target || m.moc || m.number, 10) || 0;
       if (target) {
