@@ -119,7 +119,6 @@ Ghi chú: mock data mặc định của phần nhiệm vụ nhận lượt hiệ
 - Các field số tự nhiên lớn hơn 0 được chặn ngay lúc nhập với các field quan trọng.
 - Giới hạn phát, mốc tích lũy, lượt quay, quantity item không được là số thập phân/chữ/nhỏ hơn hoặc bằng 0 khi cấu hình đang enabled.
 - Cảnh báo khi thiếu ảnh quà hoặc ảnh tooltip ở các mốc cần preview ra FE.
-- Cảnh báo/lỗi khi reward/item đang enabled nhưng giới hạn phát không hợp lệ.
 
 ## 6. Dashboard / Report
 
@@ -156,7 +155,6 @@ Trong bài tập này nên tách rõ 2 khái niệm:
 Không có API thì không thể biết tồn kho realtime. Tuy nhiên admin tool vẫn cho cấu hình `stock/limit` ban đầu để validation và dashboard mock có cơ sở tính:
 
 - `remaining = configured stock - mock claimed count`
-- Warning khi stock = 0 nhưng reward/item vẫn enabled
 - Warning khi claimed count mock > configured stock
 
 Trong bản demo, `remaining` là mock. Bản production cần claim API/log để tính remaining thật.

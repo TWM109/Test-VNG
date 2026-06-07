@@ -1187,7 +1187,6 @@
       <li>Start/end date: end date phải lớn hơn start date.</li>
       <li>Các field số tự nhiên lớn hơn 0 được chặn ngay lúc nhập với các field quan trọng.</li>
       <li>Giới hạn phát, mốc tích lũy, lượt quay, quantity item không được là số thập phân/chữ/nhỏ hơn hoặc bằng 0 khi cấu hình đang enabled.</li>
-      <li>Cảnh báo/lỗi khi reward/item đang enabled nhưng giới hạn phát bằng 0.</li>
     </ul>
 
     <h3>Dashboard / Report (Mock data)</h3>
@@ -1225,7 +1224,6 @@
     <p>Không có API thì không thể biết tồn kho realtime. Tuy nhiên admin tool vẫn cho cấu hình <code>stock/limit</code> ban đầu để validation và dashboard mock có cơ sở tính:</p>
     <ul>
       <li><code>remaining = configured stock - mock claimed count</code></li>
-      <li>Warning khi stock = 0 nhưng reward/item vẫn enabled.</li>
     </ul>
     <p>Trong bản demo, <code>remaining</code> là mock. Bản production cần claim API/log để tính remaining thật.</p>
 
