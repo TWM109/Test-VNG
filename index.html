@@ -212,6 +212,10 @@
 
   /* ── VALIDATION PANEL ── */
   .validation-panel { margin-top: 20px; }
+  .validation-panel.attention {
+    border-color: var(--red);
+    box-shadow: 0 0 0 1px rgba(239, 68, 68, .45), 0 0 22px rgba(239, 68, 68, .16);
+  }
   .val-item {
     display: flex; align-items: flex-start; gap: 10px;
     padding: 10px 14px; border-radius: 6px; margin-bottom: 8px;
@@ -2371,6 +2375,17 @@ function runValidation() {
   return issues;
 }
 
+function scrollValidationPanel() {
+  const panel = document.querySelector('.validation-panel');
+  if (!panel) return;
+  panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  panel.classList.add('attention');
+  clearTimeout(panel._attentionTimer);
+  panel._attentionTimer = setTimeout(() => {
+    panel.classList.remove('attention');
+  }, 2200);
+}
+
 // ═══════════════════════════════════════════
 // SAVE / LOAD / RESET
 // ═══════════════════════════════════════════
@@ -2403,6 +2418,7 @@ function gatherConfig() {
 function saveConfig() {
   const issues = runValidation();
   if (issues.some(it => it.type === 'error')) {
+    scrollValidationPanel();
     showToast('Config chưa hợp lệ. Vui lòng xử lý lỗi validation trước khi lưu.', 'error');
     return false;
   }
@@ -2418,6 +2434,7 @@ function saveConfig() {
 function syncConfigForPreview() {
   const issues = runValidation();
   if (issues.some(it => it.type === 'error')) {
+    scrollValidationPanel();
     showToast('Config chưa hợp lệ. Không thể mở preview khi còn lỗi validation.', 'error');
     return false;
   }
