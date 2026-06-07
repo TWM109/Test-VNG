@@ -604,7 +604,7 @@
           <li>Chọn <strong>Start Date</strong> và <strong>End Date</strong> cho thời gian hiệu lực của module Thiệp Mời. Ngoài khung giờ đã cài đặt, hệ thống sẽ áp dụng mặc định của VNG</li>
           <li><strong>Số mốc tích lũy</strong> là số block mốc đang hiển thị; dùng <strong>+ Thêm mốc</strong> để thêm mốc mới hoặc <strong>Xóa mốc</strong> để bỏ mốc.</li>
           <li>Nhập <strong>Số mốc tích lũy</strong> cho từng mốc, ví dụ 1000, 5000, 10000 lượt.</li>
-          <li>Dán <strong>Link ảnh quà</strong> và <strong>Link ảnh Tooltip</strong>; (https://freepngimg.com/thumb/the_legend_of_zelda/20983-8-zelda-link-photo-thumb.png)- 1 mock link mà người dùng có thể thử. Dùng nút <strong>Mở ảnh</strong> để kiểm tra trực tiếp, các ảnh này sẽ reflect ra FE Preview khi lưu cấu hình.</li>
+          <li>Dán <strong>Link ảnh quà</strong> và <strong>Link ảnh Tooltip</strong>. Link test: <code>https://freepngimg.com/thumb/goku/20182-6-goku-thumb.png</code> hoặc <code>https://freepngimg.com/thumb/the_legend_of_zelda/20983-8-zelda-link-photo-thumb.png</code>. Dùng nút <strong>Mở ảnh</strong> để kiểm tra trực tiếp, các ảnh này sẽ reflect ra FE Preview khi lưu cấu hình.</li>
           <li>Trong mỗi mốc, chọn danh sách <strong>Quà tặng</strong> từ mock data và nhập quantity cho từng quà.</li>
           <li>Dùng <strong>Enabled</strong> để bật/tắt mốc. Nếu admin không config, FE dùng fallback default của trang event VNG hiện tại.</li>
           <li>Nhập nội dung HTML để config cho phần thể lệ chương trình.</li>
@@ -628,7 +628,7 @@
       </div>
       <div class="table-actions">
         <button class="btn btn-ghost btn-sm" type="button" onclick="addThiepMoiMilestone()">+ Thêm mốc</button>
-        <button class="btn btn-primary btn-sm" type="button" onclick="saveThiepMoiConfig()" style="margin-left:auto">💾 Lưu mốc Thiệp Mời</button>
+        <button class="btn btn-success btn-sm" type="button" onclick="saveAndPreview()" style="margin-left:auto">💾 Save &amp; Preview</button>
       </div>
     </div>
   </div>
@@ -646,7 +646,7 @@
         <ol>
           <li>Chọn Start Date và End Date cho thời gian hiệu lực cho cả 3 module (vòng quay,nhiệm vụ nhận lượt và tích lũy nhận lượt). Ngoài khung giờ đã cài đặt, hệ thống sẽ áp dụng mặc định của VNG </li>
           <li>Chọn quà tặng từ danh sách mock data ở cột <strong>Quà tặng</strong>.</li>
-          <li>Dán <strong>link ảnh</strong> vào cột Link ảnh quà; ảnh này sẽ hiển thị ngoài FE Preview và có thể mở trực tiếp bằng cột <strong>Xem ảnh</strong>.</li>
+          <li>Dán <strong>link ảnh</strong> vào cột Link ảnh quà; ảnh này sẽ hiển thị ngoài FE Preview và có thể mở trực tiếp bằng cột <strong>Xem ảnh</strong>. Link test: <code>https://freepngimg.com/thumb/goku/20182-6-goku-thumb.png</code> hoặc <code>https://freepngimg.com/thumb/the_legend_of_zelda/20983-8-zelda-link-photo-thumb.png</code>.</li>
           <li>Nhập <strong>Rate (%)</strong> cho từng quà. Tổng rate của các quà đang enabled phải bằng 100% trước khi lưu/preview.</li>
           <li>Nhập <strong>Giới hạn phát</strong> để mock tồn kho/tổng số lần phát tối đa cho giải đó.</li>
           <li>Dùng toggle <strong>Enabled</strong> để bật/tắt quà, hoặc nút <strong>Xóa</strong> để bỏ khỏi cấu hình.</li>
@@ -684,6 +684,9 @@
         <button class="btn btn-ghost btn-sm" onclick="addSpinRow()">+ Thêm phần thưởng</button>
         <span id="spinRateSum" class="mono" style="margin-left:auto;font-size:13px;color:var(--muted)">Tổng: 0%</span>
       </div>
+      <div class="table-actions">
+        <button class="btn btn-success btn-sm" type="button" onclick="saveAndPreview()" style="margin-left:auto">💾 Save &amp; Preview</button>
+      </div>
       <div style="height:16px"></div>
       <div class="card-title" style="font-size:15px;margin-bottom:8px"><span class="card-title-icon">📋</span>Nhiệm Vụ Nhận Lượt</div>
       <div class="config-guide">
@@ -718,6 +721,7 @@
       </div>
       <div class="table-actions">
         <button class="btn btn-ghost btn-sm" onclick="addMissionRow()">+ Thêm nhiệm vụ</button>
+        <button class="btn btn-success btn-sm" type="button" onclick="saveAndPreview()" style="margin-left:auto">💾 Save &amp; Preview</button>
       </div>
       <div style="height:16px"></div>
       <div class="card-title" style="font-size:15px;margin-bottom:8px"><span class="card-title-icon">🎁</span>Tích Lũy Nhận Lượt</div>
@@ -726,7 +730,7 @@
         <ol>
           <li><strong>Số mốc nhận lượt</strong> chính là số block mốc đang hiển thị bên dưới; dùng nút <strong>+ Thêm mốc tích lũy</strong> để tăng số mốc, hoặc <strong>Xóa mốc</strong> để bỏ mốc.</li>
           <li>Nhập <strong>Số lượt tích lũy</strong> cho từng mốc, ví dụ 1, 5, 10, 20 lượt.</li>
-          <li>Dán <strong>Link ảnh quà</strong> và <strong>Link ảnh Tooltip</strong>; các ảnh này sẽ hiển thị ngoài FE và có thể kiểm tra nhanh bằng nút <strong>Mở ảnh</strong>.</li>
+          <li>Dán <strong>Link ảnh quà</strong> và <strong>Link ảnh Tooltip</strong>; các ảnh này sẽ hiển thị ngoài FE và có thể kiểm tra nhanh bằng nút <strong>Mở ảnh</strong>. Link test: <code>https://freepngimg.com/thumb/goku/20182-6-goku-thumb.png</code> hoặc <code>https://freepngimg.com/thumb/the_legend_of_zelda/20983-8-zelda-link-photo-thumb.png</code>.</li>
           <li>Trong mỗi mốc, chọn danh sách <strong>Quà tặng</strong> từ mock data và nhập số lượng nhận được.</li>
           <li>Dùng <strong>Enabled</strong> để bật/tắt từng mốc tích lũy.</li>
           <li>Nếu admin không config, FE giữ fallback default của trang event VNG hiện tại.</li>
@@ -736,6 +740,9 @@
       <div class="table-actions">
         <button class="btn btn-ghost btn-sm" type="button" onclick="addSpinAccumulationMilestone()">+ Thêm mốc tích lũy</button>
         <span id="spinAccumulationCount" class="mono" style="margin-left:auto;font-size:13px;color:var(--muted)">Số mốc: 0</span>
+      </div>
+      <div class="table-actions">
+        <button class="btn btn-success btn-sm" type="button" onclick="saveAndPreview()" style="margin-left:auto">💾 Save &amp; Preview</button>
       </div>
       <div class="form-row mt-12">
         <label>Thể lệ (HTML)</label>
@@ -758,8 +765,7 @@
           <li>Chọn <strong>Vật Phẩm</strong> từ mock data và nhập <strong>Số lượng</strong> item user nhận được mỗi lần đổi.</li>
           <li>Nhập <strong>Số Bánh Tích Lũy</strong> là số bánh cần có để mở/đổi vật phẩm đó.</li>
           <li>Nhập <strong>Giới hạn phát</strong> để mock limit/tồn kho phát thưởng cho từng vật phẩm.</li>
-          <li>Dán <strong>Link ảnh quà</strong> và dùng <strong>Mở ảnh</strong> để kiểm tra trực tiếp ảnh sẽ reflect ra FE.</li>
-          <li>1 số link test hình ảnh để team có thể test (https://freepngimg.com/thumb/goku/20182-6-goku-thumb.png), (https://freepngimg.com/thumb/the_legend_of_zelda/20983-8-zelda-link-photo-thumb.png)</li>
+          <li>Dán <strong>Link ảnh quà</strong> và dùng <strong>Mở ảnh</strong> để kiểm tra trực tiếp ảnh sẽ reflect ra FE. Link test: <code>https://freepngimg.com/thumb/goku/20182-6-goku-thumb.png</code> hoặc <code>https://freepngimg.com/thumb/the_legend_of_zelda/20983-8-zelda-link-photo-thumb.png</code>.</li>
           <li>Dùng <strong>Enabled</strong> để bật/tắt vật phẩm, <strong>Xóa</strong> để bỏ vật phẩm, hoặc <strong>+ Thêm vật phẩm</strong> để thêm dòng mới.</li>
         </ol>
       </div>
@@ -798,6 +804,9 @@
       <div class="form-row mt-12">
         <label>Thể lệ (HTML)</label>
         <textarea class="rule-editor" id="rule_shop_vip" placeholder="<h2>...</h2>"></textarea>
+      </div>
+      <div class="table-actions">
+        <button class="btn btn-success btn-sm" type="button" onclick="saveAndPreview()" style="margin-left:auto">💾 Save &amp; Preview</button>
       </div>
     </div>
   </div>
@@ -856,6 +865,7 @@
       </div>
       <div class="table-actions">
         <button class="btn btn-ghost btn-sm" onclick="addBirthdayTableMissionRow()">+ Thêm nhiệm vụ</button>
+        <button class="btn btn-success btn-sm" type="button" onclick="saveAndPreview()" style="margin-left:auto">💾 Save &amp; Preview</button>
       </div>
     </div>
   </div>
@@ -1110,7 +1120,7 @@
       <li>Vào tab <strong>Config</strong>, mở module <strong>Cấu Hình Mốc Tích Lũy Thiệp Mời Đại Tiệc</strong>.</li>
       <li>Chọn <strong>Start Date</strong> và <strong>End Date</strong> cho thời gian hiệu lực của module.</li>
       <li><strong>Số mốc tích lũy</strong> là tổng số block mốc đang hiển thị; dùng <strong>+ Thêm mốc</strong> để thêm mốc hoặc <strong>Xóa mốc</strong> để bỏ mốc.</li>
-      <li>Nhập <strong>Số mốc tích lũy</strong>, <strong>Link ảnh quà</strong> và <strong>Link ảnh Tooltip</strong> cho từng mốc; dùng <strong>Mở ảnh</strong> để kiểm tra trực tiếp từng link ảnh.</li>
+      <li>Nhập <strong>Số mốc tích lũy</strong>, <strong>Link ảnh quà</strong> và <strong>Link ảnh Tooltip</strong> cho từng mốc; dùng <strong>Mở ảnh</strong> để kiểm tra trực tiếp từng link ảnh. Link test: <code>https://freepngimg.com/thumb/goku/20182-6-goku-thumb.png</code> hoặc <code>https://freepngimg.com/thumb/the_legend_of_zelda/20983-8-zelda-link-photo-thumb.png</code>.</li>
       <li>Chọn danh sách <strong>Quà tặng</strong> từ mock data và nhập quantity cho từng quà trong mốc.</li>
       <li>Dùng <strong>Enabled</strong> để bật/tắt mốc. Nếu admin không cấu hình, FE dùng fallback default của trang event VNG hiện tại.</li>
     </ol>
@@ -1119,7 +1129,7 @@
     <ol>
       <li>Vào tab <strong>Config</strong>, mở module <strong>Config Mở quà sinh nhật</strong>, phần <strong>Vòng quay Lucky Spin</strong>.</li>
       <li>Ở mỗi dòng, chọn <strong>Quà tặng</strong> từ danh sách mock data.</li>
-      <li>Dán <strong>Link ảnh quà</strong>. Cột <strong>Xem ảnh</strong> cho phép mở ảnh trong tab mới để kiểm tra nhanh, và khi Save & Preview ảnh sẽ được reflect ra <code>vng.html</code>.</li>
+      <li>Dán <strong>Link ảnh quà</strong>. Cột <strong>Xem ảnh</strong> cho phép mở ảnh trong tab mới để kiểm tra nhanh, và khi Save & Preview ảnh sẽ được reflect ra <code>vng.html</code>. Link test: <code>https://freepngimg.com/thumb/goku/20182-6-goku-thumb.png</code> hoặc <code>https://freepngimg.com/thumb/the_legend_of_zelda/20983-8-zelda-link-photo-thumb.png</code>.</li>
       <li>Nhập <strong>Rate (%)</strong>. Tổng rate của các quà đang enabled phải bằng <strong>100%</strong>.</li>
       <li>Nhập <strong>Giới hạn phát</strong> để mock limit/tồn kho phát thưởng cho từng giải.</li>
       <li>Dùng <strong>Enabled</strong> để bật/tắt quà hoặc nút <strong>Xóa</strong> để loại quà khỏi config.</li>
@@ -1141,7 +1151,7 @@
       <li>Vào module <strong>Config Mở quà sinh nhật</strong>, phần <strong>Tích Lũy Nhận Lượt</strong>.</li>
       <li><strong>Số mốc nhận lượt</strong> là tổng số block mốc đang hiển thị; dùng <strong>+ Thêm mốc tích lũy</strong> để tăng số mốc hoặc <strong>Xóa mốc</strong> để giảm số mốc.</li>
       <li>Nhập <strong>Số lượt tích lũy</strong> cho từng mốc để FE biết người chơi cần đạt bao nhiêu lượt quay.</li>
-      <li>Dán <strong>Link ảnh Tooltip</strong> và dùng <strong>Mở ảnh</strong> để kiểm tra trực tiếp ảnh tooltip của mốc.</li>
+      <li>Dán <strong>Link ảnh quà</strong> và <strong>Link ảnh Tooltip</strong>, dùng <strong>Mở ảnh</strong> để kiểm tra trực tiếp ảnh của mốc. Link test: <code>https://freepngimg.com/thumb/goku/20182-6-goku-thumb.png</code> hoặc <code>https://freepngimg.com/thumb/the_legend_of_zelda/20983-8-zelda-link-photo-thumb.png</code>.</li>
       <li>Chọn danh sách <strong>Quà tặng</strong> từ mock data và nhập quantity cho từng quà trong mốc.</li>
       <li>Dùng <strong>Enabled</strong> để bật/tắt từng mốc tích lũy.</li>
       <li>Nếu admin không cấu hình, FE tiếp tục dùng fallback default của trang event VNG hiện tại.</li>
@@ -1152,7 +1162,7 @@
       <li>Vào tab <strong>Config</strong>, mở module <strong>Tích bánh mở quà Vip</strong>.</li>
       <li>Chọn <strong>Start Date</strong> và <strong>End Date</strong> cho thời gian hiệu lực của module đổi quà VIP.</li>
       <li>Chọn <strong>Vật Phẩm</strong>, nhập <strong>Số lượng</strong>, <strong>Số Bánh Tích Lũy</strong> và <strong>Giới hạn phát</strong>.</li>
-      <li>Dán <strong>Link ảnh quà</strong> và dùng <strong>Mở ảnh</strong> để kiểm tra trực tiếp ảnh sẽ reflect ra FE.</li>
+      <li>Dán <strong>Link ảnh quà</strong> và dùng <strong>Mở ảnh</strong> để kiểm tra trực tiếp ảnh sẽ reflect ra FE. Link test: <code>https://freepngimg.com/thumb/goku/20182-6-goku-thumb.png</code> hoặc <code>https://freepngimg.com/thumb/the_legend_of_zelda/20983-8-zelda-link-photo-thumb.png</code>.</li>
       <li>Dùng <strong>Enabled</strong> để bật/tắt vật phẩm, <strong>Xóa</strong> để bỏ vật phẩm, hoặc <strong>+ Thêm vật phẩm</strong> để thêm dòng mới.</li>
       <li>Nếu admin không cấu hình, FE tiếp tục dùng fallback default của trang event VNG hiện tại.</li>
     </ol>

@@ -59,7 +59,7 @@ Người review tính đúng của campaign:
 1. Vào tab `Config`, mở module `Cấu Hình Mốc Tích Lũy Thiệp Mời Đại Tiệc`.
 2. Chọn `Start Date` và `End Date` cho thời gian hiệu lực của module.
 3. `Số mốc tích lũy` là tổng số block mốc đang hiển thị; dùng `+ Thêm mốc` để thêm mốc hoặc `Xóa mốc` để bỏ mốc.
-4. Nhập `Số mốc tích lũy`, `Link ảnh quà` và `Link ảnh Tooltip` cho từng mốc; dùng `Mở ảnh` để kiểm tra trực tiếp từng link ảnh.
+4. Nhập `Số mốc tích lũy`, `Link ảnh quà` và `Link ảnh Tooltip` cho từng mốc; dùng `Mở ảnh` để kiểm tra trực tiếp từng link ảnh. Link test: `https://freepngimg.com/thumb/goku/20182-6-goku-thumb.png` hoặc `https://freepngimg.com/thumb/the_legend_of_zelda/20983-8-zelda-link-photo-thumb.png`.
 5. Chọn danh sách `Quà tặng` từ mock data và nhập quantity cho từng quà trong mốc.
 6. Dùng `Enabled` để bật/tắt mốc. Nếu admin không cấu hình, FE dùng fallback default của trang event VNG hiện tại.
 
@@ -67,7 +67,7 @@ Người review tính đúng của campaign:
 
 1. Vào tab `Config`, mở module `Config Mở quà sinh nhật`, phần `Vòng quay Lucky Spin`.
 2. Ở mỗi dòng, chọn `Quà tặng` từ danh sách mock data.
-3. Dán `Link ảnh tooltip`; cột `Xem ảnh` mở ảnh trong tab mới để kiểm tra nhanh, và khi Save & Preview ảnh sẽ reflect ra `vng.html`.
+3. Dán `Link ảnh quà`; cột `Xem ảnh` mở ảnh trong tab mới để kiểm tra nhanh, và khi Save & Preview ảnh sẽ reflect ra `vng.html`. Link test: `https://freepngimg.com/thumb/goku/20182-6-goku-thumb.png` hoặc `https://freepngimg.com/thumb/the_legend_of_zelda/20983-8-zelda-link-photo-thumb.png`.
 4. Nhập `Rate (%)`; tổng rate của các quà đang enabled phải bằng `100%`.
 5. Nhập `Giới hạn phát` để mock limit/tồn kho phát thưởng cho từng giải.
 6. Dùng `Enabled` để bật/tắt quà hoặc nút `Xóa` để loại quà khỏi config.
@@ -89,7 +89,7 @@ Ghi chú: mock data mặc định của phần nhiệm vụ nhận lượt hiệ
 1. Vào module `Config Mở quà sinh nhật`, phần `Tích Lũy Nhận Lượt`.
 2. `Số mốc nhận lượt` là tổng số block mốc đang hiển thị; dùng `+ Thêm mốc tích lũy` để tăng số mốc hoặc `Xóa mốc` để giảm số mốc.
 3. Nhập `Số lượt tích lũy` cho từng mốc để FE biết người chơi cần đạt bao nhiêu lượt quay.
-4. Dán `Link ảnh quà` và `Link ảnh Tooltip`; dùng `Mở ảnh` để kiểm tra trực tiếp từng ảnh.
+4. Dán `Link ảnh quà` và `Link ảnh Tooltip`; dùng `Mở ảnh` để kiểm tra trực tiếp từng ảnh. Link test: `https://freepngimg.com/thumb/goku/20182-6-goku-thumb.png` hoặc `https://freepngimg.com/thumb/the_legend_of_zelda/20983-8-zelda-link-photo-thumb.png`.
 5. Chọn danh sách `Quà tặng` từ mock data và nhập quantity cho từng quà trong mốc.
 6. Khi Save & Preview, `vng.html` sẽ reflect cả ảnh quà của mốc và ảnh tooltip.
 7. Nếu admin không cấu hình, FE tiếp tục dùng fallback default của trang event VNG hiện tại.
@@ -99,7 +99,7 @@ Ghi chú: mock data mặc định của phần nhiệm vụ nhận lượt hiệ
 1. Vào tab `Config`, mở module `Tích bánh mở quà Vip`.
 2. Chọn `Start Date` và `End Date` cho thời gian hiệu lực của module đổi quà VIP.
 3. Chọn `Vật Phẩm`, nhập `Số lượng`, `Số Bánh Tích Lũy` và `Giới hạn phát`.
-4. Dán `Link ảnh quà` và dùng `Mở ảnh` để kiểm tra trực tiếp ảnh sẽ reflect ra FE.
+4. Dán `Link ảnh quà` và dùng `Mở ảnh` để kiểm tra trực tiếp ảnh sẽ reflect ra FE. Link test: `https://freepngimg.com/thumb/goku/20182-6-goku-thumb.png` hoặc `https://freepngimg.com/thumb/the_legend_of_zelda/20983-8-zelda-link-photo-thumb.png`.
 5. Dùng `Enabled` để bật/tắt vật phẩm, `Xóa` để bỏ vật phẩm, hoặc `+ Thêm vật phẩm` để thêm dòng mới.
 6. Nếu admin không cấu hình, FE tiếp tục dùng fallback default của trang event VNG hiện tại.
 
