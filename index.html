@@ -2796,10 +2796,10 @@ function renderThiepMoiWishProgress() {
   const achievedIndex = milestones.reduce((last, milestone, index) => current >= milestone.moc ? index : last, -1);
   const achieved = achievedIndex >= 0 ? milestones[achievedIndex] : null;
   const next = milestones.find(milestone => milestone.moc > current) || null;
-  const previousTarget = achieved ? achieved.moc : 0;
   const nextTarget = next ? next.moc : (achieved ? achieved.moc : 0);
-  const range = Math.max(1, nextTarget - previousTarget);
-  const pctToNext = next ? Math.max(0, Math.min(100, Math.round(((current - previousTarget) / range) * 100))) : 100;
+  const pctToNext = next
+    ? Math.max(0, Math.min(100, Math.round((current / Math.max(1, nextTarget)) * 100)))
+    : 100;
   const missing = next ? Math.max(0, next.moc - current) : 0;
   const nextText = next ? 'Mốc kế tiếp: mức ' + (achievedIndex + 2) + ' (' + fmt(next.moc) + ')' : 'Không còn mốc kế tiếp';
 

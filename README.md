@@ -1,163 +1,169 @@
-# DT3Q Sinh Nhat 7 Tuoi - Admin Operation Tool
+# DT3Q Sinh Nhật 7 Tuổi - Admin Operation Tool
 
-## 1. Muc tieu
+## 1. Mục Tiêu
 
-Tool nay phuc vu viec cau hinh va van hanh promotion sinh nhat DT3Q 7 tuoi. Admin cau hinh tai `index.html`, sau do preview ket qua tren FE `vng.html`.
+Tool này phục vụ việc cấu hình và vận hành promotion sinh nhật DT3Q 7 tuổi. Admin cấu hình tại `index.html`, sau đó preview kết quả trên FE `vng.html`.
 
-Pham vi bai tap khong ket noi API that, nen cac so lieu thong ke, ton kho, claim va doanh thu dang la mock/estimate de minh hoa workflow van hanh.
+Phạm vi bài tập không kết nối API thật, nên các số liệu thống kê, tồn kho, claim, conversion và doanh thu đang là mock/estimate để minh họa workflow vận hành.
 
-## 2. Promotion gom bao nhieu module?
+## 2. Promotion Gồm Bao Nhiêu Module?
 
-Promotion hien duoc hieu la 4 module chinh:
+Promotion hiện được hiểu là 4 module chính:
 
-| Module | Mapping trong bai | Noi dung cau hinh |
+| Module | Mapping trong bài | Nội dung cấu hình |
 |---|---|---|
-| Thiep Moi Dai Tiec | Community Milestone | Start/end date, cac moc tich luy, anh tooltip, danh sach qua theo tung moc, the le HTML |
-| Mo Qua Sinh Nhat | Vong quay Lucky Spin + Nhiem vu + Tich luy nhan luot | Start/end date, danh sach phan thuong mock data, link anh co the preview ngoai FE, rate (%), gioi han phat moi giai, enabled/xoa, nhiem vu nhan luot, direct URL, moc tich luy nhan luot, the le HTML |
-| Tich Banh Mo Qua VIP | Doi qua | Start/end date, vat pham doi, so luong item nhan moi lan, so banh dieu kien doi, gioi han phat, enabled, anh tooltip, the le HTML |
-| Ban Tiec Sinh Nhat | Loi chuc / binh chon / mission phu | Start/end date, the le HTML, danh sach nhiem vu nhan luot, direct URL |
+| Thiệp Mời Đại Tiệc | Community Milestone | Start/end date, các mốc tích lũy, ảnh quà, ảnh tooltip, enabled, danh sách quà theo từng mốc, thể lệ HTML |
+| Mở Quà Sinh Nhật | Vòng quay Lucky Spin + Nhiệm vụ + Tích lũy nhận lượt | Start/end date, phần thưởng mock data, ảnh tooltip, rate, giới hạn phát, nhiệm vụ nhận lượt, direct URL, mốc tích lũy nhận lượt, ảnh quà, ảnh tooltip, thể lệ HTML |
+| Tích Bánh Mở Quà VIP | Đổi quà | Start/end date, vật phẩm đổi, số lượng item nhận mỗi lần, số bánh điều kiện đổi, giới hạn phát, enabled, ảnh tooltip, thể lệ HTML |
+| Bàn Tiệc Sinh Nhật | Lời chúc / bình chọn / mission phụ | Start/end date, thể lệ HTML, danh sách nhiệm vụ nhận lượt, direct URL |
 
-## 3. Persona nguoi dung tool
+## 3. Persona Người Dùng Tool
 
 ### Primary persona: Event Operation Admin
 
-Nguoi van hanh su kien hang ngay. Ho khong can code, nhung can sua nhanh cau hinh promotion va xem preview truoc khi publish.
+Người vận hành sự kiện hằng ngày. Họ không cần code, nhưng cần sửa nhanh cấu hình promotion và xem preview trước khi publish.
 
-Cong viec hang ngay:
+Công việc hằng ngày:
 
-- Cap nhat thoi gian bat dau/ket thuc tung module.
-- Dieu chinh danh sach qua, rate, gioi han phat va dieu kien doi.
-- Bat/tat nhiem vu, sua so luot thuong va link dieu huong.
-- Sua noi dung the le HTML theo yeu cau campaign.
-- Chay validation truoc khi save.
-- Mo FE preview de dam bao cau hinh hien thi dung.
-- Xem dashboard mock de theo doi tinh trang event.
+- Cập nhật thời gian bắt đầu/kết thúc từng module.
+- Điều chỉnh danh sách quà, hình ảnh quà/tooltip, rate, giới hạn phát và điều kiện đổi.
+- Bật/tắt nhiệm vụ, sửa số lượt thưởng và link điều hướng.
+- Sửa nội dung thể lệ HTML theo yêu cầu campaign.
+- Chạy validation trước khi save.
+- Mở FE preview để đảm bảo cấu hình hiển thị đúng.
+- Xem dashboard mock để theo dõi tình trạng event.
 
 ### Secondary persona: Campaign Owner / PO
 
-Nguoi review tinh dung cua campaign:
+Người review tính đúng của campaign:
 
-- Kiem tra module co dung scope promotion khong.
-- Kiem tra copywriting, the le, moc thuong.
-- Kiem tra rui ro cau hinh sai: rate khong du 100%, end date nho hon start date, gioi han phat/quantity khong hop le.
+- Kiểm tra module có đúng scope promotion không.
+- Kiểm tra copywriting, thể lệ, mốc thưởng.
+- Kiểm tra tiến độ mốc cộng đồng và mốc tiếp theo.
+- Kiểm tra rủi ro cấu hình sai: rate không đủ 100%, end date nhỏ hơn start date, thiếu ảnh, thiếu quà, giới hạn phát/quantity không hợp lệ.
 
-## 4. Cac tinh nang da co
+## 4. Các Tính Năng Đã Có
 
 ### Configuration
 
-- Cau hinh start/end date theo module.
-- Cau hinh Thiep Moi Dai Tiec nhu Community Milestone.
-- Cau hinh Mo Qua Sinh Nhat: Vong quay Lucky Spin gom phan thuong mock data, link anh preview ngoai FE, rate, gioi han phat, enabled/xoa, nhiem vu, direct URL, tich luy nhan luot.
-- Cau hinh Tich Banh Mo Qua VIP nhu Doi Qua.
-- Cau hinh Ban Tiec Sinh Nhat: the le va nhiem vu.
-- Cau hinh the le HTML cho cac module chinh.
-- FE preview doc config tu `localStorage` va reflect len `vng.html`.
+- Cấu hình start/end date theo module.
+- Cấu hình Thiệp Mời Đại Tiệc như Community Milestone.
+- Cấu hình Mở Quà Sinh Nhật: Vòng quay Lucky Spin, nhiệm vụ nhận lượt, tích lũy nhận lượt.
+- Cấu hình Tích Bánh Mở Quà VIP.
+- Cấu hình Bàn Tiệc Sinh Nhật: thể lệ và nhiệm vụ.
+- Cấu hình thể lệ HTML cho các module chính.
+- FE preview đọc config từ `localStorage` và reflect lên `vng.html`.
 
-### Guide config Moc Tich Luy Thiep Moi Dai Tiec
+### Guide Config Mốc Tích Lũy Thiệp Mời Đại Tiệc
 
-1. Vao tab `Config`, mo module `Cau Hinh Moc Tich Luy Thiep Moi Dai Tiec`.
-2. Chon `Start Date` va `End Date` cho thoi gian hieu luc cua module.
-3. `So moc tich luy` la tong so block moc dang hien thi; dung `+ Them moc` de them moc hoac `Xoa moc` de bo moc.
-4. Nhap `So moc tich luy`, `Link anh qua` va `Link anh Tooltip` cho tung moc; dung `Mo anh` de kiem tra truc tiep tung link anh.
-5. Chon danh sach `Qua tang` tu mock data va nhap quantity cho tung qua trong moc.
-6. Dung `Enabled` de bat/tat moc. Neu admin khong cau hinh, FE dung fallback default cua trang event VNG hien tai.
+1. Vào tab `Config`, mở module `Cấu Hình Mốc Tích Lũy Thiệp Mời Đại Tiệc`.
+2. Chọn `Start Date` và `End Date` cho thời gian hiệu lực của module.
+3. `Số mốc tích lũy` là tổng số block mốc đang hiển thị; dùng `+ Thêm mốc` để thêm mốc hoặc `Xóa mốc` để bỏ mốc.
+4. Nhập `Số mốc tích lũy`, `Link ảnh quà` và `Link ảnh Tooltip` cho từng mốc; dùng `Mở ảnh` để kiểm tra trực tiếp từng link ảnh.
+5. Chọn danh sách `Quà tặng` từ mock data và nhập quantity cho từng quà trong mốc.
+6. Dùng `Enabled` để bật/tắt mốc. Nếu admin không cấu hình, FE dùng fallback default của trang event VNG hiện tại.
 
-### Guide config Vong quay Lucky Spin
+### Guide Config Vòng Quay Lucky Spin
 
-1. Vao tab `Config`, mo module `Config Mo qua sinh nhat`, phan `Vong quay Lucky Spin`.
-2. Moi dong chon `Qua tang` tu danh sach mock data.
-3. Dan `Link anh tooltip`; cot `Xem anh` mo anh trong tab moi de kiem tra nhanh, va khi Save & Preview anh se reflect ra `vng.html`.
-4. Nhap `Rate (%)`; tong rate cua cac qua dang enabled phai bang `100%`.
-5. Nhap `Gioi han phat` de mock limit/ton kho phat thuong cho tung giai.
-6. Dung `Enabled` de bat/tat qua hoac nut `Xoa` de loai qua khoi config.
-7. Neu admin khong luu config hoac du lieu spin khong du hop le, FE dung fallback default cua trang event VNG hien tai.
+1. Vào tab `Config`, mở module `Config Mở quà sinh nhật`, phần `Vòng quay Lucky Spin`.
+2. Ở mỗi dòng, chọn `Quà tặng` từ danh sách mock data.
+3. Dán `Link ảnh tooltip`; cột `Xem ảnh` mở ảnh trong tab mới để kiểm tra nhanh, và khi Save & Preview ảnh sẽ reflect ra `vng.html`.
+4. Nhập `Rate (%)`; tổng rate của các quà đang enabled phải bằng `100%`.
+5. Nhập `Giới hạn phát` để mock limit/tồn kho phát thưởng cho từng giải.
+6. Dùng `Enabled` để bật/tắt quà hoặc nút `Xóa` để loại quà khỏi config.
+7. Nếu admin không lưu config hoặc dữ liệu spin không đủ hợp lệ, FE dùng fallback default của trang event VNG hiện tại.
 
-### Guide config Nhiem Vu Nhan Luot
+### Guide Config Nhiệm Vụ Nhận Lượt
 
-1. Vao module `Config Mo qua sinh nhat`, phan `Nhiem Vu Nhan Luot`.
-2. Chon `Loai` nhiem vu: `Hang ngay` hoac `Co dinh`.
-3. Nhap `Noi dung HTML` mo ta nhiem vu va phan thuong luot quay.
-4. Nhap `Luot quay` se cong cho user sau khi hoan thanh nhiem vu.
-5. Chon text nut `Thuc Hien` hoac `Nhan Luot`, roi nhap `Direct Url` neu can dieu huong.
-6. Dung `Enabled` de bat/tat nhiem vu, `Xoa` de bo nhiem vu, hoac `+ Them nhiem vu` de them dong moi.
+1. Vào module `Config Mở quà sinh nhật`, phần `Nhiệm Vụ Nhận Lượt`.
+2. Chọn `Loại` nhiệm vụ: `Hàng ngày` hoặc `Cố định`.
+3. Nhập `Nội dung HTML` mô tả nhiệm vụ và phần thưởng lượt quay.
+4. Nhập `Lượt quay` sẽ cộng cho user sau khi hoàn thành nhiệm vụ.
+5. Chọn text nút `Thực Hiện` hoặc `Nhận Lượt`, rồi nhập `Direct Url` nếu cần điều hướng.
+6. Dùng `Enabled` để bật/tắt nhiệm vụ, `Xóa` để bỏ nhiệm vụ, hoặc `+ Thêm nhiệm vụ` để thêm dòng mới.
 
-### Guide config Tich Luy Nhan Luot
+Ghi chú: mock data mặc định của phần nhiệm vụ nhận lượt hiện được rút gọn còn 7 nhiệm vụ để dễ review hơn.
 
-1. Vao module `Config Mo qua sinh nhat`, phan `Tich Luy Nhan Luot`.
-2. `So moc nhan luot` la tong so block moc dang hien thi; dung `+ Them moc tich luy` de tang so moc hoac `Xoa moc` de giam so moc.
-3. Nhap `So luot tich luy` cho tung moc de FE biet nguoi choi can dat bao nhieu luot quay.
-4. Dan `Link anh Tooltip` va dung `Mo anh` de kiem tra truc tiep anh tooltip cua moc.
-5. Chon danh sach `Qua tang` tu mock data va nhap quantity cho tung qua trong moc.
-6. Neu admin khong cau hinh, FE tiep tuc dung fallback default cua trang event VNG hien tai.
+### Guide Config Tích Lũy Nhận Lượt
 
-### Guide config Tich Banh Mo Qua VIP
+1. Vào module `Config Mở quà sinh nhật`, phần `Tích Lũy Nhận Lượt`.
+2. `Số mốc nhận lượt` là tổng số block mốc đang hiển thị; dùng `+ Thêm mốc tích lũy` để tăng số mốc hoặc `Xóa mốc` để giảm số mốc.
+3. Nhập `Số lượt tích lũy` cho từng mốc để FE biết người chơi cần đạt bao nhiêu lượt quay.
+4. Dán `Link ảnh quà` và `Link ảnh Tooltip`; dùng `Mở ảnh` để kiểm tra trực tiếp từng ảnh.
+5. Chọn danh sách `Quà tặng` từ mock data và nhập quantity cho từng quà trong mốc.
+6. Khi Save & Preview, `vng.html` sẽ reflect cả ảnh quà của mốc và ảnh tooltip.
+7. Nếu admin không cấu hình, FE tiếp tục dùng fallback default của trang event VNG hiện tại.
 
-1. Vao tab `Config`, mo module `Tich banh mo qua Vip`.
-2. Chon `Start Date` va `End Date` cho thoi gian hieu luc cua module doi qua VIP.
-3. Chon `Vat Pham`, nhap `So luong`, `So Banh Tich Luy` va `Gioi han phat`.
-4. Dan `Hinh Anh (Link anh tooltip)` va dung `Mo anh` de kiem tra truc tiep anh tooltip se reflect ra FE.
-5. Dung `Enabled` de bat/tat vat pham, `Xoa` de bo vat pham, hoac `+ Them vat pham` de them dong moi.
-6. Neu admin khong cau hinh, FE tiep tuc dung fallback default cua trang event VNG hien tai.
+### Guide Config Tích Bánh Mở Quà VIP
 
-### Guide config Ban Tiec Sinh Nhat
+1. Vào tab `Config`, mở module `Tích bánh mở quà Vip`.
+2. Chọn `Start Date` và `End Date` cho thời gian hiệu lực của module đổi quà VIP.
+3. Chọn `Vật Phẩm`, nhập `Số lượng`, `Số Bánh Tích Lũy` và `Giới hạn phát`.
+4. Dán `Hình Ảnh (Link ảnh tooltip)` và dùng `Mở ảnh` để kiểm tra trực tiếp ảnh tooltip sẽ reflect ra FE.
+5. Dùng `Enabled` để bật/tắt vật phẩm, `Xóa` để bỏ vật phẩm, hoặc `+ Thêm vật phẩm` để thêm dòng mới.
+6. Nếu admin không cấu hình, FE tiếp tục dùng fallback default của trang event VNG hiện tại.
 
-1. Vao tab `Config`, mo module `Ban tiec sinh nhat`.
-2. Chon `Start Date` va `End Date` cho thoi gian hieu luc cua module.
-3. Nhap `The le (HTML)` cho popup the le cua Ban tiec sinh nhat.
-4. Trong phan `Nhiem Vu Nhan Luot`, cau hinh `Loai`, `Noi dung HTML`, `Luot quay`, text nut va `Direct Url`.
-5. Dung `Enabled` de bat/tat nhiem vu, `Xoa` de bo nhiem vu, hoac `+ Them nhiem vu` de them dong moi.
-6. Neu admin khong cau hinh, FE tiep tuc dung fallback default/mock hien tai.
+### Guide Config Bàn Tiệc Sinh Nhật
 
-### Validation
+1. Vào tab `Config`, mở module `Bàn tiệc sinh nhật`.
+2. Chọn `Start Date` và `End Date` cho thời gian hiệu lực của module.
+3. Nhập `Thể lệ (HTML)` cho popup thể lệ của Bàn tiệc sinh nhật.
+4. Trong phần `Nhiệm Vụ Nhận Lượt`, cấu hình `Loại`, `Nội dung HTML`, `Lượt quay`, text nút và `Direct Url`.
+5. Dùng `Enabled` để bật/tắt nhiệm vụ, `Xóa` để bỏ nhiệm vụ, hoặc `+ Thêm nhiệm vụ` để thêm dòng mới.
+6. Nếu admin không cấu hình, FE tiếp tục dùng fallback default/mock hiện tại.
 
-- Tong rate vong quay phai bang 100%.
-- Start/end date: end date phai lon hon start date.
-- Cac field so tu nhien lon hon 0 duoc chan ngay luc nhap voi cac field quan trong.
-- Gioi han phat, moc tich luy, luot quay, quantity item khong duoc la so thap phan/chu/<= 0 khi cau hinh dang enabled.
-- Canh bao/loi khi reward/item dang enabled nhung gioi han phat <= 0.
+## 5. Validation
 
-### Dashboard / Report
+- Tổng rate vòng quay phải bằng `100%`.
+- Start/end date: end date phải lớn hơn start date.
+- Các field số tự nhiên lớn hơn 0 được chặn ngay lúc nhập với các field quan trọng.
+- Giới hạn phát, mốc tích lũy, lượt quay, quantity item không được là số thập phân/chữ/nhỏ hơn hoặc bằng 0 khi cấu hình đang enabled.
+- Cảnh báo khi thiếu ảnh quà hoặc ảnh tooltip ở các mốc cần preview ra FE.
+- Cảnh báo/lỗi khi reward/item đang enabled nhưng giới hạn phát không hợp lệ.
 
-- KPI tong participants, conversion, doanh thu uoc tinh, tong luot quay da dung.
-- Bang tong so nguoi tham gia tung module.
-- Chart participants theo ngay.
-- Chart Top 10 phan thuong duoc nhan nhieu nhat.
-- Bang Lucky Spin theo tung giai: rate config, claim rate mock, luot da dung, luot con lai va trang thai.
-- Widget Thiep Moi Dai Tiec hien thi tong loi chuc hien tai, moc da dat, so loi chuc con thieu toi moc ke tiep va du 7 moc qua theo config.
-- Widget Tich Luy Nhan Luot hien thi so user reach mock theo tung moc luot quay dang config trong admin.
-- Bang trang thai vat pham doi qua gom gioi han phat, da phat mock, claim rate mock va con lai mock.
+## 6. Dashboard / Report
+
+- KPI tổng participants, conversion, doanh thu ước tính, tổng lượt quay đã dùng.
+- Bảng tổng số người tham gia từng module.
+- Chart participants theo ngày.
+- Chart Top 10 phần thưởng được nhận nhiều nhất.
+- Bảng Lucky Spin theo từng giải: rate config, claim rate mock, lượt đã dùng, lượt còn lại và trạng thái.
+- Widget Thiệp Mời Đại Tiệc hiển thị tổng lời chúc hiện tại, mốc đã đạt, số lời chúc còn thiếu tới mốc kế tiếp và đủ 7 mốc quà theo config.
+- Thanh tiến độ Thiệp Mời Đại Tiệc đang tính theo `tổng lời chúc hiện tại / mốc kế tiếp`. Ví dụ 32.699 / 50.000 tương đương khoảng 65%.
+- Widget Tích Lũy Nhận Lượt hiển thị số user reach mock theo từng mốc lượt quay đang config trong admin.
+- Bảng trạng thái vật phẩm đổi quà gồm giới hạn phát, đã phát mock, claim rate mock và còn lại mock.
 - Conversion funnel mock: visit -> login -> mission done.
-- Doanh thu uoc tinh mock tu cac package dang enabled.
+- Doanh thu ước tính mock từ các package đang enabled.
 
-## 5. Gioi han hien tai
+## 7. Giới Hạn Hiện Tại
 
-Do bai tap khong ket noi API, cac muc sau chi la mock/estimate:
+Do bài tập không kết nối API, các mục sau chỉ là mock/estimate:
 
-- Ton kho thuc te cua vat pham.
-- So luot quay da dung/con lai theo tung giai dang duoc mo phong tu config rate va mock participants.
-- Claim rate thuc te so voi cau hinh dang la mock vi chua co claim API/log.
-- Top 10 phan thuong nhan nhieu nhat dang duoc mo phong tu spin/shop mock claimed count.
-- Conversion that theo chuoi visit -> login -> mission done.
-- Doanh thu that tu goi nap; dashboard hien estimate tu package config.
+- Tồn kho thực tế của vật phẩm.
+- Số lượt quay đã dùng/còn lại theo từng giải đang được mô phỏng từ config rate và mock participants.
+- Claim rate thực tế so với cấu hình đang là mock vì chưa có claim API/log.
+- Top 10 phần thưởng nhận nhiều nhất đang được mô phỏng từ spin/shop mock claimed count.
+- Conversion thật theo chuỗi visit -> login -> mission done.
+- Doanh thu thật từ gói nạp; dashboard hiện estimate từ package config.
 
-## 6. Ghi chu nghiep vu ve Stock / Ton kho
+## 8. Ghi Chú Nghiệp Vụ Về Stock / Tồn Kho
 
-Trong bai tap nay nen tach ro 2 khai niem:
+Trong bài tập này nên tách rõ 2 khái niệm:
 
-- `quantity`: so luong item nguoi choi nhan duoc moi lan claim/doi.
-- `stock` hoac `limit`: tong so luong toi da co the phat trong su kien. Trong UI nen hieu la "Gioi han phat".
+- `quantity`: số lượng item người chơi nhận được mỗi lần claim/đổi.
+- `stock` hoặc `limit`: tổng số lượng tối đa có thể phát trong sự kiện. Trong UI nên hiểu là `Giới hạn phát`.
 
-Khong co API thi khong the biet ton kho realtime. Tuy nhien admin tool van cho cau hinh `stock/limit` ban dau de validation va dashboard mock co co so tinh:
+Không có API thì không thể biết tồn kho realtime. Tuy nhiên admin tool vẫn cho cấu hình `stock/limit` ban đầu để validation và dashboard mock có cơ sở tính:
 
-- remaining = configured stock - mock claimed count
-- warning khi stock = 0 nhung reward/item van enabled
-- warning khi claimed count mock > configured stock
+- `remaining = configured stock - mock claimed count`
+- Warning khi stock = 0 nhưng reward/item vẫn enabled
+- Warning khi claimed count mock > configured stock
 
-Trong ban demo, `remaining` la mock. Ban production can claim API/log de tinh remaining that.
+Trong bản demo, `remaining` là mock. Bản production cần claim API/log để tính remaining thật.
 
-## 7. Cach chay
+## 9. Cách Chạy
 
-1. Mo `index.html` de cau hinh admin.
-2. Chay validation.
-3. Save Config hoac Save & Preview.
-4. FE preview mo `vng.html` va doc config tu `localStorage`.
+1. Mở `index.html` để cấu hình admin.
+2. Chạy validation.
+3. Save Config hoặc Save & Preview.
+4. FE preview mở `vng.html` và đọc config từ `localStorage`.
