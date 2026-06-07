@@ -319,7 +319,22 @@
   .filter-btn.active { background: var(--blue); color: #fff; border-color: var(--blue); }
   .filter-sep { color: var(--border2); }
   .filter-date { display: flex; align-items: center; gap: 6px; }
-  .filter-date input { width: 140px; padding: 6px 10px; font-size: 12px; }
+  .filter-date input { width: 140px; padding: 6px 10px; font-size: 12px; cursor: pointer; }
+  input.date-invalid {
+    border-color: var(--red) !important;
+    box-shadow: 0 0 0 2px rgba(239, 68, 68, .18);
+  }
+  .dashboard-filter-notice {
+    display: none;
+    margin: -10px 0 16px;
+    padding: 9px 12px;
+    border-radius: 6px;
+    border: 1px solid rgba(239, 68, 68, .35);
+    background: rgba(239, 68, 68, .10);
+    color: #fca5a5;
+    font-size: 12px;
+  }
+  .dashboard-filter-notice.show { display: block; }
 
   /* Progress bars */
   .progress-row { margin-bottom: 12px; }
@@ -901,13 +916,14 @@
     <button class="filter-btn" id="fb-7d" onclick="setFilter('7d',this)">7 ngày qua</button>
     <span class="filter-sep">|</span>
     <div class="filter-date">
-      <label style="margin:0;color:var(--muted)">Từ</label>
-      <input type="date" id="filterFrom" onchange="setFilter('custom',null)">
-      <label style="margin:0;color:var(--muted)">Đến</label>
-      <input type="date" id="filterTo" onchange="setFilter('custom',null)">
+      <label for="filterFrom" style="margin:0;color:var(--muted);cursor:pointer">Từ</label>
+      <input type="date" id="filterFrom" onchange="handleDashboardDateChange()">
+      <label for="filterTo" style="margin:0;color:var(--muted);cursor:pointer">Đến</label>
+      <input type="date" id="filterTo" onchange="handleDashboardDateChange()">
     </div>
     <button class="btn btn-primary btn-sm" onclick="refreshDashboard()">↻ Refresh</button>
   </div>
+  <div class="dashboard-filter-notice" id="dashboardFilterNotice"></div>
 
   <!-- KPI Cards -->
   <div class="grid-4 mb-12">
@@ -1266,7 +1282,12 @@ const GIFT_ITEM_OPTIONS = [
   'Rương Chọn Đá Thô', 'Quà Đặc Biệt', 'Rương Tướng Hán Ngẫu Nhiên',
   'Rương Đỏ/Kim Ngẫu Nhiên', 'Bánh Sinh Nhật', 'Móc Khóa',
   'Rương Chọn Mảnh Tướng Tân', 'Rương Nhân Phẩm Vô Cực',
-  'Rương Chọn Mảnh Thập Giới', 'Gối Ôm Tiểu Kiều'
+  'Rương Chọn Mảnh Thập Giới', 'Gối Ôm Tiểu Kiều',
+  'Rương chọn đá thần binh', 'Tướng đỏ/kim ngẫu nhiên',
+  'Rương nhân phẩm vô cực', 'Rương chọn tướng Hoàng Kim',
+  'Thần thú đỏ ngẫu nhiên', 'Rương tướng hán ngẫu nhiên',
+  'Đại Tiệc rương Linh Kim', 'Rương chọn Mảnh Kim Cương',
+  'Rương chọn mảnh thần tướng', 'Rương chọn mảnh thần hóa'
 ];
 
 const SPIN_ITEM_IMG_BASE = 'https://cdn-mainsite-aka.vnggames.com/products/dt3q/landing/2026-sinh-nhat-7-ai/dist/optimized/dt3q-ld-sinhnhat-vongquay/images/';
@@ -1356,16 +1377,16 @@ const MOCK = {
     { name: 'Gối Ôm Tiểu Kiều', tooltipImg: SPIN_ITEM_IMG_BASE + 'item-11.png', rate: 8, stock: 300 },
   ],
   shop: [
-    { name: 'Rương Chọn Đá Thô', qty: 1, cakes: 1, tooltipImg: SHOP_ITEM_IMG_BASE + 'banh-1.webp' },
-    { name: 'Quà Đặc Biệt', qty: 1, cakes: 2, tooltipImg: SHOP_ITEM_IMG_BASE + 'banh-2.webp' },
-    { name: 'Thức Tỉnh Đơn', qty: 5, cakes: 3, tooltipImg: SHOP_ITEM_IMG_BASE + 'banh-3.webp' },
-    { name: 'Rương Tướng Hán Ngẫu Nhiên', qty: 1, cakes: 4, tooltipImg: SHOP_ITEM_IMG_BASE + 'banh-4.webp' },
-    { name: 'Rương Đỏ/Kim Ngẫu Nhiên', qty: 1, cakes: 5, tooltipImg: SHOP_ITEM_IMG_BASE + 'banh-5.webp' },
-    { name: 'Bánh Sinh Nhật', qty: 10, cakes: 6, tooltipImg: SHOP_ITEM_IMG_BASE + 'banh-6.webp' },
-    { name: 'Móc Khóa', qty: 1, cakes: 7, tooltipImg: SHOP_ITEM_IMG_BASE + 'banh-7.webp' },
-    { name: 'Rương Chọn Mảnh Tướng Tân', qty: 1, cakes: 8, tooltipImg: SHOP_ITEM_IMG_BASE + 'banh-8.webp' },
-    { name: 'Rương Nhân Phẩm Vô Cực', qty: 1, cakes: 9, tooltipImg: SHOP_ITEM_IMG_BASE + 'banh-9.webp' },
-    { name: 'Rương Chọn Mảnh Thập Giới', qty: 1, cakes: 10, tooltipImg: SHOP_ITEM_IMG_BASE + 'banh-10.webp' },
+    { name: 'Rương chọn đá thần binh', qty: 1, cakes: 1, stock: 120, tooltipImg: SHOP_ITEM_IMG_BASE + 'banh-1.webp' },
+    { name: 'Tướng đỏ/kim ngẫu nhiên', qty: 1, cakes: 2, stock: 100, tooltipImg: SHOP_ITEM_IMG_BASE + 'banh-2.webp' },
+    { name: 'Rương nhân phẩm vô cực', qty: 1, cakes: 3, stock: 80, tooltipImg: SHOP_ITEM_IMG_BASE + 'banh-3.webp' },
+    { name: 'Rương chọn tướng Hoàng Kim', qty: 1, cakes: 4, stock: 70, tooltipImg: SHOP_ITEM_IMG_BASE + 'banh-4.webp' },
+    { name: 'Thần thú đỏ ngẫu nhiên', qty: 1, cakes: 5, stock: 60, tooltipImg: SHOP_ITEM_IMG_BASE + 'banh-5.webp' },
+    { name: 'Rương tướng hán ngẫu nhiên', qty: 1, cakes: 6, stock: 90, tooltipImg: SHOP_ITEM_IMG_BASE + 'banh-6.webp' },
+    { name: 'Đại Tiệc rương Linh Kim', qty: 1, cakes: 7, stock: 50, tooltipImg: SHOP_ITEM_IMG_BASE + 'banh-7.webp' },
+    { name: 'Rương chọn Mảnh Kim Cương', qty: 1, cakes: 8, stock: 45, tooltipImg: SHOP_ITEM_IMG_BASE + 'banh-8.webp' },
+    { name: 'Rương chọn mảnh thần tướng', qty: 1, cakes: 9, stock: 40, tooltipImg: SHOP_ITEM_IMG_BASE + 'banh-9.webp' },
+    { name: 'Rương chọn mảnh thần hóa', qty: 1, cakes: 10, stock: 35, tooltipImg: SHOP_ITEM_IMG_BASE + 'banh-10.webp' },
   ],
   milestone: [
     { target: 1000, reward: 'Quà mốc Q1', status: 'unlocked' },
@@ -1457,6 +1478,11 @@ const DAILY = [
   { date:'31/05', participants:3200, visits:15500, login:9100, missionDone:2630 },
   { date:'01/06', participants:3500, visits:17200, login:10300, missionDone:2890 },
   { date:'02/06', participants:3700, visits:18500, login:10900, missionDone:3100 },
+  { date:'03/06', participants:3950, visits:19800, login:11750, missionDone:3320 },
+  { date:'04/06', participants:4200, visits:21400, login:12600, missionDone:3560 },
+  { date:'05/06', participants:4550, visits:23100, login:13800, missionDone:3860 },
+  { date:'06/06', participants:4900, visits:24800, login:14900, missionDone:4210 },
+  { date:'07/06', participants:5300, visits:26600, login:16100, missionDone:4620 },
 ];
 
 const CURRENT_THIEP_MOI_WISHES = 32699;
@@ -1598,6 +1624,7 @@ function validateTimelineRealtime(showMessage = false) {
 }
 
 function openNativeDatePicker(input) {
+  if (!input) return;
   if (typeof input.showPicker !== 'function') return;
   try {
     input.showPicker();
@@ -1615,6 +1642,7 @@ function initDateInputs() {
     input.addEventListener('change', () => validateTimelineRealtime(true));
     input.dataset.dateInputReady = '1';
   });
+  initDashboardDateFilters();
 }
 
 // ═══════════════════════════════════════════
@@ -2550,8 +2578,22 @@ function normalizeShopConfig(rows) {
   const isLegacyShopMock = rows.length <= legacyNames.length &&
     rows.every((row, index) => row && row.name === legacyNames[index]);
   const isPreviousVipMock = rows.every(row => row && /^Quà Vip \d+$/.test(row.name || ''));
+  const duplicatedSpinShopNames = [
+    'Rương Chọn Đá Thô',
+    'Quà Đặc Biệt',
+    'Thức Tỉnh Đơn',
+    'Rương Tướng Hán Ngẫu Nhiên',
+    'Rương Đỏ/Kim Ngẫu Nhiên',
+    'Bánh Sinh Nhật',
+    'Móc Khóa',
+    'Rương Chọn Mảnh Tướng Tân',
+    'Rương Nhân Phẩm Vô Cực',
+    'Rương Chọn Mảnh Thập Giới'
+  ];
+  const isDuplicatedSpinShopMock = rows.length === duplicatedSpinShopNames.length &&
+    rows.every((row, index) => row && row.name === duplicatedSpinShopNames[index]);
   const isOldShopSchema = rows.every(row => row && row.cakes === undefined && row.tooltipImg === undefined && row.img === undefined && row.image === undefined);
-  if (isLegacyShopMock || isPreviousVipMock || isOldShopSchema) return MOCK.shop.map(r => ({...r}));
+  if (isLegacyShopMock || isPreviousVipMock || isDuplicatedSpinShopMock || isOldShopSchema) return MOCK.shop.map(r => ({...r}));
 
   return rows.map((row, index) => {
     const fallback = MOCK.shop[index] || {
@@ -2605,6 +2647,96 @@ function renderAll() {
 // ═══════════════════════════════════════════
 // DASHBOARD
 // ═══════════════════════════════════════════
+function getLocalDateInputValue(date = new Date()) {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+}
+
+function parseDashboardDateValue(value) {
+  if (!value) return null;
+  const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(value);
+  if (!match) return null;
+  const date = new Date(Number(match[1]), Number(match[2]) - 1, Number(match[3]));
+  return Number.isNaN(date.getTime()) ? null : date;
+}
+
+function parseDailyMockDate(label) {
+  const match = /^(\d{2})\/(\d{2})$/.exec(label || '');
+  if (!match) return null;
+  const year = new Date().getFullYear();
+  return new Date(year, Number(match[2]) - 1, Number(match[1]));
+}
+
+function setDashboardDateNotice(message) {
+  const notice = document.getElementById('dashboardFilterNotice');
+  if (!notice) return;
+  notice.textContent = message || '';
+  notice.classList.toggle('show', Boolean(message));
+}
+
+function validateDashboardDateRange(showMessage = false) {
+  const fromEl = document.getElementById('filterFrom');
+  const toEl = document.getElementById('filterTo');
+  if (!fromEl || !toEl) return true;
+
+  const todayValue = getLocalDateInputValue();
+  fromEl.max = todayValue;
+  toEl.max = todayValue;
+
+  const fromDate = parseDashboardDateValue(fromEl.value);
+  const toDate = parseDashboardDateValue(toEl.value);
+  const today = parseDashboardDateValue(todayValue);
+  let message = '';
+  let invalidTarget = null;
+
+  if (fromDate && fromDate > today) {
+    message = 'Dashboard không thể xem data của ngày sau hiện tại. Vui lòng chọn lại ngày Từ.';
+    invalidTarget = fromEl;
+  } else if (toDate && toDate > today) {
+    message = 'Dashboard không thể xem data của ngày sau hiện tại. Vui lòng chọn lại ngày Đến.';
+    invalidTarget = toEl;
+  } else if (fromDate && toDate && toDate < fromDate) {
+    message = 'Ngày Đến phải lớn hơn hoặc bằng ngày Từ.';
+    invalidTarget = toEl;
+  }
+
+  const invalid = Boolean(message);
+  fromEl.classList.toggle('date-invalid', invalid && Boolean(fromDate && (fromDate > today || (toDate && toDate < fromDate))));
+  toEl.classList.toggle('date-invalid', invalid && Boolean(toDate && (toDate > today || (fromDate && toDate < fromDate))));
+  fromEl.setCustomValidity(message);
+  toEl.setCustomValidity(message);
+  fromEl.setAttribute('aria-invalid', String(invalid));
+  toEl.setAttribute('aria-invalid', String(invalid));
+  fromEl.title = message;
+  toEl.title = message;
+  setDashboardDateNotice(message);
+
+  if (invalid && showMessage) {
+    showToast(message, 'error');
+    (invalidTarget || toEl).reportValidity();
+  }
+  return !invalid;
+}
+
+function initDashboardDateFilters() {
+  const inputs = [document.getElementById('filterFrom'), document.getElementById('filterTo')].filter(Boolean);
+  inputs.forEach(input => {
+    input.max = getLocalDateInputValue();
+    if (input.dataset.dashboardDateReady === '1') return;
+    input.addEventListener('click', () => openNativeDatePicker(input));
+    input.addEventListener('focus', () => openNativeDatePicker(input));
+    input.addEventListener('input', () => validateDashboardDateRange(false));
+    input.dataset.dashboardDateReady = '1';
+  });
+  validateDashboardDateRange(false);
+}
+
+function handleDashboardDateChange() {
+  setFilter('custom', null);
+}
+
 function setFilter(type, btn) {
   activeFilter = type;
   document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
@@ -2614,15 +2746,30 @@ function setFilter(type, btn) {
 
 function getFilteredData() {
   if (activeFilter === 'today') return [DAILY[DAILY.length - 1]];
-  return DAILY; // 7d or custom (simplified: always all 7)
+  if (activeFilter !== 'custom') return DAILY;
+
+  const fromDate = parseDashboardDateValue(getInputValue('filterFrom'));
+  const toDate = parseDashboardDateValue(getInputValue('filterTo'));
+  return DAILY.filter(item => {
+    const itemDate = parseDailyMockDate(item.date);
+    if (!itemDate) return false;
+    if (fromDate && itemDate < fromDate) return false;
+    if (toDate && itemDate > toDate) return false;
+    return true;
+  });
 }
 
 function refreshDashboard() {
+  if (activeFilter === 'custom') {
+    if (!validateDashboardDateRange(true)) return;
+  } else {
+    setDashboardDateNotice('');
+  }
   const data = getFilteredData();
   const stats = buildDashboardStats(data);
 
   document.getElementById('kpi-participants').textContent = fmt(stats.totPart);
-  document.getElementById('kpi-participants-d').textContent = data.length > 1 ? `+${fmt(data[data.length-1].participants - data[0].participants)} so với đầu kỳ` : 'Hôm nay';
+  document.getElementById('kpi-participants-d').textContent = data.length > 1 ? `+${fmt(data[data.length-1].participants - data[0].participants)} so với đầu kỳ` : (data.length === 1 ? 'Hôm nay' : 'Không có data trong khoảng');
   document.getElementById('kpi-conv').textContent = stats.conv.toFixed(1) + '%';
   document.getElementById('kpi-conv-d').textContent = 'Visit → Mission Done';
   document.getElementById('kpi-revenue').textContent = fmtVnd(stats.revenue);
