@@ -727,7 +727,7 @@
         <ol>
           <li><strong>Số mốc nhận lượt</strong> chính là số block mốc đang hiển thị bên dưới; dùng nút <strong>+ Thêm mốc tích lũy</strong> để tăng số mốc, hoặc <strong>Xóa mốc</strong> để bỏ mốc.</li>
           <li>Nhập <strong>Số lượt tích lũy</strong> cho từng mốc, ví dụ 1, 5, 10, 20 lượt.</li>
-          <li>Dán <strong>Link ảnh Tooltip</strong>; ảnh này sẽ hiển thị ngoài FE khi hover mốc và có thể kiểm tra nhanh bằng nút <strong>Mở ảnh</strong>.</li>
+          <li>Dán <strong>Link ảnh quà</strong> và <strong>Link ảnh Tooltip</strong>; các ảnh này sẽ hiển thị ngoài FE và có thể kiểm tra nhanh bằng nút <strong>Mở ảnh</strong>.</li>
           <li>Trong mỗi mốc, chọn danh sách <strong>Quà tặng</strong> từ mock data và nhập số lượng nhận được.</li>
           <li>Nếu admin không config, FE giữ fallback default của trang event VNG hiện tại.</li>
         </ol>
@@ -1367,26 +1367,6 @@ const MOCK = {
     { type: 'fixed', contentHtml: '<b>Nạp gói promotion 199.000đ</b><br>(+ 10 lượt)', action: 'Thực Hiện', enabled: true },
     { type: 'fixed', contentHtml: '<b>Nạp gói promotion 299.000đ</b><br>(+ 15 lượt)', action: 'Thực Hiện', enabled: true },
     { type: 'fixed', contentHtml: '<b>Nạp gói promotion 599.000đ</b><br>(+ 30 lượt)', action: 'Thực Hiện', enabled: true },
-    { type: 'fixed', contentHtml: '<b>Nạp gói promotion 899.000đ</b><br>(+ 46 lượt)', action: 'Thực Hiện', enabled: true },
-    { type: 'fixed', contentHtml: '<b>Nạp gói promotion 1.499.000đ</b><br>(+ 78 lượt)', action: 'Thực Hiện', enabled: true },
-    { type: 'fixed', contentHtml: '<b>Nạp gói promotion 1.999.000đ</b><br>(+ 105 lượt)', action: 'Thực Hiện', enabled: true },
-    { type: 'fixed', contentHtml: '<b>Nạp gói event 1</b><br>(+ 2 lượt)', action: 'Thực Hiện', enabled: true },
-    { type: 'fixed', contentHtml: '<b>Nạp gói event 2</b><br>(+ 2 lượt)', action: 'Thực Hiện', enabled: true },
-    { type: 'fixed', contentHtml: '<b>Nạp gói event 3</b><br>(+ 2 lượt)', action: 'Thực Hiện', enabled: true },
-    { type: 'fixed', contentHtml: '<b>Nạp gói event 4</b><br>(+ 3 lượt)', action: 'Thực Hiện', enabled: true },
-    { type: 'fixed', contentHtml: '<b>Nạp gói event 5</b><br>(+ 3 lượt)', action: 'Thực Hiện', enabled: true },
-    { type: 'fixed', contentHtml: '<b>Nạp gói event 6</b><br>(+ 5 lượt)', action: 'Thực Hiện', enabled: true },
-    { type: 'fixed', contentHtml: '<b>Nạp gói event 7</b><br>(+ 7 lượt)', action: 'Thực Hiện', enabled: true },
-    { type: 'fixed', contentHtml: '<b>Nạp gói event 8</b><br>(+ 15 lượt)', action: 'Thực Hiện', enabled: true },
-    { type: 'fixed', contentHtml: '<b>Nạp gói event 9</b><br>(+ 22 lượt)', action: 'Thực Hiện', enabled: true },
-    { type: 'fixed', contentHtml: '<b>Nạp gói event 10</b><br>(+ 22 lượt)', action: 'Thực Hiện', enabled: true },
-    { type: 'fixed', contentHtml: '<b>Nạp gói event 11</b><br>(+ 25 lượt)', action: 'Thực Hiện', enabled: true },
-    { type: 'fixed', contentHtml: '<b>Nạp gói event 12</b><br>(+ 25 lượt)', action: 'Thực Hiện', enabled: true },
-    { type: 'fixed', contentHtml: '<b>Nạp gói event 13</b><br>(+ 50 lượt)', action: 'Thực Hiện', enabled: true },
-    { type: 'fixed', contentHtml: '<b>Nạp gói event 14</b><br>(+ 125 lượt)', action: 'Thực Hiện', enabled: true },
-    { type: 'fixed', contentHtml: '<b>Nạp gói event 15</b><br>(+ 125 lượt)', action: 'Thực Hiện', enabled: true },
-    { type: 'fixed', contentHtml: '<b>Nạp gói event 16</b><br>(+ 250 lượt)', action: 'Thực Hiện', enabled: true },
-    { type: 'fixed', contentHtml: '<b>Nạp gói event 17</b><br>(+ 250 lượt)', action: 'Thực Hiện', enabled: true },
   ],
   birthdayTableMission: [
     { type: 'daily', contentHtml: '<b>Gửi lời chúc sinh nhật</b><br>(+ 1 lượt/ngày)', turns: 1, action: 'Thực Hiện', enabled: true },
@@ -1396,36 +1376,43 @@ const MOCK = {
   spinAccumulation: [
     {
       target: 1,
+      giftImg: 'https://cdn-mainsite-aka.vnggames.com/products/dt3q/landing/2026-sinh-nhat-7-ai/dist/optimized/dt3q-ld-sinhnhat-vongquay/images/moc-1.webp',
       tooltipImg: 'https://cdn-mainsite-aka.vnggames.com/products/dt3q/landing/2026-sinh-nhat-7-ai/dist/optimized/dt3q-ld-sinhnhat-vongquay/images/tooltip/tooltip-1.webp',
       gifts: [{ name: 'Thức Tỉnh Đơn', qty: 1 }, { name: 'Vàng', qty: 1 }]
     },
     {
       target: 5,
+      giftImg: 'https://cdn-mainsite-aka.vnggames.com/products/dt3q/landing/2026-sinh-nhat-7-ai/dist/optimized/dt3q-ld-sinhnhat-vongquay/images/moc-2.webp',
       tooltipImg: 'https://cdn-mainsite-aka.vnggames.com/products/dt3q/landing/2026-sinh-nhat-7-ai/dist/optimized/dt3q-ld-sinhnhat-vongquay/images/tooltip/tooltip-2.webp',
       gifts: [{ name: 'Thức Tỉnh Đơn', qty: 5 }, { name: 'Vé Quay', qty: 1 }]
     },
     {
       target: 10,
+      giftImg: 'https://cdn-mainsite-aka.vnggames.com/products/dt3q/landing/2026-sinh-nhat-7-ai/dist/optimized/dt3q-ld-sinhnhat-vongquay/images/moc-3.webp',
       tooltipImg: 'https://cdn-mainsite-aka.vnggames.com/products/dt3q/landing/2026-sinh-nhat-7-ai/dist/optimized/dt3q-ld-sinhnhat-vongquay/images/tooltip/tooltip-3.webp',
       gifts: [{ name: 'Thức Tỉnh Đơn', qty: 10 }, { name: 'Rương Đỏ', qty: 1 }]
     },
     {
       target: 20,
+      giftImg: 'https://cdn-mainsite-aka.vnggames.com/products/dt3q/landing/2026-sinh-nhat-7-ai/dist/optimized/dt3q-ld-sinhnhat-vongquay/images/moc-4.webp',
       tooltipImg: 'https://cdn-mainsite-aka.vnggames.com/products/dt3q/landing/2026-sinh-nhat-7-ai/dist/optimized/dt3q-ld-sinhnhat-vongquay/images/tooltip/tooltip-4.webp',
       gifts: [{ name: 'Thức Tỉnh Đơn', qty: 20 }, { name: 'Rương Kim', qty: 1 }]
     },
     {
       target: 40,
+      giftImg: 'https://cdn-mainsite-aka.vnggames.com/products/dt3q/landing/2026-sinh-nhat-7-ai/dist/optimized/dt3q-ld-sinhnhat-vongquay/images/moc-5.webp',
       tooltipImg: 'https://cdn-mainsite-aka.vnggames.com/products/dt3q/landing/2026-sinh-nhat-7-ai/dist/optimized/dt3q-ld-sinhnhat-vongquay/images/tooltip/tooltip-5.webp',
       gifts: [{ name: 'Thức Tỉnh Đơn', qty: 40 }, { name: 'Rương Chọn Đá', qty: 1 }]
     },
     {
       target: 80,
+      giftImg: 'https://cdn-mainsite-aka.vnggames.com/products/dt3q/landing/2026-sinh-nhat-7-ai/dist/optimized/dt3q-ld-sinhnhat-vongquay/images/moc-6.webp',
       tooltipImg: 'https://cdn-mainsite-aka.vnggames.com/products/dt3q/landing/2026-sinh-nhat-7-ai/dist/optimized/dt3q-ld-sinhnhat-vongquay/images/tooltip/tooltip-6.webp',
       gifts: [{ name: 'Thức Tỉnh Đơn', qty: 80 }, { name: 'Rương Chọn Đá', qty: 2 }]
     },
     {
       target: 150,
+      giftImg: 'https://cdn-mainsite-aka.vnggames.com/products/dt3q/landing/2026-sinh-nhat-7-ai/dist/optimized/dt3q-ld-sinhnhat-vongquay/images/moc-7.webp',
       tooltipImg: 'https://cdn-mainsite-aka.vnggames.com/products/dt3q/landing/2026-sinh-nhat-7-ai/dist/optimized/dt3q-ld-sinhnhat-vongquay/images/tooltip/tooltip-7.png',
       gifts: [{ name: 'Quà Đặc Biệt', qty: 1 }, { name: 'Thức Tỉnh Đơn', qty: 150 }]
     },
@@ -1890,11 +1877,20 @@ function renderSpinAccumulationUI() {
 
     block.innerHTML =
       '<div class="thiep-moc-label">Mốc tích lũy #' + (mi + 1) + '</div>' +
-      '<div class="thiep-moc-header">' +
+      '<div class="thiep-moc-header thiep-moc-header--media">' +
         '<div class="form-group">' +
           '<label>Số lượt tích lũy</label>' +
           '<input type="text" inputmode="numeric" pattern="[1-9][0-9]*" value="' + esc(milestone.target || 0) + '" ' +
           'oninput="sanitizePositiveIntegerInput(this, spinAccumulationData[' + mi + '], \'target\')" onchange="sanitizePositiveIntegerInput(this, spinAccumulationData[' + mi + '], \'target\')">' +
+        '</div>' +
+        '<div class="form-group">' +
+          '<label>Link ảnh quà</label>' +
+          '<input type="text" value="' + esc(milestone.giftImg || '') + '" ' +
+          'placeholder="https://..." onchange="spinAccumulationData[' + mi + '].giftImg=this.value.trim(); renderSpinAccumulationUI();">' +
+        '</div>' +
+        '<div class="form-group">' +
+          '<label>Xem ảnh quà</label>' +
+          buildImagePreviewLink(milestone.giftImg, 'Ảnh quà mốc tích lũy #' + (mi + 1)) +
         '</div>' +
         '<div class="form-group">' +
           '<label>Link ảnh Tooltip</label>' +
@@ -1902,7 +1898,7 @@ function renderSpinAccumulationUI() {
           'placeholder="https://..." onchange="spinAccumulationData[' + mi + '].tooltipImg=this.value.trim(); renderSpinAccumulationUI();">' +
         '</div>' +
         '<div class="form-group">' +
-          '<label>Xem ảnh</label>' +
+          '<label>Xem tooltip</label>' +
           buildImagePreviewLink(milestone.tooltipImg, 'Tooltip mốc tích lũy #' + (mi + 1)) +
         '</div>' +
         '<button class="btn btn-danger btn-sm" type="button" onclick="removeSpinAccumulationMilestone(' + mi + ')">🗑 Xóa mốc</button>' +
@@ -1931,8 +1927,10 @@ function removeSpinAccumulationGift(milestoneIndex, giftIndex) {
 }
 
 function addSpinAccumulationMilestone() {
+  const fallbackIndex = (spinAccumulationData.length % 7) + 1;
   spinAccumulationData.push({
     target: 1,
+    giftImg: 'https://cdn-mainsite-aka.vnggames.com/products/dt3q/landing/2026-sinh-nhat-7-ai/dist/optimized/dt3q-ld-sinhnhat-vongquay/images/moc-' + fallbackIndex + '.webp',
     tooltipImg: '',
     gifts: [{ name: GIFT_ITEM_OPTIONS[0], qty: 1 }]
   });
@@ -2269,6 +2267,12 @@ function runValidation() {
     if (!isPositiveIntegerValue(m.target)) {
       issues.push({ type:'error', msg: `Tích Lũy Nhận Lượt mốc #${i + 1}: Số lượt tích lũy phải là số tự nhiên lớn hơn 0 và không được là số thập phân` });
     }
+    if (!(m.giftImg || '').trim()) {
+      issues.push({ type:'warning', msg: `Tích Lũy Nhận Lượt mốc #${i + 1}: thiếu link ảnh quà` });
+    }
+    if (!(m.tooltipImg || '').trim()) {
+      issues.push({ type:'warning', msg: `Tích Lũy Nhận Lượt mốc #${i + 1}: thiếu link ảnh tooltip` });
+    }
     (m.gifts || []).forEach((g, gi) => {
       if (!isPositiveIntegerValue(g.qty)) {
         issues.push({ type:'error', msg: `Tích Lũy Nhận Lượt mốc #${i + 1}, item #${gi + 1}: Số lượng phải là số tự nhiên lớn hơn 0 và không được là số thập phân` });
@@ -2327,7 +2331,7 @@ function runValidation() {
     spinData.some(r => !(r.tooltipImg || '').trim()) ||
     shopData.some(r => !(r.tooltipImg || '').trim()) ||
     thiepMoiData.some(r => r.enabled !== false && (!(r.gifts || []).length || !(r.giftImg || '').trim() || !(r.tooltipImg || '').trim())) ||
-    spinAccumulationData.some(r => !(r.gifts || []).length || !(r.tooltipImg || '').trim());
+    spinAccumulationData.some(r => !(r.gifts || []).length || !(r.giftImg || '').trim() || !(r.tooltipImg || '').trim());
   if (emptyName) issues.push({ type:'warning', msg: 'Có dòng thiếu tên/nội dung/quà hoặc tooltip' });
 
   // Render
@@ -2448,7 +2452,7 @@ function applyConfig(cfg) {
     ? cfg.birthdayTable.missions
     : (Array.isArray(cfg.birthdayTableMissions) ? cfg.birthdayTableMissions : MOCK.birthdayTableMission);
   birthdayTableMissionData = birthdayMissions.map(r => ({...r}));
-  spinAccumulationData = (cfg.spinAccumulation || cfg.accumulations || MOCK.spinAccumulation).map(r => ({...r, gifts: (r.gifts || []).map(g => ({...g}))}));
+  spinAccumulationData = normalizeSpinAccumulationConfig(cfg.spinAccumulation || cfg.accumulations);
   packageData = cfg.packages || [...MOCK.packages];
   rulesData = normalizeRulesConfig(cfg.rules);
   renderAll();
@@ -2466,7 +2470,7 @@ function resetMock() {
   milestoneData = m.milestone.map(r => ({...r}));
   missionData = m.mission.map(r => ({...r}));
   birthdayTableMissionData = m.birthdayTableMission.map(r => ({...r}));
-  spinAccumulationData = m.spinAccumulation.map(r => ({...r, gifts: (r.gifts || []).map(g => ({...g}))}));
+  spinAccumulationData = normalizeSpinAccumulationConfig(m.spinAccumulation);
   thiepMoiData = JSON.parse(JSON.stringify(DEFAULT_THIEP_MOI));
   packageData = m.packages.map(r => ({...r}));
   rulesData = normalizeRulesConfig(DEFAULT_RULES);
@@ -2523,6 +2527,24 @@ function normalizeShopConfig(rows) {
       stock: parseInt(row.stock ?? row.limit ?? fallback.stock ?? 100, 10) || 100,
       enabled: row.enabled !== false,
       tooltipImg: row.tooltipImg || row.img || row.image || fallback.tooltipImg
+    };
+  });
+}
+
+function normalizeSpinAccumulationConfig(rows) {
+  if (!Array.isArray(rows) || !rows.length) rows = MOCK.spinAccumulation;
+
+  return rows.map((row, index) => {
+    row = row || {};
+    const fallback = MOCK.spinAccumulation[index] || MOCK.spinAccumulation[MOCK.spinAccumulation.length - 1] || {};
+    return {
+      target: parseInt(row.target ?? row.moc ?? row.number ?? fallback.target, 10) || 1,
+      giftImg: row.giftImg || row.giftImage || row.rewardImg || fallback.giftImg || '',
+      tooltipImg: row.tooltipImg || row.img || row.image || fallback.tooltipImg || '',
+      gifts: (Array.isArray(row.gifts) && row.gifts.length ? row.gifts : (fallback.gifts || [])).map(g => ({
+        name: g.name || GIFT_ITEM_OPTIONS[0],
+        qty: parseInt(g.qty ?? g.quantity ?? g.amount, 10) || 1
+      }))
     };
   });
 }

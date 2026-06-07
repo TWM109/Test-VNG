@@ -926,6 +926,11 @@
         setImageSrc(el.querySelector('.tooltip img'), tooltipUrl);
       }
 
+      var giftUrl = m.giftImg || m.giftImage || m.rewardImg || '';
+      if (giftUrl) {
+        setImageSrc(el.querySelector(':scope > img'), giftUrl);
+      }
+
       var gifts = giftSummary(m.gifts || []);
       if (gifts) {
         el.setAttribute('title', gifts);
