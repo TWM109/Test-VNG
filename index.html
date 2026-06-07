@@ -1261,7 +1261,6 @@ const SPIN_ITEM_IMG_BASE = 'https://cdn-mainsite-aka.vnggames.com/products/dt3q/
 const SHOP_ITEM_IMG_BASE = 'https://cdn-mainsite-aka.vnggames.com/products/dt3q/landing/2026-sinh-nhat-7-ai/dist/optimized/dt3q-ld-sinhnhat-doiqua/images/';
 
 function getShopTooltipImgByIndex(index) {
-  if (index === 10) return SPIN_ITEM_IMG_BASE + 'item-11.png';
   return SHOP_ITEM_IMG_BASE + 'banh-' + ((index % 10) + 1) + '.webp';
 }
 
@@ -1355,7 +1354,6 @@ const MOCK = {
     { name: 'Rương Chọn Mảnh Tướng Tân', qty: 1, cakes: 8, tooltipImg: SHOP_ITEM_IMG_BASE + 'banh-8.webp' },
     { name: 'Rương Nhân Phẩm Vô Cực', qty: 1, cakes: 9, tooltipImg: SHOP_ITEM_IMG_BASE + 'banh-9.webp' },
     { name: 'Rương Chọn Mảnh Thập Giới', qty: 1, cakes: 10, tooltipImg: SHOP_ITEM_IMG_BASE + 'banh-10.webp' },
-    { name: 'Gối Ôm Tiểu Kiều', qty: 1, cakes: 11, tooltipImg: getShopTooltipImgByIndex(10) },
   ],
   milestone: [
     { target: 1000, reward: 'Quà mốc Q1', status: 'unlocked' },
@@ -1717,7 +1715,7 @@ function addShopRow() {
     cakes: next,
     stock: 100,
     enabled: true,
-    tooltipImg: getShopTooltipImgByIndex((next - 1) % 11)
+    tooltipImg: getShopTooltipImgByIndex((next - 1) % 10)
   });
   renderShopTable();
 }
@@ -2509,6 +2507,8 @@ function normalizeSpinConfig(rows) {
 
 function normalizeShopConfig(rows) {
   if (!Array.isArray(rows) || !rows.length) return MOCK.shop.map(r => ({...r}));
+  rows = rows.filter(row => !(row && row.name === 'Gối Ôm Tiểu Kiều' && parseInt(row.cakes, 10) === 11));
+  if (!rows.length) return MOCK.shop.map(r => ({...r}));
 
   const legacyNames = ['Móc khóa DT3Q', 'Gối ôm DT3Q', 'Quà đặc biệt'];
   const isLegacyShopMock = rows.length <= legacyNames.length &&
@@ -2522,7 +2522,7 @@ function normalizeShopConfig(rows) {
       name: GIFT_ITEM_OPTIONS[index % GIFT_ITEM_OPTIONS.length],
       qty: 1,
       cakes: index + 1,
-      tooltipImg: getShopTooltipImgByIndex(index % 11)
+      tooltipImg: getShopTooltipImgByIndex(index % 10)
     };
     const tooltipImg = row.tooltipImg || row.img || row.image || '';
     return {
