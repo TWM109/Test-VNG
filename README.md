@@ -14,7 +14,7 @@ Promotion hiện được hiểu là 4 module chính:
 |---|---|---|
 | Thiệp Mời Đại Tiệc | Community Milestone | Start/end date, các mốc tích lũy, ảnh quà, ảnh tooltip, enabled, danh sách quà theo từng mốc, thể lệ HTML |
 | Mở Quà Sinh Nhật | Vòng quay Lucky Spin + Nhiệm vụ + Tích lũy nhận lượt | Start/end date, phần thưởng mock data, ảnh tooltip, rate, giới hạn phát, nhiệm vụ nhận lượt, direct URL, mốc tích lũy nhận lượt, ảnh quà, ảnh tooltip, thể lệ HTML |
-| Tích Bánh Mở Quà VIP | Đổi quà | Start/end date, vật phẩm đổi, số lượng item nhận mỗi lần, số bánh điều kiện đổi, giới hạn phát, enabled, ảnh tooltip, thể lệ HTML |
+| Tích Bánh Mở Quà VIP | Đổi quà | Start/end date, vật phẩm đổi, số lượng item nhận mỗi lần, số bánh điều kiện đổi, giới hạn phát, enabled, link ảnh quà, thể lệ HTML |
 | Bàn Tiệc Sinh Nhật | Lời chúc / bình chọn / mission phụ | Start/end date, thể lệ HTML, danh sách nhiệm vụ nhận lượt, direct URL |
 
 ## 3. Persona Người Dùng Tool
@@ -99,7 +99,7 @@ Ghi chú: mock data mặc định của phần nhiệm vụ nhận lượt hiệ
 1. Vào tab `Config`, mở module `Tích bánh mở quà Vip`.
 2. Chọn `Start Date` và `End Date` cho thời gian hiệu lực của module đổi quà VIP.
 3. Chọn `Vật Phẩm`, nhập `Số lượng`, `Số Bánh Tích Lũy` và `Giới hạn phát`.
-4. Dán `Hình Ảnh (Link ảnh tooltip)` và dùng `Mở ảnh` để kiểm tra trực tiếp ảnh tooltip sẽ reflect ra FE.
+4. Dán `Link ảnh quà` và dùng `Mở ảnh` để kiểm tra trực tiếp ảnh sẽ reflect ra FE.
 5. Dùng `Enabled` để bật/tắt vật phẩm, `Xóa` để bỏ vật phẩm, hoặc `+ Thêm vật phẩm` để thêm dòng mới.
 6. Nếu admin không cấu hình, FE tiếp tục dùng fallback default của trang event VNG hiện tại.
 

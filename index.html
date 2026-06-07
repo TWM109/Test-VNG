@@ -758,7 +758,7 @@
           <li>Chọn <strong>Vật Phẩm</strong> từ mock data và nhập <strong>Số lượng</strong> item user nhận được mỗi lần đổi.</li>
           <li>Nhập <strong>Số Bánh Tích Lũy</strong> là số bánh cần có để mở/đổi vật phẩm đó.</li>
           <li>Nhập <strong>Giới hạn phát</strong> để mock limit/tồn kho phát thưởng cho từng vật phẩm.</li>
-          <li>Dán <strong>Hình Ảnh (Link ảnh tooltip)</strong> và dùng <strong>Mở ảnh</strong> để kiểm tra trực tiếp ảnh sẽ reflect ra FE.</li>
+          <li>Dán <strong>Link ảnh quà</strong> và dùng <strong>Mở ảnh</strong> để kiểm tra trực tiếp ảnh sẽ reflect ra FE.</li>
           <li>1 số link test hình ảnh để team có thể test (https://freepngimg.com/thumb/goku/20182-6-goku-thumb.png), (https://freepngimg.com/thumb/the_legend_of_zelda/20983-8-zelda-link-photo-thumb.png)</li>
           <li>Dùng <strong>Enabled</strong> để bật/tắt vật phẩm, <strong>Xóa</strong> để bỏ vật phẩm, hoặc <strong>+ Thêm vật phẩm</strong> để thêm dòng mới.</li>
         </ol>
@@ -783,7 +783,7 @@
               <th style="width:110px">Số lượng</th>
               <th style="width:160px">Số Bánh Tích Lũy(Để mở)</th>
               <th style="width:130px">Giới hạn phát</th>
-              <th>Hình Ảnh (Link ảnh tooltip)</th>
+              <th>Link ảnh quà</th>
               <th style="width:110px">Xem ảnh</th>
               <th style="width:90px">Enabled</th>
               <th style="width:60px">Xoá</th>
@@ -1061,7 +1061,7 @@
         <tr>
           <td>Tích Bánh Mở Quà VIP</td>
           <td>Đổi quà</td>
-          <td>Start/end date, vật phẩm đổi, số lượng item nhận mỗi lần, số bánh điều kiện đổi, giới hạn phát, enabled, ảnh tooltip, thể lệ HTML.</td>
+          <td>Start/end date, vật phẩm đổi, số lượng item nhận mỗi lần, số bánh điều kiện đổi, giới hạn phát, enabled, link ảnh quà, thể lệ HTML.</td>
         </tr>
         <tr>
           <td>Bàn Tiệc Sinh Nhật</td>
@@ -1152,7 +1152,7 @@
       <li>Vào tab <strong>Config</strong>, mở module <strong>Tích bánh mở quà Vip</strong>.</li>
       <li>Chọn <strong>Start Date</strong> và <strong>End Date</strong> cho thời gian hiệu lực của module đổi quà VIP.</li>
       <li>Chọn <strong>Vật Phẩm</strong>, nhập <strong>Số lượng</strong>, <strong>Số Bánh Tích Lũy</strong> và <strong>Giới hạn phát</strong>.</li>
-      <li>Dán <strong>Hình Ảnh (Link ảnh tooltip)</strong> và dùng <strong>Mở ảnh</strong> để kiểm tra trực tiếp ảnh tooltip sẽ reflect ra FE.</li>
+      <li>Dán <strong>Link ảnh quà</strong> và dùng <strong>Mở ảnh</strong> để kiểm tra trực tiếp ảnh sẽ reflect ra FE.</li>
       <li>Dùng <strong>Enabled</strong> để bật/tắt vật phẩm, <strong>Xóa</strong> để bỏ vật phẩm, hoặc <strong>+ Thêm vật phẩm</strong> để thêm dòng mới.</li>
       <li>Nếu admin không cấu hình, FE tiếp tục dùng fallback default của trang event VNG hiện tại.</li>
     </ol>
@@ -1276,7 +1276,7 @@ const DEFAULT_RULES = {
   },
   shop_vip: {
     sourceUrl: 'https://dt3q.zing.vn/sinh-nhat-3-tuoi/promotion/the-le-tich-l-y-banh-mo-qua-vip.html',
-    html: '<h2>Thể lệ Tích Bánh Mở Quà VIP</h2><p>Người chơi tích lũy Bánh Kem trong sự kiện để mở các phần quà VIP. Mỗi vật phẩm yêu cầu số Bánh Kem tương ứng theo cấu hình admin.</p><ul><li>Số Bánh Kem sẽ được trừ khi đổi quà thành công.</li><li>Mỗi phần quà hiển thị theo ảnh tooltip và số lượng admin cấu hình.</li><li>Nội dung này được mock từ URL thể lệ hiện có trong FE: <a href="https://dt3q.zing.vn/sinh-nhat-3-tuoi/promotion/the-le-tich-l-y-banh-mo-qua-vip.html" target="_blank">the-le-tich-l-y-banh-mo-qua-vip.html</a>.</li></ul>'
+    html: '<h2>Thể lệ Tích Bánh Mở Quà VIP</h2><p>Người chơi tích lũy Bánh Kem trong sự kiện để mở các phần quà VIP. Mỗi vật phẩm yêu cầu số Bánh Kem tương ứng theo cấu hình admin.</p><ul><li>Số Bánh Kem sẽ được trừ khi đổi quà thành công.</li><li>Mỗi phần quà hiển thị theo link ảnh quà và số lượng admin cấu hình.</li><li>Nội dung này được mock từ URL thể lệ hiện có trong FE: <a href="https://dt3q.zing.vn/sinh-nhat-3-tuoi/promotion/the-le-tich-l-y-banh-mo-qua-vip.html" target="_blank">the-le-tich-l-y-banh-mo-qua-vip.html</a>.</li></ul>'
   },
   birthday_table: {
     sourceUrl: 'https://dt3q.zing.vn/sinh-nhat-3-tuoi/promotion/the-le-ban-tiec-sinh-nhat.html',
@@ -2306,7 +2306,7 @@ function runValidation() {
       issues.push({ type:'error', msg: `Tích bánh mở quà Vip #${i + 1}: giới hạn phát phải lớn hơn 0 khi vật phẩm đang bật` });
     }
     if (!(r.tooltipImg || '').trim()) {
-      issues.push({ type:'warning', msg: `Tích bánh mở quà Vip "${r.name || ('#' + (i + 1))}": thiếu link ảnh tooltip` });
+      issues.push({ type:'warning', msg: `Tích bánh mở quà Vip "${r.name || ('#' + (i + 1))}": thiếu link ảnh quà` });
     }
   });
 
